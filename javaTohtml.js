@@ -3,6 +3,7 @@
 // Create a new Date object
 const now = new Date();
 
+//Jeg skriver noget
 
 const year = now.getFullYear();
 
