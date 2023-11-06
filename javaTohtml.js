@@ -3,7 +3,7 @@
 // Create a new Date object
 const now = new Date();
 
-// Determine the year of the current date
+
 const year = now.getFullYear();
 
 // Determine the first day of the year
