@@ -1,0 +1,320 @@
+-- Creating the Database if it does not exist
+-- DROP DATABASE craveconnect;
+CREATE DATABASE IF NOT EXISTS craveconnect;
+USE craveconnect;
+
+-- Creating the Roles Table with a Unique Constraint on RoleDescription
+CREATE TABLE Roles (
+    RoleID INT AUTO_INCREMENT PRIMARY KEY,
+    RoleDescription VARCHAR(100) UNIQUE NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO Roles (RoleDescription) VALUES ('Administrator'), ('User'), ('Guest');
+
+-- Creating the User Table
+CREATE TABLE User (
+    UserID INT AUTO_INCREMENT PRIMARY KEY,
+    UserName VARCHAR(100) UNIQUE NOT NULL,
+    Password VARCHAR(25) NOT NULL,
+    UserRoleID INT,
+    AddDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+    ModifiedDate DATETIME ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (UserRoleID) REFERENCES Roles(RoleID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Inserting values into User
+INSERT INTO craveconnect.User (UserName, Password, UserRoleID, AddDate, ModifiedDate)
+VALUES
+    ('Jakob', 'password123', 1, '2023-11-26', '2023-11-26'),
+    ('Tim', 'password456', 2, '2023-11-26', '2023-11-26'),
+    ('Søren', 'password789', 3, '2023-11-26', '2023-11-26'),
+    ('Niels', 'pass123word', 1, '2023-11-26', '2023-11-26'),
+    ('Andreas', 'securepass', 3, '2023-11-26', '2023-11-26'),
+    ('Noah', 'userpass', 1, '2023-11-26', '2023-11-26'),
+    ('User7', 'passuser', 2, '2023-11-26', '2023-11-26'),
+    ('User8', 'randompass', 1, '2023-11-26', '2023-11-26'),
+    ('User9', 'pass1234', 2, '2023-11-26', '2023-11-26'),
+    ('User10', '1234pass', 1, '2023-11-26', '2023-11-26');
+
+
+-- Creating the FoodSupplierStates Table
+CREATE TABLE FoodSupplierStates (
+    StateID INT AUTO_INCREMENT PRIMARY KEY,
+    StateDescription VARCHAR(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO FoodSupplierStates (StateDescription) VALUES ('Active'), ('Inactive'), ('Pending');
+
+-- Creating the Foodsupplier Table
+CREATE TABLE craveconnect.Foodsupplier (
+    FoodsupplierID INT AUTO_INCREMENT PRIMARY KEY,
+    FoodsupplierName VARCHAR(100) NOT NULL,
+    Address VARCHAR(100),
+    PostNr VARCHAR(4),
+    City VARCHAR(100),
+    PhoneNumber VARCHAR(100),
+    ExternalLink VARCHAR(255),
+    StateID INT,
+    AddDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+    ModifiedDate DATETIME ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (StateID) REFERENCES FoodSupplierStates(StateID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO Foodsupplier (FoodsupplierName, Address, PostNr, City, PhoneNumber, ExternalLink, StateID, AddDate, ModifiedDate)
+VALUES 
+('The American House', 'Borgergade 32', '9000', 'Aalborg', '+45 98 9813 4591', 'www.americanhouse', '1', '2023-11-14', '2023-11-14'),
+('Hanoi House', 'Borgergade 4', '9000', 'Aalborg', '+45 98 9572 3848', 'www.hanoi-house', '1', '2023-11-14', '2023-11-14'),
+('Thai to go', 'Boulevarden 14', '9000', 'Aalborg', '+45 98 8944 8836', 'www.thai-to-go.dk', '1', '2023-11-14', '2023-11-14'),
+('Taste of India', 'Boulevarden 30', '9000', 'Aalborg', '+45 98 6612 9982', 'www.tasteofindia.dk', '1', '2023-11-14', '2023-11-14'),
+('Den store gode danske', 'Algade 39', '9000', 'Aalborg', '+45 98 4782 1004', 'www.Denstoregodedanske.dk', '1', '2023-11-14', '2023-11-14'),
+('Jakobs fisk', 'Myrdalstræde 279', '9220', 'Aalborg Øst', '+45 98 6893 4433', 'www.Jakobsfisk.dk', '1', '2023-11-14', '2023-11-14'),
+('Dos Caminos', 'Fredericagade 21', '9000', 'Aalborg', '+45 98 8877 1102', 'www.Dos.Caminos.dk', '1', '2023-11-14', '2023-11-14'),
+('Japani', 'Sjællandsgade 83', '9000', 'Aalborg', '+45 98 6212 3830', 'www.japani-DK-aalborg.dk', '1', '2023-11-15', '2023-11-15'),
+('Savory Haven', 'Danmarksgade 42', '9000', 'Aalborg', '+45 98 7654 3210', 'www.labellavita-aalborg.dk', '1', '2023-11-14', '2023-11-14'),
+('Culinary Oasis', 'Danmarksgade 42', '9000', 'Aalborg', '+45 98 7654 3210', 'www.labellavita-aalborg.dk', '1', '2023-11-14', '2023-11-14'),
+('Gourmet Junction', 'Danmarksgade 42', '9000', 'Aalborg', '+45 98 7654 3210', 'www.labellavita-aalborg.dk', '1', '2023-11-14', '2023-11-14'),
+('Flavor Fusion', 'Danmarksgade 42', '9000', 'Aalborg', '+45 98 7654 3210', 'www.labellavita-aalborg.dk', '1', '2023-11-14', '2023-11-14'),
+('Epicurean Delight', 'Danmarksgade 42', '9000', 'Aalborg', '+45 98 7654 3210', 'www.labellavita-aalborg.dk', '1', '2023-11-14', '2023-11-14'),
+('Tasty Trails', 'Danmarksgade 42', '9000', 'Aalborg', '+45 98 7654 3210', 'www.labellavita-aalborg.dk', '1', '2023-11-14', '2023-11-14'),
+('Palate Paradise', 'Danmarksgade 42', '9000', 'Aalborg', '+45 98 7654 3210', 'www.labellavita-aalborg.dk', '1', '2023-11-14', '2023-11-14');
+
+-- Creating the FoodItem Table
+CREATE TABLE FoodCategory (
+    FoodItemCategoryID INT AUTO_INCREMENT PRIMARY KEY,
+    FoodItemDescription VARCHAR(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO FoodCategory (FoodItemDescription) VALUES 
+('Mexikansk'), 
+('Italiansk'), 
+('Kinesisk'), 
+('Japansk'), 
+('Indisk'), 
+('Fransk'), 
+('Amerikansk'), 
+('Thai'), 
+('Dansk'), 
+('Vietnamesisk');
+
+-- Creating the FoodItem Table
+CREATE TABLE FoodItem (
+    FoodItemID INT AUTO_INCREMENT PRIMARY KEY,
+    FoodItemName VARCHAR(100) NOT NULL,
+    Price DECIMAL(18,2),
+    LinkToFoodImage VARCHAR(255),
+    FoodsupplierID INT,
+    AddDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+    ModifiedDate DATETIME ON UPDATE CURRENT_TIMESTAMP,
+    FoodItemCategoryID int,
+    FOREIGN KEY (FoodsupplierID) REFERENCES Foodsupplier(FoodsupplierID),
+    FOREIGN KEY (FoodItemCategoryID) REFERENCES FoodCategory(FoodItemCategoryID)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO FoodItem (FoodItemName, Price, LinkToFoodImage, FoodSupplierID, AddDate, ModifiedDate, FoodItemCategoryID)
+VALUES
+('Cheeseburger med Pommes Frites', 85, 'https://example.com/cheeseburger_med_pommes_frites.jpg', 4, '2023-01-15', '2023-01-15','7'),
+    ('Hotdog med Løg og Sennep', 50, 'https://example.com/hotdog_med_loeg_og_sennep.jpg', 4, '2023-01-15', '2023-01-15','7'),
+    ('BBQ Spareribs', 110, 'https://example.com/bbq_spareribs.jpg', 4, '2023-01-15', '2023-01-15','7'),
+    ('Caesar Salat med Kylling', 75, 'https://example.com/caesar_salat_med_kylling.jpg', 4, '2023-01-15', '2023-01-15','7'),
+    ('Macaroni and Cheese', 65, 'https://example.com/macaroni_and_cheese.jpg', 4, '2023-01-15', '2023-01-15','7'),
+    ('Buffalo Wings med Blue Cheese Dip', 90, 'https://example.com/buffalo_wings.jpg', 4, '2023-01-15', '2023-01-15','7'),
+    ('Philly Cheesesteak Sandwich', 95, 'https://example.com/philly_cheesesteak.jpg', 4, '2023-01-15', '2023-01-15','7'),
+    ('Clam Chowder Suppe', 55, 'https://example.com/clam_chowder.jpg', 4, '2023-01-15', '2023-01-15','7'),
+    ('Pandekager med Ahornsirup', 40, 'https://example.com/pancakes_med_ahornsirup.jpg', 4, '2023-01-15', '2023-01-15','7'),
+    ('Æble Pie med Vaniljeis', 60, 'https://example.com/apple_pie.jpg', 4, '2023-01-15', '2023-01-15','7'),
+    ('Pho Bo (Oksekødssuppe)', 85, 'https://example.com/pho_bo.jpg', 5, '2023-01-15', '2023-01-15','10'),
+    ('Banh Mi Sandwich', 60, 'https://example.com/banh_mi_sandwich.jpg', 5, '2023-01-15', '2023-01-15','10'),
+    ('Goi Cuon (Forårsruller)', 50, 'https://example.com/goi_cuon.jpg', 5, '2023-01-15', '2023-01-15','10'),
+    ('Bun Cha (Grillet Svinekød med Nudler)', 75, 'https://example.com/bun_cha.jpg', 5, '2023-01-15', '2023-01-15','10'),
+    ('Com Ga (Stegt Kylling med Ris)', 90, 'https://example.com/com_ga.jpg', 5, '2023-01-15', '2023-01-15','10'),
+    ('Bun Thit Nuong (Grillet Oksekød med Nudler)', 80, 'https://example.com/bun_thit_nuong.jpg', 5, '2023-01-15', '2023-01-15','10'),
+    ('Ca Kho To (Simret Fisk i Lerfad)', 110, 'https://example.com/ca_kho_to.jpg', 5, '2023-01-15', '2023-01-15','10'),
+    ('Xoi Ga (Sticky Rice med Kylling)', 65, 'https://example.com/xoi_ga.jpg', 5, '2023-01-15', '2023-01-15','10'),
+    ('Banh Xeo (Vietnamesisk Pandekage)', 70, 'https://example.com/banh_xeo.jpg', 5, '2023-01-15', '2023-01-15','10'),
+    ('Che Ba Mau (Dessert med Tre Lag)', 55, 'https://example.com/che_ba_mau.jpg', 5, '2023-01-15', '2023-01-15','10'),
+    ('Som Tam (Grøn Papaya Salat)', 70, 'https://example.com/som_tam.jpg', 12, '2023-01-15', '2023-01-15','8'),
+    ('Tom Yum Suppe med Rejer', 75, 'https://example.com/tom_yum_suppe_med_rejer.jpg', 12, '2023-01-15', '2023-01-15','8'),
+    ('Massaman Kylling Curry', 100, 'https://example.com/massaman_kylling_curry.jpg', 12, '2023-01-15', '2023-01-15','8'),
+    ('Pad Krapow med Oksekød', 65, 'https://example.com/pad_krapow_med_oksekoed.jpg', 12, '2023-01-15', '2023-01-15','8'),
+    ('Stegte Forårsruller', 40, 'https://example.com/stegte_foraarsruller.jpg', 12, '2023-01-15', '2023-01-15','8'),
+    ('Panang Karry med Fisk', 110, 'https://example.com/panang_karry_med_fisk.jpg', 12, '2023-01-15', '2023-01-15','8'),
+    ('Khao Pad (Stegt Ris)', 50, 'https://example.com/khao_pad.jpg', 12, '2023-01-15', '2023-01-15','8'),
+    ('Mango Sticky Rice Dessert', 45, 'https://example.com/mango_sticky_rice.jpg', 12, '2023-01-15', '2023-01-15','8'),
+    ('Chicken Tikka Masala', 90, 'https://example.com/chicken_tikka_masala.jpg', 11, '2023-01-15', '2023-01-15','5'),
+    ('Saag Paneer', 80, 'https://example.com/saag_paneer.jpg', 11, '2023-01-15', '2023-01-15','5'),
+    ('Vegetarisk Biryani', 75, 'https://example.com/vegetarisk_biryani.jpg', 11, '2023-01-15', '2023-01-15','5'),
+    ('Dal Makhani', 70, 'https://example.com/dal_makhani.jpg', 11, '2023-01-15', '2023-01-15','5'),
+    ('Butter Chicken', 100, 'https://example.com/butter_chicken.jpg', 11, '2023-01-15', '2023-01-15','5'),
+    ('Aloo Gobi', 65, 'https://example.com/aloo_gobi.jpg', 11, '2023-01-15', '2023-01-15','5'),
+    ('Raita med Agurk', 35, 'https://example.com/raita_med_agurk.jpg', 11, '2023-01-15', '2023-01-15','5'),
+    ('Prawn Curry', 110, 'https://example.com/prawn_curry.jpg', 11, '2023-01-15', '2023-01-15','5'),
+    ('Tandoori Naan', 40, 'https://example.com/tandoori_naan.jpg', 11, '2023-01-15', '2023-01-15','5'),
+    ('Mango Lassi', 45, 'https://example.com/mango_lassi.jpg', 11, '2023-01-15', '2023-01-15','5'),
+    ('Stegt Flæsk med Persillesovs', 85, 'https://example.com/stegt_flaesk_med_persillesovs.jpg', 10, '2023-01-15', '2023-01-15','9'),
+    ('Frikadeller med Kartoffelsalat', 70, 'https://example.com/frikadeller_med_kartoffelsalat.jpg', 10, '2023-01-15', '2023-01-15','9'),
+    ('Æbleflæsk', 60, 'https://example.com/aeblerflaesk.jpg', 10, '2023-01-15', '2023-01-15','9'),
+    ('Biksemad med Spejlæg', 75, 'https://example.com/biksemad_med_spejlaeg.jpg', 10, '2023-01-15', '2023-01-15','9'),
+    ('Fiskefilet med Remoulade', 90, 'https://example.com/fiskefilet_med_remoulade.jpg', 10, '2023-01-15', '2023-01-15','9'),
+    ('Kold Kartoffelsalat med Sild', 80, 'https://example.com/kold_kartoffelsalat_med_sild.jpg', 10, '2023-01-15', '2023-01-15','9'),
+    ('Leverpostejmadder med Rødbeder', 55, 'https://example.com/leverpostejmadder_med_roedbeder.jpg', 10, '2023-01-15', '2023-01-15','9'),
+    ('Stjerneskud', 95, 'https://example.com/stjerneskud.jpg', 10, '2023-01-15', '2023-01-15','9'),
+    ('Hakkebøf med Bløde Løg', 110, 'https://example.com/hakkeboef_med_bloede_loeg.jpg', 10, '2023-01-15', '2023-01-15','9'),
+    ('Rødgrød med Fløde', 45, 'https://example.com/roedgroed_med_floede.jpg', 10, '2023-01-15', '2023-01-15','9'),
+    ('Stegt Laks med Citron', 120, 'https://example.com/stegt_laks_med_citron.jpg', 9, '2023-01-15', '2023-01-15','6'),
+    ('Grillet Tunbøf med Sesam', 150, 'https://example.com/grillet_tunboef_med_sesam.jpg', 9, '2023-01-15', '2023-01-15','6'),
+    ('Fiskefrikadeller med Remoulade', 80, 'https://example.com/fiskefrikadeller_med_remoulade.jpg', 9, '2023-01-15', '2023-01-15','9'),
+    ('Rejecocktail', 70, 'https://example.com/rejecocktail.jpg', 9, '2023-01-15', '2023-01-15','9'),
+    ('Fish and Chips', 90, 'https://example.com/fish_and_chips.jpg', 9, '2023-01-15', '2023-01-15','6'),
+    ('Ceviche med Havtaske', 110, 'https://example.com/ceviche_med_havtaske.jpg', 9, '2023-01-15', '2023-01-15','6'),
+    ('Laksesalat med Avocado', 85, 'https://example.com/laksesalat_med_avocado.jpg', 9, '2023-01-15', '2023-01-15','9'),
+    ('Fiskepande med Grøntsager', 130, 'https://example.com/fiskepande_med_groentsager.jpg', 9, '2023-01-15', '2023-01-15','9'),
+    ('Hummersuppe', 160, 'https://example.com/hummersuppe.jpg', 9, '2023-01-15', '2023-01-15','6'),
+    ('Sushi med Frisk Fisk', 180, 'https://example.com/sushi_med_frisk_fisk.jpg', 9, '2023-01-15', '2023-01-15','4'),
+    ('Tacos al Pastor', 80, 'https://example.com/tacos_al_pastor.jpg', 8, '2023-01-15', '2023-01-15','1'),
+    ('Enchiladas Verdes', 90, 'https://example.com/enchiladas_verdes.jpg', 8, '2023-01-15', '2023-01-15','1'),
+    ('Guacamole med tortillachips', 50, 'https://example.com/guacamole_with_chips.jpg', 8, '2023-01-15', '2023-01-15','1'),
+    ('Quesadillas con Salsa', 70, 'https://example.com/quesadillas_con_salsa.jpg', 8, '2023-01-15', '2023-01-15','1'),
+    ('Burrito Supreme XL', 100, 'https://example.com/burrito_supreme.jpg', 8, '2023-01-15', '2023-01-15','1'),
+    ('Burrito', 110, 'https://example.com/burrito.jpg', 8, '2023-01-15', '2023-01-15','1'),
+    ('Suppe med Tortilla', 60, 'https://example.com/sopa_de_tortilla.jpg', 8, '2023-01-15', '2023-01-15','1'),
+    ('Margarita Cocktail', 120, 'https://example.com/margarita_cocktail.jpg', 8, '2023-01-15', '2023-01-15','1'),
+    ('Taco med valgfri fyld', 85, 'https://taco.med.fyld.jpg', 8, '2023-01-15', '2023-01-15','1'),
+    ('Græskar tærte', 40, 'https://example.com/græskartærte.jpg', 8, '2023-01-15', '2023-01-15','1'),
+    ('Sushi Combo', 120, 'https://example.com/sushi_combo.jpg', 7, '2023-01-15', '2023-01-15','4'),
+    ('Ramen Bowl', 80, 'https://example.com/ramen_bowl.jpg', 7, '2023-01-15', '2023-01-15','4'),
+    ('Tempura Plate', 150, 'https://example.com/tempura_platter.jpg', 7, '2023-01-15', '2023-01-15','4'),
+    ('Miso Suppe', 40, 'https://example.com/miso_soup.jpg', 7, '2023-01-15', '2023-01-15','4'),
+    ('Teriyaki Chicken', 110, 'https://example.com/teriyaki_chicken.jpg', 7, '2023-01-15', '2023-01-15','4'),
+    ('Edamame bønner', 30, 'https://example.com/edamame.jpg', 7, '2023-01-15', '2023-01-15','4'),
+    ('Sashimi Plate', 180, 'https://example.com/sashimi_platter.jpg', 7, '2023-01-15', '2023-01-15','4'),
+    ('Green Tea is', 60, 'https://example.com/green_tea_ice_cream.jpg', 7, '2023-01-15', '2023-01-15','4'),
+    ('Vegetarisk Gyoza', 70, 'https://example.com/vegetable_gyoza.jpg', 7, '2023-01-15', '2023-01-15','4'),
+    ('Chawanmushi', 50, 'https://example.com/chawanmushi.jpg', 7, '2023-01-15', '2023-01-15','4'),
+('Margherita Pizza', 89.95, 'https://example.com/margherita.jpg', 6, '2023-11-14', '2023-11-14','2'),
+('Pasta Carbonara', 79.50, 'https://example.com/carbonara.jpg', 6, '2023-11-14', '2023-11-14','2'),
+('Bruschetta al Pomodoro', 34.99, 'https://example.com/bruschetta.jpg', 6, '2023-11-14', '2023-11-14','2'),
+('Tiramisu', 49.95, 'https://example.com/tiramisu.jpg', 6, '2023-11-14', '2023-11-14','2'),
+('Ravioli di Spinaci', 89.00, 'https://example.com/ravioli.jpg', 6, '2023-11-14', '2023-11-14','2');
+
+-- Creating the RatingValueTable
+CREATE TABLE RatingValueTable (
+    RatingValue INT,
+    PRIMARY KEY (RatingValue)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Inserting values into RatingValueTable
+insert into RatingValueTable 
+values(1),(2),(3),(4),(5);
+
+-- Creating the Rating Table 
+CREATE TABLE craveconnect.Rating (
+    RatingID INT AUTO_INCREMENT PRIMARY KEY,
+    UserId int, 
+    RatingValue INT,
+    Comment VARCHAR(100),
+    FoodItemID INT,
+    AddDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+    ModifiedDate DATETIME ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (FoodItemID) REFERENCES FoodItem(FoodItemID),
+    FOREIGN KEY (UserId) REFERENCES User(UserId),
+    FOREIGN KEY (RatingValue) REFERENCES RatingValueTable(RatingValue)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+
+INSERT INTO craveconnect.Rating (UserID, RatingValue, Comment, FoodItemID, AddDate, ModifiedDate)
+VALUES
+    (1, 4, 'Good taste!', 1, '2023-11-26', '2023-11-27'),
+    (2, 3, 'Average', 10, '2023-11-26', '2023-11-27'),
+    (3, 5, 'Amazing!', 12, '2023-11-26', '2023-11-27'),
+    (4, 2, 'Not satisfied', 2, '2023-11-26', '2023-11-27'),
+    (5, 5, 'Delicious', 3, '2023-11-26', '2023-11-27'),
+    (6, 1, 'Terrible', 2, '2023-11-26', '2023-11-27'),
+    (7, 4, 'Really enjoyed it', 5, '2023-11-26', '2023-11-27'),
+    (8, 5, 'Top-notch!', 9, '2023-11-26', '2023-11-27'),
+    (9, 3, 'Could be better', 2, '2023-11-26', '2023-11-27'),
+    (10, 4, 'Nice flavor', 1, '2023-11-26', '2023-11-27');
+
+    -- Creating the Ingredients Table
+CREATE TABLE Ingredients (
+    IngredientID INT AUTO_INCREMENT PRIMARY KEY,
+    IngredientName VARCHAR(100) NOT NULL,
+    AddDate DATETIME DEFAULT CURRENT_TIMESTAMP,
+    ModifiedDate DATETIME ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO Ingredients (IngredientName) VALUES
+('Tomat'),
+('Kylling'),
+('Oksekød'),
+('Salat'),
+('Ris'),
+('Sorte bønner'),
+('Cheddar Ost'),
+('Sour Cream'),
+('Tortilla'),
+('Pasta'),
+('Basilikum'),
+('Oregano'),
+('Mozzarella Ost'),
+('Parmesan Ost'),
+('Marinara sovs'),
+('Sushi Ris'),
+('Nori'),
+('Laks'),
+('Tun'),
+('Wasabi'),
+('Curry pulver'),
+('Korriander'),
+('Ingerfær'),
+('Hvidløg'),
+('Peberfrugt'),
+('Fisk'),
+('Oksekød'),
+('Svinekød'),
+('Kartofler'),
+('Pasta'),
+('Ælbe'),
+('Pære'),
+('Honning'),
+('Nødder'),
+('Rejer'),
+('Kokosmælk'),
+('Lime'),
+('Mango'),
+('Agurk'),
+('Creme Fraice'),
+('Æg'),
+('Brød'),
+('Ketchup'),
+('Mayonaise'),
+('Remolade'),
+('Løg'),
+('Pølser'),
+('Sennep'),
+('BBQ'),
+('Ristede løg'),
+('Persille');
+
+-- Junction table for FoodItemIngredients, 
+CREATE TABLE craveconnect.FoodItemIngredients (
+    FoodItemID INT,
+    IngredientID INT,
+    PRIMARY KEY (FoodItemID, IngredientID),
+    FOREIGN KEY (FoodItemID) REFERENCES FoodItem(FoodItemID) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (IngredientID) REFERENCES Ingredients(IngredientID) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO FoodItemIngredients (FoodItemID, IngredientID) VALUES
+(1,1),
+(1,3),
+(1,4),
+(1,7),
+(4,1),
+(4,4),
+(4,11),
+(4,34);
+
+
+
+
+
