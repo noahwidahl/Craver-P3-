@@ -16,6 +16,4 @@
         Today is: <%= new java.util.Date().toString()%>
         <a href="read">View the FoodItems</a>
     </body>
-</html>
-
-
+</html>´

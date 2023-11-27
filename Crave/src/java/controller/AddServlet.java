@@ -1,6 +1,5 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
+ * Servlet class to handle adding new FoodItem records.
  */
 package controller;
 
@@ -14,20 +13,13 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
-import model.Crave;
+import model.FoodItem;
 
-
-
-/**
- *
- * @author sorennygaardjensen
- */
 @WebServlet(name = "AddServlet", urlPatterns = {"/addFoodItem"})
 public class AddServlet extends HttpServlet {
 
     /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
+     * Processes requests for both HTTP GET and POST methods.
      *
      * @param request servlet request
      * @param response servlet response
@@ -36,9 +28,10 @@ public class AddServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // Setting the content type of the servlet response to HTML
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
+            // Writing HTML content to the response
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
@@ -51,9 +44,8 @@ public class AddServlet extends HttpServlet {
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
-     * Handles the HTTP <code>GET</code> method.
+     * Handles the HTTP GET method by redirecting to doPost method.
      *
      * @param request servlet request
      * @param response servlet response
@@ -63,12 +55,11 @@ public class AddServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-            doPost (request, response);
+        doPost(request, response);
     }
 
     /**
-     * Handles the HTTP <code>POST</code> method.
+     * Handles the HTTP POST method to add a new FoodItem.
      *
      * @param request servlet request
      * @param response servlet response
@@ -78,33 +69,24 @@ public class AddServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-                // Get the data
-                 String name = request.getParameter("FoodItemName");
-                 BigDecimal price = new BigDecimal(request.getParameter("Price"));
+        // Retrieving form data from the request
+        String name = request.getParameter("FoodItemName");
+        BigDecimal price = new BigDecimal(request.getParameter("Price"));
 
-                // Set up a Crave object
-                Crave FoodItem = new Crave();
-                FoodItem.setFoodItemName(name); // Use the variable 'name'
-                FoodItem.setPrice(price); // Use the variable 'price'
+        // Creating a FoodItem object and setting its properties
+        FoodItem FoodItem = new FoodItem();
+        FoodItem.setFoodItemName(name);
+        FoodItem.setPrice(price);
 
-        
-        
-
-                //set up an AddQuery object
+        // Creating an AddQuery object to handle database insertion
+        AddQuery aq = new AddQuery();
+        // Adding the FoodItem to the database
+        aq.doAdd(FoodItem);
                 
-                AddQuery aq = new AddQuery();
-        
-                //pass the FoodItem to AddQuery to add to the database
-                
-                aq.doAdd(FoodItem);
-                
-                //pass exeution control to Readservlet 
-                String url ="/read";
-                
-                RequestDispatcher dispatcher = request.getRequestDispatcher(url);
-                dispatcher.forward (request, response);
-                
+        // Redirecting to the ReadServlet to display all FoodItems
+        String url = "/read";
+        RequestDispatcher dispatcher = request.getRequestDispatcher(url);
+        dispatcher.forward(request, response);
     }
 
     /**
@@ -114,7 +96,7 @@ public class AddServlet extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
+        return "Short description"; // Description of this servlet
+    }
+    // </editor-fold>
 }

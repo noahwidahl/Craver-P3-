@@ -1,6 +1,5 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
+ * Servlet class to handle read requests for displaying FoodItem records.
  */
 package controller;
 
@@ -14,16 +13,11 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-/**
- *
- * @author sorennygaardjensen
- */
 @WebServlet(name = "ReadServlet", urlPatterns = {"/read"})
 public class ReadServlet extends HttpServlet {
 
     /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
+     * Processes requests for both HTTP GET and POST methods.
      *
      * @param request servlet request
      * @param response servlet response
@@ -32,9 +26,10 @@ public class ReadServlet extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // Setting the content type of the servlet response to HTML
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
+            // Writing HTML content to the response
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
@@ -47,9 +42,8 @@ public class ReadServlet extends HttpServlet {
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
-     * Handles the HTTP <code>GET</code> method.
+     * Handles the HTTP GET method by redirecting to doPost method.
      *
      * @param request servlet request
      * @param response servlet response
@@ -59,14 +53,11 @@ public class ReadServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        
-                doPost(request, response);
-                
+        doPost(request, response);
     }
 
     /**
-     * Handles the HTTP <code>POST</code> method.
+     * Handles the HTTP POST method for reading and displaying FoodItem records.
      *
      * @param request servlet request
      * @param response servlet response
@@ -76,21 +67,22 @@ public class ReadServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // Creating a ReadQuery helper object
+        ReadQuery rq = new ReadQuery();
         
-            //Create a ReadQuery helper object
-            ReadQuery rq =new ReadQuery();
-            
-            
-            //Get the HTML table from the ReadQuery object
-             rq.doRead();
-            String table = rq.getHTMLTable();
-            
-            // pass execution control to read.jsp along with the table
-            request.setAttribute("table", table);
-            String url ="/read.jsp";
-            
-            RequestDispatcher dispatcher = request.getRequestDispatcher(url);
-            dispatcher.forward(request,response);
+        // Executing the read operation
+        rq.doRead();
+        // Getting the HTML table with the FoodItem data
+        String table = rq.getHTMLTable();
+        
+        // Setting the HTML table as a request attribute
+        request.setAttribute("table", table);
+        // URL of the JSP page to display the data
+        String url = "/read.jsp";
+        
+        // Dispatching the request to the JSP page
+        RequestDispatcher dispatcher = request.getRequestDispatcher(url);
+        dispatcher.forward(request, response);
     }
 
     /**
@@ -100,7 +92,7 @@ public class ReadServlet extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
+        return "Short description"; // Description of this servlet
+    }
+    // </editor-fold>
 }

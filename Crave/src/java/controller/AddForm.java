@@ -1,9 +1,7 @@
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/JSP_Servlet/Servlet.java to edit this template
+ * Servlet class to handle Add Form requests for Food Items.
  */
 package controller;
-
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -14,16 +12,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.RequestDispatcher;
 
-/**
- *
- * @author sorennygaardjensen
- */
 @WebServlet(name = "AddForm", urlPatterns = {"/add"})
 public class AddForm extends HttpServlet {
 
     /**
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
-     * methods.
+     * Processes requests for both HTTP GET and POST methods.
      *
      * @param request servlet request
      * @param response servlet response
@@ -32,9 +25,10 @@ public class AddForm extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // Setting the content type of the servlet response to HTML
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-            /* TODO output your page here. You may use following sample code. */
+            // Writing HTML content to the response
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
@@ -47,9 +41,8 @@ public class AddForm extends HttpServlet {
         }
     }
 
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
-     * Handles the HTTP <code>GET</code> method.
+     * Handles the HTTP GET method.
      *
      * @param request servlet request
      * @param response servlet response
@@ -59,12 +52,12 @@ public class AddForm extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-            doPost(request,response);
+        // Redirecting GET request to doPost method
+        doPost(request, response);
     }
 
     /**
-     * Handles the HTTP <code>POST</code> method.
+     * Handles the HTTP POST method.
      *
      * @param request servlet request
      * @param response servlet response
@@ -74,12 +67,12 @@ public class AddForm extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // URL of the JSP page to display
+        String url = "/add.jsp";
         
-        
-            String url = "/add.jsp";
-            
-             RequestDispatcher dispatcher = request.getRequestDispatcher(url);
-            dispatcher.forward(request,response);
+        // Dispatching the request to the JSP page
+        RequestDispatcher dispatcher = request.getRequestDispatcher(url);
+        dispatcher.forward(request, response);
     }
 
     /**
@@ -89,7 +82,7 @@ public class AddForm extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
-
+        return "Short description"; // Description of this servlet
+    }
+    // </editor-fold>
 }
