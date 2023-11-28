@@ -7,6 +7,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
     </head>
+<<<<<<< HEAD
     <button type="button" onclick="alert('Button Clicked!')">Click me</button>
     <% String table = (String) request.getAttribute("table"); %>
     
@@ -18,6 +19,14 @@
     
     <body>
         <h1>Hello World2!</h1>
+=======
+    
+    <% String table = (String) request.getAttribute("table"); %>
+    
+    
+    <body>
+        <h1>Hello World!</h1>
+>>>>>>> origin/Udkast-Jakob
         <%= table %>
     </body>
 </html>
