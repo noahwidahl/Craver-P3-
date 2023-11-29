@@ -9,7 +9,7 @@
 <body>
     <button type="button" onclick="alert('Button Clicked!')">Click me</button>
     
-    <form action="TableUpdateServlet" method="post">
+    <form action="read" method="post">
         <label for="newValue">New Value:</label>
         <input type="text" id="newValueId" name="newValueName">
         <button type="submit">Update Table</button>
