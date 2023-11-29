@@ -90,7 +90,17 @@ public class Read extends HttpServlet {
             ReadQuery readQuery = new ReadQuery();
             //Get the HTML table from the ReadQuery object
             
-            results = readQuery.ReadTableData("SELECT * FROM craveconnect.Foodsupplier;");
+            // Get the new value from the form
+            String newValue = request.getParameter("newValueName");
+            String query = "";
+            
+            if (newValue == null || newValue == "") {
+                query = "SELECT * FROM craveconnect.Foodsupplier;";
+            } else {
+                query = "SELECT * FROM craveconnect.FoodItem where FoodsupplierID = "+newValue+";"; // Code to be executed if the boolean expression is false
+            }
+            
+            results = readQuery.ReadTableData(query);
             
             String table = readQuery.outputResultAsHtmlTable(results);
             
