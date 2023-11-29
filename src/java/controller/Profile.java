@@ -12,22 +12,13 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import dbHelpers.ReadQuery;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-
 
 /**
  *
  * @author Bokaj
  */
-@WebServlet(name = "Read", urlPatterns = {"/read"})
-public class Read extends HttpServlet {
-
-    private ResultSet results;
+@WebServlet(name = "Profile", urlPatterns = {"/profile"})
+public class Profile extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -46,10 +37,10 @@ public class Read extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet Read</title>");            
+            out.println("<title>Servlet Profile</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet Read at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet Profile at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -67,8 +58,7 @@ public class Read extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-            
-            // Pass execution on to doPost
+        // Pass execution on to doPost
                 doPost(request, response);
     }
 
@@ -83,41 +73,18 @@ public class Read extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-            
 
-        try {
-            //Create a ReadQuery helper object
-            ReadQuery readQuery = new ReadQuery();
-            //Get the HTML table from the ReadQuery object
-            
-            // Get the new value from the form
-            String newValue = request.getParameter("newValueName");
-            String query = "";
-            
-            if (newValue == null || newValue == "") {
-                query = "SELECT * FROM craveconnect.Foodsupplier;";
-            } else {
-                query = "SELECT * FROM craveconnect.FoodItem where FoodsupplierID = "+newValue+";"; // Code to be executed if the boolean expression is false
-            }
-            
-            results = readQuery.ReadTableData(query);
-            
-            String table = readQuery.outputResultAsHtmlTable(results);
-            
-            //Pass execution control to read.jsp along with the table.
-            request.setAttribute("table", table);
-            String url ="/read.jsp";
+
+            String url ="/profile.jsp";
             
             RequestDispatcher dispatcher = request.getRequestDispatcher(url);
             dispatcher.forward(request, response);
         
+
+    
+        
         
         processRequest(request, response);
-        } catch (SQLException ex) {
-            Logger.getLogger(Read.class.getName()).log(Level.SEVERE, null, ex);
-        }
-            
-            
     }
 
     /**
@@ -131,5 +98,3 @@ public class Read extends HttpServlet {
     }// </editor-fold>
 
 }
-
-

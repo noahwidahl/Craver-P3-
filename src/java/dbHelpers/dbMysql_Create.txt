@@ -45,6 +45,15 @@ CREATE TABLE FoodSupplierStates (
 
 INSERT INTO FoodSupplierStates (StateDescription) VALUES ('Active'), ('Inactive'), ('Pending');
 
+CREATE TABLE craveconnect.FoodSupplierCatagory(
+	 FoodSupplierCategoryID INT AUTO_INCREMENT PRIMARY KEY,
+     FoodSupplierCategoryDescription VARCHAR(100) NOT NULL
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO craveconnect.FoodSupplierCatagory (FoodSupplierCategoryDescription) 
+VALUES ('Restaurant')
+, ('Recipe site');
+
 -- Creating the Foodsupplier Table
 CREATE TABLE craveconnect.Foodsupplier (
     FoodsupplierID INT AUTO_INCREMENT PRIMARY KEY,
@@ -58,27 +67,30 @@ CREATE TABLE craveconnect.Foodsupplier (
     AddDate DATETIME DEFAULT CURRENT_TIMESTAMP,
     ModifiedDate DATETIME ON UPDATE CURRENT_TIMESTAMP,
     Latitude DECIMAL(10, 8) DEFAULT NULL,
-    Longitude DECIMAL(11, 8) DEFAULT NULL,
-    FOREIGN KEY (StateID) REFERENCES FoodSupplierStates(StateID)
+    Longitude DECIMAL(10, 8) DEFAULT NULL,
+    FoodSupplierCategoryID INT,
+    FOREIGN KEY (StateID) REFERENCES FoodSupplierStates(StateID),
+    FOREIGN KEY (FoodSupplierCategoryID) REFERENCES FoodSupplierCatagory(FoodSupplierCategoryID),
+    CONSTRAINT uc_FoodSupplier UNIQUE (FoodsupplierName, Address, PostNr, City)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO Foodsupplier (FoodsupplierName, Address, PostNr, City, PhoneNumber, ExternalLink, StateID, AddDate, ModifiedDate,Latitude,Longitude)
+INSERT INTO Foodsupplier (FoodsupplierName, Address, PostNr, City, PhoneNumber, ExternalLink, StateID, AddDate, ModifiedDate,Latitude,Longitude, FoodSupplierCategoryID)
 VALUES 
-('The American House', 'Borgergade 32', '9000', 'Aalborg', '+45 98 9813 4591', 'www.americanhouse', '1', '2023-11-14', '2023-11-14', 57.051860, 9.913610),
-('Hanoi House', 'Borgergade 4', '9000', 'Aalborg', '+45 98 9572 3848', 'www.hanoi-house', '1', '2023-11-14', '2023-11-14', 57.051150, 9.918010),
-('Thai to go', 'Boulevarden 14', '9000', 'Aalborg', '+45 98 8944 8836', 'www.thai-to-go.dk', '1', '2023-11-14', '2023-11-14', 57.046610, 9.919220),
-('Taste of India', 'Boulevarden 30', '9000', 'Aalborg', '+45 98 6612 9982', 'www.tasteofindia.dk', '1', '2023-11-14', '2023-11-14',57.045020, 9.918080),
-('Den store gode danske', 'Algade 39', '9000', 'Aalborg', '+45 98 4782 1004', 'www.Denstoregodedanske.dk', '1', '2023-11-14', '2023-11-14', 57.047570, 9.919540),
-('Jakobs fisk', 'Myrdalstræde 279', '9220', 'Aalborg Øst', '+45 98 6893 4433', 'www.Jakobsfisk.dk', '1', '2023-11-14', '2023-11-14', 57.014431, 10.12345678),
-('Dos Caminos', 'Fredericagade 21', '9000', 'Aalborg', '+45 98 8877 1102', 'www.Dos.Caminos.dk', '1', '2023-11-14', '2023-11-14', 57.051450, 9.904340),
-('Japani', 'Sjællandsgade 83', '9000', 'Aalborg', '+45 98 6212 3830', 'www.japani-DK-aalborg.dk', '1', '2023-11-15', '2023-11-15', 57.044100, 9.944410),
-('Savory Haven', 'Danmarksgade 42', '9000', 'Aalborg', '+45 98 7654 3210', 'www.labellavita-aalborg.dk', '1', '2023-11-14', '2023-11-14', 57.045490, 9.922190),
-('Culinary Oasis', 'Danmarksgade 42', '9000', 'Aalborg', '+45 98 7654 3210', 'www.labellavita-aalborg.dk', '1', '2023-11-14', '2023-11-14',null,null),
-('Gourmet Junction', 'Danmarksgade 42', '9000', 'Aalborg', '+45 98 7654 3210', 'www.labellavita-aalborg.dk', '1', '2023-11-14', '2023-11-14',null,null),
-('Flavor Fusion', 'Danmarksgade 42', '9000', 'Aalborg', '+45 98 7654 3210', 'www.labellavita-aalborg.dk', '1', '2023-11-14', '2023-11-14',null,null),
-('Epicurean Delight', 'Danmarksgade 42', '9000', 'Aalborg', '+45 98 7654 3210', 'www.labellavita-aalborg.dk', '1', '2023-11-14', '2023-11-14',null,null),
-('Tasty Trails', 'Danmarksgade 42', '9000', 'Aalborg', '+45 98 7654 3210', 'www.labellavita-aalborg.dk', '1', '2023-11-14', '2023-11-14',null,null),
-('Palate Paradise', 'Danmarksgade 42', '9000', 'Aalborg', '+45 98 7654 3210', 'www.labellavita-aalborg.dk', '1', '2023-11-14', '2023-11-14',null,null);
+('The American House', 'Borgergade 32', '9000', 'Aalborg', '+45 98 9813 4591', 'www.americanhouse', '1', '2023-11-14', '2023-11-14', 57.051860, 9.913610, 1),
+('Hanoi House', 'Borgergade 4', '9000', 'Aalborg', '+45 98 9572 3848', 'www.hanoi-house', '1', '2023-11-14', '2023-11-14', 57.051150, 9.918010, 1),
+('Thai to go', 'Boulevarden 14', '9000', 'Aalborg', '+45 98 8944 8836', 'www.thai-to-go.dk', '1', '2023-11-14', '2023-11-14', 57.046610, 9.919220, 1),
+('Taste of India', 'Boulevarden 30', '9000', 'Aalborg', '+45 98 6612 9982', 'www.tasteofindia.dk', '1', '2023-11-14', '2023-11-14',57.045020, 9.918080, 1),
+('Den store gode danske', 'Algade 39', '9000', 'Aalborg', '+45 98 4782 1004', 'www.Denstoregodedanske.dk', '1', '2023-11-14', '2023-11-14', 57.047570, 9.919540, 1),
+('Jakobs fisk', 'Myrdalstræde 279', '9220', 'Aalborg Øst', '+45 98 6893 4433', 'www.Jakobsfisk.dk', '1', '2023-11-14', '2023-11-14', 57.014431, 10.12345678, 1),
+('Dos Caminos', 'Fredericagade 21', '9000', 'Aalborg', '+45 98 8877 1102', 'www.Dos.Caminos.dk', '1', '2023-11-14', '2023-11-14', 57.051450, 9.904340, 1),
+('Japani', 'Sjællandsgade 83', '9000', 'Aalborg', '+45 98 6212 3830', 'www.japani-DK-aalborg.dk', '1', '2023-11-15', '2023-11-15', 57.044100, 9.944410, 1),
+('Savory Haven', 'Danmarksgade 42', '9000', 'Aalborg', '+45 98 7654 3210', 'www.labellavita-aalborg.dk', '1', '2023-11-14', '2023-11-14', 57.045490, 9.922190, 1),
+('Culinary Oasis', Null, Null, Null, Null, 'https://www.valdemarsro.dk/', '1', '2023-11-14', '2023-11-14',null,null, 2),
+('Gourmet Junction', Null, Null, Null, Null, 'https://www.arla.dk/produkter/arla-karolines-kokken/', '1', '2023-11-14', '2023-11-14',null,null, 2),
+('Flavor Fusion', Null, Null, Null, Null, 'https://www.valdemarsro.dk/', '1', '2023-11-14', '2023-11-14',null,null, 2),
+('Epicurean Delight', Null, Null, Null, Null, 'https://www.arla.dk/produkter/arla-karolines-kokken/', '1', '2023-11-14', '2023-11-14',null,null, 2),
+('Tasty Trails', Null, Null, Null, Null, 'https://www.valdemarsro.dk/', '1', '2023-11-14', '2023-11-14',null,null, 2),
+('Palate Paradise', Null, Null, Null, Null, 'https://www.arla.dk/produkter/arla-karolines-kokken/', '1', '2023-11-14', '2023-11-14',null,null, 2);
 
 -- Creating the FoodItem Table
 CREATE TABLE FoodCategory (
@@ -246,7 +258,8 @@ CREATE TABLE Ingredients (
     IngredientID INT AUTO_INCREMENT PRIMARY KEY,
     IngredientName VARCHAR(100) NOT NULL,
     AddDate DATETIME DEFAULT CURRENT_TIMESTAMP,
-    ModifiedDate DATETIME ON UPDATE CURRENT_TIMESTAMP
+    ModifiedDate DATETIME ON UPDATE CURRENT_TIMESTAMP,
+    CONSTRAINT uc_IngredientName UNIQUE (IngredientName)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO Ingredients (IngredientName) VALUES
@@ -276,10 +289,8 @@ INSERT INTO Ingredients (IngredientName) VALUES
 ('Hvidløg'),
 ('Peberfrugt'),
 ('Fisk'),
-('Oksekød'),
 ('Svinekød'),
 ('Kartofler'),
-('Pasta'),
 ('Ælbe'),
 ('Pære'),
 ('Honning'),
