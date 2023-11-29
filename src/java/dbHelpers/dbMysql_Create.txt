@@ -57,26 +57,28 @@ CREATE TABLE craveconnect.Foodsupplier (
     StateID INT,
     AddDate DATETIME DEFAULT CURRENT_TIMESTAMP,
     ModifiedDate DATETIME ON UPDATE CURRENT_TIMESTAMP,
+    Latitude DECIMAL(10, 8) DEFAULT NULL,
+    Longitude DECIMAL(11, 8) DEFAULT NULL,
     FOREIGN KEY (StateID) REFERENCES FoodSupplierStates(StateID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO Foodsupplier (FoodsupplierName, Address, PostNr, City, PhoneNumber, ExternalLink, StateID, AddDate, ModifiedDate)
+INSERT INTO Foodsupplier (FoodsupplierName, Address, PostNr, City, PhoneNumber, ExternalLink, StateID, AddDate, ModifiedDate,Latitude,Longitude)
 VALUES 
-('The American House', 'Borgergade 32', '9000', 'Aalborg', '+45 98 9813 4591', 'www.americanhouse', '1', '2023-11-14', '2023-11-14'),
-('Hanoi House', 'Borgergade 4', '9000', 'Aalborg', '+45 98 9572 3848', 'www.hanoi-house', '1', '2023-11-14', '2023-11-14'),
-('Thai to go', 'Boulevarden 14', '9000', 'Aalborg', '+45 98 8944 8836', 'www.thai-to-go.dk', '1', '2023-11-14', '2023-11-14'),
-('Taste of India', 'Boulevarden 30', '9000', 'Aalborg', '+45 98 6612 9982', 'www.tasteofindia.dk', '1', '2023-11-14', '2023-11-14'),
-('Den store gode danske', 'Algade 39', '9000', 'Aalborg', '+45 98 4782 1004', 'www.Denstoregodedanske.dk', '1', '2023-11-14', '2023-11-14'),
-('Jakobs fisk', 'Myrdalstræde 279', '9220', 'Aalborg Øst', '+45 98 6893 4433', 'www.Jakobsfisk.dk', '1', '2023-11-14', '2023-11-14'),
-('Dos Caminos', 'Fredericagade 21', '9000', 'Aalborg', '+45 98 8877 1102', 'www.Dos.Caminos.dk', '1', '2023-11-14', '2023-11-14'),
-('Japani', 'Sjællandsgade 83', '9000', 'Aalborg', '+45 98 6212 3830', 'www.japani-DK-aalborg.dk', '1', '2023-11-15', '2023-11-15'),
-('Savory Haven', 'Danmarksgade 42', '9000', 'Aalborg', '+45 98 7654 3210', 'www.labellavita-aalborg.dk', '1', '2023-11-14', '2023-11-14'),
-('Culinary Oasis', 'Danmarksgade 42', '9000', 'Aalborg', '+45 98 7654 3210', 'www.labellavita-aalborg.dk', '1', '2023-11-14', '2023-11-14'),
-('Gourmet Junction', 'Danmarksgade 42', '9000', 'Aalborg', '+45 98 7654 3210', 'www.labellavita-aalborg.dk', '1', '2023-11-14', '2023-11-14'),
-('Flavor Fusion', 'Danmarksgade 42', '9000', 'Aalborg', '+45 98 7654 3210', 'www.labellavita-aalborg.dk', '1', '2023-11-14', '2023-11-14'),
-('Epicurean Delight', 'Danmarksgade 42', '9000', 'Aalborg', '+45 98 7654 3210', 'www.labellavita-aalborg.dk', '1', '2023-11-14', '2023-11-14'),
-('Tasty Trails', 'Danmarksgade 42', '9000', 'Aalborg', '+45 98 7654 3210', 'www.labellavita-aalborg.dk', '1', '2023-11-14', '2023-11-14'),
-('Palate Paradise', 'Danmarksgade 42', '9000', 'Aalborg', '+45 98 7654 3210', 'www.labellavita-aalborg.dk', '1', '2023-11-14', '2023-11-14');
+('The American House', 'Borgergade 32', '9000', 'Aalborg', '+45 98 9813 4591', 'www.americanhouse', '1', '2023-11-14', '2023-11-14', 57.051860, 9.913610),
+('Hanoi House', 'Borgergade 4', '9000', 'Aalborg', '+45 98 9572 3848', 'www.hanoi-house', '1', '2023-11-14', '2023-11-14', 57.051150, 9.918010),
+('Thai to go', 'Boulevarden 14', '9000', 'Aalborg', '+45 98 8944 8836', 'www.thai-to-go.dk', '1', '2023-11-14', '2023-11-14', 57.046610, 9.919220),
+('Taste of India', 'Boulevarden 30', '9000', 'Aalborg', '+45 98 6612 9982', 'www.tasteofindia.dk', '1', '2023-11-14', '2023-11-14',57.045020, 9.918080),
+('Den store gode danske', 'Algade 39', '9000', 'Aalborg', '+45 98 4782 1004', 'www.Denstoregodedanske.dk', '1', '2023-11-14', '2023-11-14', 57.047570, 9.919540),
+('Jakobs fisk', 'Myrdalstræde 279', '9220', 'Aalborg Øst', '+45 98 6893 4433', 'www.Jakobsfisk.dk', '1', '2023-11-14', '2023-11-14', 57.014431, 10.12345678),
+('Dos Caminos', 'Fredericagade 21', '9000', 'Aalborg', '+45 98 8877 1102', 'www.Dos.Caminos.dk', '1', '2023-11-14', '2023-11-14', 57.051450, 9.904340),
+('Japani', 'Sjællandsgade 83', '9000', 'Aalborg', '+45 98 6212 3830', 'www.japani-DK-aalborg.dk', '1', '2023-11-15', '2023-11-15', 57.044100, 9.944410),
+('Savory Haven', 'Danmarksgade 42', '9000', 'Aalborg', '+45 98 7654 3210', 'www.labellavita-aalborg.dk', '1', '2023-11-14', '2023-11-14', 57.045490, 9.922190),
+('Culinary Oasis', 'Danmarksgade 42', '9000', 'Aalborg', '+45 98 7654 3210', 'www.labellavita-aalborg.dk', '1', '2023-11-14', '2023-11-14',null,null),
+('Gourmet Junction', 'Danmarksgade 42', '9000', 'Aalborg', '+45 98 7654 3210', 'www.labellavita-aalborg.dk', '1', '2023-11-14', '2023-11-14',null,null),
+('Flavor Fusion', 'Danmarksgade 42', '9000', 'Aalborg', '+45 98 7654 3210', 'www.labellavita-aalborg.dk', '1', '2023-11-14', '2023-11-14',null,null),
+('Epicurean Delight', 'Danmarksgade 42', '9000', 'Aalborg', '+45 98 7654 3210', 'www.labellavita-aalborg.dk', '1', '2023-11-14', '2023-11-14',null,null),
+('Tasty Trails', 'Danmarksgade 42', '9000', 'Aalborg', '+45 98 7654 3210', 'www.labellavita-aalborg.dk', '1', '2023-11-14', '2023-11-14',null,null),
+('Palate Paradise', 'Danmarksgade 42', '9000', 'Aalborg', '+45 98 7654 3210', 'www.labellavita-aalborg.dk', '1', '2023-11-14', '2023-11-14',null,null);
 
 -- Creating the FoodItem Table
 CREATE TABLE FoodCategory (
@@ -224,12 +226,17 @@ CREATE TABLE craveconnect.Rating (
 INSERT INTO craveconnect.Rating (UserID, RatingValue, Comment, FoodItemID, AddDate, ModifiedDate)
 VALUES
     (1, 4, 'Good taste!', 1, '2023-11-26', '2023-11-27'),
+    (1, 2, 'could be better', 2, '2023-11-26', '2023-11-27'),
+    (1, 1, 'awefull..', 7, '2023-11-26', '2023-11-27'),
+    (1, 5, 'Very Good taste!', 11, '2023-11-26', '2023-11-27'),
     (2, 3, 'Average', 10, '2023-11-26', '2023-11-27'),
     (3, 5, 'Amazing!', 12, '2023-11-26', '2023-11-27'),
     (4, 2, 'Not satisfied', 2, '2023-11-26', '2023-11-27'),
     (5, 5, 'Delicious', 3, '2023-11-26', '2023-11-27'),
     (6, 1, 'Terrible', 2, '2023-11-26', '2023-11-27'),
     (7, 4, 'Really enjoyed it', 5, '2023-11-26', '2023-11-27'),
+    (7, 2, 'meh', 3, '2023-11-26', '2023-11-27'),
+    (7, 1, 'where is the lamb sauce!', 2, '2023-11-26', '2023-11-27'),
     (8, 5, 'Top-notch!', 9, '2023-11-26', '2023-11-27'),
     (9, 3, 'Could be better', 2, '2023-11-26', '2023-11-27'),
     (10, 4, 'Nice flavor', 1, '2023-11-26', '2023-11-27');
