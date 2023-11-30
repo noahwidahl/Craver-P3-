@@ -16,13 +16,19 @@
   </head>
 <body>
     
-  <!-- Menu elements start -->
-  <div id="square1" class="square">
+<!-- Menu elements start -->    
+        <%-- Set the userName attribute --%>
+    <%
+        String userName = "Jakob";
+        request.setAttribute("userName", userName);
+    %>
+    <div id="square1" class="square">
     <nav>    
 
       <a href="${pageContext.request.contextPath}\home.jsp">Home</a>
-      <a href="${pageContext.request.contextPath}\search.jsp">Search</a>
+      <a href="${pageContext.request.contextPath}\searchFoodSupplierProfile.jsp">Search</a>
       <a href="${pageContext.request.contextPath}\profile.jsp">User profile</a> 
+      <div id="user-name-placeholder" class="user-name-placeholder">${userName}</div>
 
     </nav>
   </div>
@@ -35,8 +41,13 @@
 
   <div id="square3" class="square">
   </div>
-   
-  <!-- Menu elements stop -->
+
+    <script>
+        document.getElementById("user-name-placeholder").innerText = "User: ${userName}";
+        
+    </script>
+<!-- Menu elements stop -->
+
   
   <div class="square">
     <p class="title">Hvad Craver du i dag?</p>
