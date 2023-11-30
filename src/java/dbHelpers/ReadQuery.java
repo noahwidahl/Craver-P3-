@@ -10,6 +10,8 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ReadQuery extends CRUD {
     
@@ -22,9 +24,23 @@ public class ReadQuery extends CRUD {
         return preparedStatement.executeQuery();
     }
     //Get specific user
-    public ResultSet ReadUser(String query) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement(query);
+    public ResultSet ReadUser(List<String> parameters, String baseQuery) throws SQLException {
+        
+        // StringBuilder to build the query dynamically
+        StringBuilder queryBuilder = new StringBuilder(baseQuery);
+        
+        // Add WHERE clause if there are conditions
+        if (!parameters.isEmpty()) {
+            queryBuilder.append(" WHERE username = ? AND password = ?");
+        }
+        
+        PreparedStatement preparedStatement = connection.prepareStatement(queryBuilder.toString());
         //Validating to be developed down here
+        
+        // Set parameters based on the values in the ArrayList
+        for (int i = 0; i < parameters.size(); i++) {
+            preparedStatement.setString(i + 1, parameters.get(i));
+        }
         
         return preparedStatement.executeQuery();
     }
@@ -118,4 +134,6 @@ public class ReadQuery extends CRUD {
             e.printStackTrace();
         }
     }
+
+
 }

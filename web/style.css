@@ -12,7 +12,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
         }
 
         nav a {
-          color: red;
+          color: white;
           text-decoration: none;
           padding: 3vh;
           font-size: 2.5vh;
@@ -21,7 +21,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
         
         /*Username placing*/
         .user-name-placeholder {
-            color: white;
+          color: white;
           text-decoration: none;
           padding: 3vh;
           font-size: 2.5vh;
@@ -31,7 +31,7 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
         
         /*Main attributes for square "class"*/
         .square {
-          background-color: red;
+          background-color: white;
           display: flex;
           justify-content: center;
           align-items: center;
@@ -69,17 +69,18 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
         .search-bar {
           width: 70%;
           padding-top: 100px;
-
           border:1px solid #0D0E19;
+          border-color: red; /* Replace 'yourBorderColor' with the color you want */
         }
 
         /*input so you can fill out the search bar*/
         input[type="text"] {
           width: 70%;
           padding: 5px;
-          border: none;
+          /*border: none;*/
           border-radius: 5px 0 0 5px;
           font-size: 20px;
+          border-color: darkblue; /* Replace 'yourBorderColor' with the color you want */
         }
             
         .title {

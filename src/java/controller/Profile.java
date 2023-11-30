@@ -12,6 +12,11 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import dbHelpers.ReadQuery;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -19,7 +24,8 @@ import jakarta.servlet.http.HttpServletResponse;
  */
 @WebServlet(name = "Profile", urlPatterns = {"/profile"})
 public class Profile extends HttpServlet {
-
+    
+    private ResultSet results;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -58,8 +64,7 @@ public class Profile extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Pass execution on to doPost
-                doPost(request, response);
+        processRequest(request, response);
     }
 
     /**
@@ -73,18 +78,34 @@ public class Profile extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
-
+        
+        
+        // Retrieve the username and password from the request parameters
+        String userName = request.getParameter("userName");
+        
+        //System.out.println(userName);
+        
+        ReadQuery readQuery;
+        try {
+            readQuery = new ReadQuery();
+            String query = "SELECT * FROM craveconnect.Rating where UserId = (SELECT UserId FROM craveconnect.User where UserName = 'Jakob');";
+            //System.out.println(query);
+            results = readQuery.ReadTableData(query);
+            //System.out.println(results);
+            String table = readQuery.outputResultAsHtmlTable(results);
+            //System.out.println(table);
+            //Pass execution control to read.jsp along with the table.
+            request.setAttribute("table", table);
             String url ="/profile.jsp";
             
+            
+             // Forward the request to the profile.jsp page
             RequestDispatcher dispatcher = request.getRequestDispatcher(url);
             dispatcher.forward(request, response);
+        } catch (SQLException ex) {
+            Logger.getLogger(Profile.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
-
-    
-        
-        
-        processRequest(request, response);
     }
 
     /**
