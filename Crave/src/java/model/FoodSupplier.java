@@ -1,12 +1,10 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 public class FoodSupplier {
+    // Fields corresponding to Foodsupplier table columns
     private int foodSupplierID;
     private String foodSupplierName;
     private String address;
@@ -17,15 +15,15 @@ public class FoodSupplier {
     private int stateID;
     private Date addDate;
     private Date modifiedDate;
+    private BigDecimal latitude;
+    private BigDecimal longitude;
     private int foodSupplierCategoryID;
 
     // Constructors
-    public FoodSupplier() {
-    }
-
-    public FoodSupplier(int foodSupplierID, String foodSupplierName, String address, String postNr, 
-                        String city, String phoneNumber, String externalLink, int stateID, 
-                        Date addDate, Date modifiedDate, int foodSupplierCategoryID) {
+    public FoodSupplier(int foodSupplierID, String foodSupplierName, String address, String postNr,
+                        String city, String phoneNumber, String externalLink, int stateID,
+                        Date addDate, Date modifiedDate, BigDecimal latitude, BigDecimal longitude,
+                        int foodSupplierCategoryID) {
         this.foodSupplierID = foodSupplierID;
         this.foodSupplierName = foodSupplierName;
         this.address = address;
@@ -36,8 +34,17 @@ public class FoodSupplier {
         this.stateID = stateID;
         this.addDate = addDate;
         this.modifiedDate = modifiedDate;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.foodSupplierCategoryID = foodSupplierCategoryID;
     }
+
+    // Getters and Setters for each field
+    // ...
+    // Implement getters and setters for all the fields
+    // ...
+
+
 
     // Getters
     public int getFoodSupplierID() {

@@ -1,28 +1,22 @@
-/*
- * Class representing a Food Item in a system (e.g., a restaurant menu, inventory system).
- */
 package model;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
 public class FoodItem {
-    // Fields (attributes) of the FoodItem class
-    private int foodItemID;        // Unique identifier for a food item
-    private String foodItemName;   // Name of the food item
-    private BigDecimal price;      // Price of the food item using BigDecimal for precision
-    private String linkToFoodImage;// URL link to an image of the food item
-    private int foodSupplierID;    // Identifier for the supplier of the food item
-    private Date addDate;          // Date the item was added to the system
-    private Date modifiedDate;     // Date the item was last modified
+    // Fields (attributes)
+    private int foodItemID;
+    private String foodItemName;
+    private BigDecimal price;
+    private String linkToFoodImage;
+    private int foodSupplierID;
+    private Date addDate;
+    private Date modifiedDate;
 
-    // Default constructor - initializes a new instance of FoodItem with default values
-    public FoodItem() {
-    }
-
-    // Parametrized constructor - initializes a new instance of FoodItem with specified values
-    public FoodItem(int foodItemID, String foodItemName, BigDecimal price, String linkToFoodImage, 
-                    String ingredients, int foodSupplierID, Date addDate, Date modifiedDate) {
+    // Parametrized constructor for existing FoodItem
+    public FoodItem(int foodItemID, String foodItemName, BigDecimal price, 
+                    String linkToFoodImage, int foodSupplierID, Date addDate, 
+                    Date modifiedDate) {
         this.foodItemID = foodItemID;
         this.foodItemName = foodItemName;
         this.price = price;
@@ -31,6 +25,18 @@ public class FoodItem {
         this.addDate = addDate;
         this.modifiedDate = modifiedDate;
     }
+
+    // Constructor for adding a new FoodItem
+    public FoodItem(String foodItemName, BigDecimal price, int foodSupplierID) {
+        this.foodItemName = foodItemName;
+        this.price = price;
+        this.foodSupplierID = foodSupplierID;
+        // Initialize other fields if needed
+        this.addDate = new Date(); // setting addDate to current date
+        this.modifiedDate = new Date(); // setting modifiedDate to current date
+        // linkToFoodImage and foodItemID can be set based on your application logic
+    }
+
 
     // Getters - methods that return the value of each field
     public int getFoodItemID() {
@@ -90,7 +96,7 @@ public class FoodItem {
         this.modifiedDate = modifiedDate;
     }
 
-    // toString method - provides a string representation of the FoodItem object, useful for debugging
+    // toString method
     @Override
     public String toString() {
         return "FoodItem{" +

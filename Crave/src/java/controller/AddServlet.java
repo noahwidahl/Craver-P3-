@@ -1,102 +1,72 @@
-/*
- * Servlet class to handle adding new FoodItem records.
- */
 package controller;
 
 import dbHelpers.AddQuery;
 import java.io.IOException;
-import java.io.PrintWriter;
-import jakarta.servlet.RequestDispatcher;
+import java.math.BigDecimal;
+import model.FoodItem;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.math.BigDecimal;
-import model.FoodItem;
+import java.sql.SQLException;
 
 @WebServlet(name = "AddServlet", urlPatterns = {"/addFoodItem"})
 public class AddServlet extends HttpServlet {
 
-    /**
-     * Processes requests for both HTTP GET and POST methods.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        // Setting the content type of the servlet response to HTML
-        response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-            // Writing HTML content to the response
-            out.println("<!DOCTYPE html>");
-            out.println("<html>");
-            out.println("<head>");
-            out.println("<title>Servlet AddServlet</title>");            
-            out.println("</head>");
-            out.println("<body>");
-            out.println("<h1>Servlet AddServlet at " + request.getContextPath() + "</h1>");
-            out.println("</body>");
-            out.println("</html>");
-        }
-    }
-
-    /**
-     * Handles the HTTP GET method by redirecting to doPost method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        doPost(request, response);
-    }
-
-    /**
-     * Handles the HTTP POST method to add a new FoodItem.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Retrieving form data from the request
-        String name = request.getParameter("FoodItemName");
-        BigDecimal price = new BigDecimal(request.getParameter("Price"));
+        try {
+            String name = request.getParameter("FoodItemName");
+            String priceStr = request.getParameter("Price");
+            String supplierIdStr = request.getParameter("FoodsupplierID");
+            String returnSupplierId = request.getParameter("returnSupplierId"); // Retrieve the returnSupplierId
 
-        // Creating a FoodItem object and setting its properties
-        FoodItem FoodItem = new FoodItem();
-        FoodItem.setFoodItemName(name);
-        FoodItem.setPrice(price);
+            if (name == null || name.isEmpty() || priceStr == null || priceStr.isEmpty() || supplierIdStr == null || supplierIdStr.isEmpty()) {
+                throw new IllegalArgumentException("Missing required fields.");
+            }
 
-        // Creating an AddQuery object to handle database insertion
-        AddQuery aq = new AddQuery();
-        // Adding the FoodItem to the database
-        aq.doAdd(FoodItem);
-                
-        // Redirecting to the ReadServlet to display all FoodItems
-        String url = "/read";
-        RequestDispatcher dispatcher = request.getRequestDispatcher(url);
-        dispatcher.forward(request, response);
+            BigDecimal price;
+            int foodSupplierID;
+            try {
+                price = new BigDecimal(priceStr);
+                if (price.compareTo(BigDecimal.ZERO) <= 0) {
+                    throw new IllegalArgumentException("Price must be positive.");
+                }
+            } catch (NumberFormatException e) {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Price format is invalid.");
+                return;
+            }
+
+            try {
+                foodSupplierID = Integer.parseInt(supplierIdStr);
+                if (foodSupplierID <= 0) {
+                    throw new IllegalArgumentException("Invalid FoodsupplierID.");
+                }
+            } catch (NumberFormatException e) {
+                response.sendError(HttpServletResponse.SC_BAD_REQUEST, "FoodSupplierID format is invalid.");
+                return;
+            }
+
+            FoodItem foodItem = new FoodItem(name, price, foodSupplierID);
+            AddQuery aq = new AddQuery();
+            aq.doAdd(foodItem);
+
+            // Redirect back to the read page with the specific supplierId
+             response.sendRedirect("read?supplierId=" + foodSupplierID);
+        } catch (IllegalArgumentException e) {
+            response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
+        } catch (SQLException e) {
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Database error occurred.");
+        } catch (Exception e) {
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "An error occurred processing the request.");
+        }
     }
 
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
     @Override
-    public String getServletInfo() {
-        return "Short description"; // Description of this servlet
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        response.sendRedirect(request.getContextPath() + "/foodItemlist.jsp");
     }
-    // </editor-fold>
 }

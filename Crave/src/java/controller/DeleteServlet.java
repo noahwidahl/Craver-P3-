@@ -65,22 +65,21 @@ public class DeleteServlet extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-        // Getting the FoodItemID from the request
+protected void doPost(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+    try {
         int FoodItemID = Integer.parseInt(request.getParameter("FoodItemID"));
-        
-        // Creating a DeleteQuery object to handle database deletion
+        int FoodSupplierID = Integer.parseInt(request.getParameter("FoodSupplierID")); // Get the supplier ID
+
         DeleteQuery dq = new DeleteQuery();
-        
-        // Using DeleteQuery to delete the FoodItem
         dq.DoDelete(FoodItemID);
-        
-        // Redirecting to the ReadServlet to display the updated list of FoodItems
-        String url = "/read";
-        RequestDispatcher dispatcher = request.getRequestDispatcher(url);
-        dispatcher.forward(request, response);
+
+        // Redirect to the read servlet with the correct supplier ID
+        response.sendRedirect("read?supplierId=" + FoodSupplierID);
+    } catch (NumberFormatException e) {
+        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid FoodItem ID or FoodSupplierID");
     }
+}
 
     /**
      * Returns a short description of the servlet.
