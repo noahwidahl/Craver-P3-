@@ -1,41 +1,46 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
 import java.math.BigDecimal;
 import java.util.Date;
 
 public class FoodItem {
-    private int foodItemId;
+    // Fields (attributes)
+    private int foodItemID;
     private String foodItemName;
     private BigDecimal price;
     private String linkToFoodImage;
-    private String ingredients; // This might be a list or a single string depending on your design.
-    private int foodSupplierId;
+    private int foodSupplierID;
     private Date addDate;
     private Date modifiedDate;
 
-    // Constructors
-    public FoodItem() {
-    }
-
-    public FoodItem(int foodItemId, String foodItemName, BigDecimal price, String linkToFoodImage, 
-                    String ingredients, int foodSupplierId, Date addDate, Date modifiedDate) {
-        this.foodItemId = foodItemId;
+    // Parametrized constructor for existing FoodItem
+    public FoodItem(int foodItemID, String foodItemName, BigDecimal price, 
+                    String linkToFoodImage, int foodSupplierID, Date addDate, 
+                    Date modifiedDate) {
+        this.foodItemID = foodItemID;
         this.foodItemName = foodItemName;
         this.price = price;
         this.linkToFoodImage = linkToFoodImage;
-        this.ingredients = ingredients;
-        this.foodSupplierId = foodSupplierId;
+        this.foodSupplierID = foodSupplierID;
         this.addDate = addDate;
         this.modifiedDate = modifiedDate;
     }
 
-    // Getters
-    public int getFoodItemId() {
-        return foodItemId;
+    // Constructor for adding a new FoodItem
+    public FoodItem(String foodItemName, BigDecimal price, int foodSupplierID) {
+        this.foodItemName = foodItemName;
+        this.price = price;
+        this.foodSupplierID = foodSupplierID;
+        // Initialize other fields if needed
+        this.addDate = new Date(); // setting addDate to current date
+        this.modifiedDate = new Date(); // setting modifiedDate to current date
+        // linkToFoodImage and foodItemID can be set based on your application logic
+    }
+
+
+    // Getters - methods that return the value of each field
+    public int getFoodItemID() {
+        return foodItemID;
     }
 
     public String getFoodItemName() {
@@ -50,12 +55,8 @@ public class FoodItem {
         return linkToFoodImage;
     }
 
-    public String getIngredients() {
-        return ingredients;
-    }
-
-    public int getFoodSupplierId() {
-        return foodSupplierId;
+    public int getFoodSupplierID() {
+        return foodSupplierID;
     }
 
     public Date getAddDate() {
@@ -66,9 +67,9 @@ public class FoodItem {
         return modifiedDate;
     }
 
-    // Setters
-    public void setFoodItemId(int foodItemId) {
-        this.foodItemId = foodItemId;
+    // Setters - methods that set or update the value of each field
+    public void setFoodItemID(int foodItemID) {
+        this.foodItemID = foodItemID;
     }
 
     public void setFoodItemName(String foodItemName) {
@@ -83,11 +84,8 @@ public class FoodItem {
         this.linkToFoodImage = linkToFoodImage;
     }
 
-    public void setIngredients(String ingredients) {
-        this.ingredients = ingredients;
-    }
-    public void setFoodSupplierId(int foodSupplierId) {
-        this.foodSupplierId = foodSupplierId;
+    public void setFoodSupplierID(int foodSupplierID) {
+        this.foodSupplierID = foodSupplierID;
     }
 
     public void setAddDate(Date addDate) {
@@ -98,22 +96,17 @@ public class FoodItem {
         this.modifiedDate = modifiedDate;
     }
 
-    // You might want to override the toString() method for debugging purposes
+    // toString method
     @Override
     public String toString() {
         return "FoodItem{" +
-                "foodItemId=" + foodItemId +
+                "foodItemID=" + foodItemID +
                 ", foodItemName='" + foodItemName + '\'' +
                 ", price=" + price +
                 ", linkToFoodImage='" + linkToFoodImage + '\'' +
-                ", ingredients='" + ingredients + '\'' +
-                ", foodSupplierId=" + foodSupplierId +
+                ", foodSupplierID=" + foodSupplierID +
                 ", addDate=" + addDate +
                 ", modifiedDate=" + modifiedDate +
                 '}';
     }
-
-    // Additional methods like an equals() and hashCode() might be needed depending on your application requirements
-
 }
-

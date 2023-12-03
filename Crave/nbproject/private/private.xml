@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/Users/sorennygaardjensen/Desktop/Crave/src/java/controller/FoodItemsServlet.java</file>
+            <file>file:/Users/sorennygaardjensen/Desktop/Crave/src/java/dbHelpers/ReadQueryBackup.java</file>
+            <file>file:/Users/sorennygaardjensen/Desktop/Crave/web/read.jsp</file>
+            <file>file:/Users/sorennygaardjensen/Desktop/Crave/src/java/controller/AddForm.java</file>
+            <file>file:/Users/sorennygaardjensen/Desktop/Crave/src/java/dbHelpers/ReadRecord.java</file>
+            <file>file:/Users/sorennygaardjensen/Desktop/Crave/src/java/controller/AddServlet.java</file>
+            <file>file:/Users/sorennygaardjensen/Desktop/Crave/src/java/model/Backup.java</file>
+            <file>file:/Users/sorennygaardjensen/Desktop/Crave/src/java/model/FoodItem.java</file>
+            <file>file:/Users/sorennygaardjensen/Desktop/Crave/src/java/model/FoodSupplier.java</file>
+            <file>file:/Users/sorennygaardjensen/Desktop/Crave/src/java/controller/UpdateFormServlet.java</file>
+            <file>file:/Users/sorennygaardjensen/Desktop/Crave/src/java/controller/UpdateServlet.java</file>
+            <file>file:/Users/sorennygaardjensen/Desktop/Crave/src/java/controller/DeleteServlet.java</file>
+            <file>file:/Users/sorennygaardjensen/Desktop/Crave/web/index.jsp</file>
+            <file>file:/Users/sorennygaardjensen/Desktop/Crave/src/java/dbHelpers/UpdateQuery.java</file>
+            <file>file:/Users/sorennygaardjensen/Desktop/Crave/src/java/controller/ReadServlet.java</file>
+            <file>file:/Users/sorennygaardjensen/Desktop/Crave/src/java/dbHelpers/AddQuery.java</file>
+            <file>file:/Users/sorennygaardjensen/Desktop/Crave/src/java/dbHelpers/DeleteQuery.java</file>
+            <file>file:/Users/sorennygaardjensen/Desktop/Crave/web/META-INF/context.xml</file>
+            <file>file:/Users/sorennygaardjensen/Desktop/Crave/web/updateForm.jsp</file>
+            <file>file:/Users/sorennygaardjensen/Desktop/Crave/web/add.jsp</file>
+            <file>file:/Users/sorennygaardjensen/Desktop/Crave/src/java/dbHelpers/ReadQuery.java</file>
+            <file>file:/Users/sorennygaardjensen/Desktop/Crave/src/java/dbHelpers/dbConn.properties</file>
+            <file>file:/Users/sorennygaardjensen/Desktop/Crave/web/WEB-INF/web.xml</file>
+        </group>
+    </open-files>
+</project-private>

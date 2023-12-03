@@ -1,19 +1,16 @@
-<%-- 
-    Document   : index
-    Created on : 5. nov. 2023, 09.35.56
-    Author     : Bokaj
---%>
-
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%> <!-- Setting the content type and character encoding -->
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Hello World!</title>
+        <title>Food Item!</title>
+        <link rel="stylesheet" type="text/css" href="css/style.css"> <!-- Link to an external CSS file for styling -->
     </head>
     <body>
-        <h1>Hello World!</h1>
-        Today is: <%= new java.util.Date().toString()%>
-        <a href="read">View All Friends</a>
+        <h1>Oversigte over Restauranter</h1> <!-- Header for the page -->
+        
+        Today is: <%= new java.util.Date().toString()%> <!-- Displaying the current date -->
+        
+        <a href="foodsuppliersservlet">View the Food Suppliers</a> <!-- Link to view the food suppliers -->
     </body>
 </html>
