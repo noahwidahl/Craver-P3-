@@ -77,8 +77,8 @@ public class DeleteServlet extends HttpServlet {
             DeleteQuery dq = new DeleteQuery();
             dq.DoDelete(FoodItemID); // Executing the delete operation
 
-            // Redirecting to the read servlet with the correct supplier ID after deletion
-            response.sendRedirect("read?supplierId=" + FoodSupplierID);
+            // Redirecting to the foodSuppliersFoodItems servlet with the correct supplier ID after deletion
+            response.sendRedirect("foodSuppliersFoodItems?supplierId=" + FoodSupplierID);
         } catch (NumberFormatException e) {
             // Handling NumberFormatException and sending a bad request error
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid FoodItem ID or FoodSupplierID");

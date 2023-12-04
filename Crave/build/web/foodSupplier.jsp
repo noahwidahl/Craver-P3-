@@ -15,7 +15,7 @@
         <%= table %> <!-- Displaying the HTML table with food suppliers -->
 
         <!-- Link to view the food items -->
-        <a href="read">View the FoodItems</a><br/>
+        <a href="foodSuppliersFoodItems">View the FoodItems</a><br/>
         
         <!-- Back button to return to the previous page -->
         <button onclick="history.back()">Back</button> 

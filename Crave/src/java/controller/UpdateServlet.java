@@ -34,8 +34,8 @@ public class UpdateServlet extends HttpServlet {
             UpdateQuery uq = new UpdateQuery();
             uq.doUpdate(foodItemToUpdate);
 
-            // Redirecting to the read servlet with the correct supplier ID after update
-            String url = "read?supplierId=" + foodSupplierID;
+            // Redirecting to the foodSuppliersFoodItems servlet with the correct supplier ID after update
+            String url = "foodSuppliersFoodItems?supplierId=" + foodSupplierID;
             response.sendRedirect(url);
         } catch (NumberFormatException e) {
             // Handling potential NumberFormatException and sending an error response

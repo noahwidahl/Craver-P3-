@@ -61,8 +61,8 @@ public class AddServlet extends HttpServlet {
             AddQuery aq = new AddQuery();
             aq.doAdd(foodItem);
 
-            // Redirecting to the read page with the specific supplierId
-            response.sendRedirect("read?supplierId=" + foodSupplierID);
+            // Redirecting to the foodSuppliersFoodItems page with the specific supplierId
+            response.sendRedirect("foodSuppliersFoodItems?supplierId=" + foodSupplierID);
         } catch (IllegalArgumentException e) {
             // Handling invalid input data
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, e.getMessage());

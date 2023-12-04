@@ -1,6 +1,6 @@
 package controller;
 
-import dbHelpers.ReadRecord;
+import dbHelpers.ReadFoodItem;
 import java.io.IOException;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
@@ -23,7 +23,7 @@ public class UpdateFormServlet extends HttpServlet {
             int foodItemID = Integer.parseInt(request.getParameter("FoodItemID"));
 
             // Using ReadRecord to fetch the specific FoodItem from the database
-            ReadRecord rr = new ReadRecord(foodItemID);
+            ReadFoodItem rr = new ReadFoodItem(foodItemID);
             rr.doRead();
             FoodItem foodItem = rr.getFooditem();
 

@@ -80,7 +80,7 @@ public class FoodSupplierReadQuery {
                 // Append a row to the HTML table for each FoodSupplier
                 table.append("<tr>");
                 table.append("<td>").append(supplier.getFoodSupplierID()).append("</td>");
-                table.append("<td><a href='read?supplierId=")
+                table.append("<td><a href='foodSuppliersFoodItems?supplierId=")
                       .append(supplier.getFoodSupplierID())
                       .append("'>")
                       .append(supplier.getFoodSupplierName())
