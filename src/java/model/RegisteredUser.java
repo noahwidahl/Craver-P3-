@@ -6,27 +6,29 @@ package model;
 
 import dbHelpers.ReadQuery;
 import dbHelpers.CreateQuery;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author Bokaj
  */
 public class RegisteredUser extends User {
-    
+    public RegisteredUser(String UserName) {
+        super(UserName);
+    }
+ 
     
 // Helper method to check if a ResultSet has exactly one row
 private static boolean hasSingleRow(ResultSet resultSet) throws SQLException {
     return resultSet.next() && !resultSet.next();
 }   
     
-    public static boolean checkLogin(String userName, String password) {
+    public boolean checkLogin(String userName, String password) {
        
     try {
         ReadQuery readInstance = new ReadQuery();   //Creating ReadQuery object
@@ -58,7 +60,7 @@ private static boolean hasSingleRow(ResultSet resultSet) throws SQLException {
 }
 
     // registerUser method
-    public static boolean registerUser(String fullName, String userName, String password, String email) {
+    public static boolean registerUser(String userName, String password, String email) {
         try {
          // Define your SQL INSERT statement
             String sql = "INSERT INTO craveconnect.User (username, password) VALUES ('"+userName+"', '"+password+"');";
@@ -87,7 +89,16 @@ private static boolean hasSingleRow(ResultSet resultSet) throws SQLException {
 /*
    // Testing example
    public static void main(String[] args) {
-    try {
+       //RegisteredUser test = new RegisteredUser();
+       boolean var = RegisteredUser.registerUser("Dennis","Dennis123","123","D@D.dk");  //Insert into DB - Dette er det tættest på en funktion i java
+       RegisteredUser test = new RegisteredUser("Dennis123");  //id 24
+       System.out.println(test.UserID); //id 
+       
+       
+       
+       
+       
+       try {
         ReadQuery readInstance = new ReadQuery();
         List<String> stringList = new ArrayList<>();
         stringList.add("Tim");
@@ -108,8 +119,19 @@ private static boolean hasSingleRow(ResultSet resultSet) throws SQLException {
     } catch (SQLException e) {
         e.printStackTrace();
     }
+}*/
+  // Testing example
+   public static void main(String[] args) {
+       //RegisteredUser test = new RegisteredUser();
+       //boolean var = RegisteredUser.registerUser("Dennis","Dennis123","123","D@D.dk");  //Insert into DB - Dette er det tættest på en funktion i java
+       //RegisteredUser test = new RegisteredUser("Dennis123");  //id 24
+       //System.out.println(test.UserID); //id 
+        
+
+           RegisteredUser test = new RegisteredUser("Jakob");
+           test.LastLogin();
+
 }
-*/
-   
+    
 }
 

@@ -4,6 +4,7 @@
  */
 package controller;
 
+import dbHelpers.ReadQuery;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.RequestDispatcher;
@@ -12,21 +13,20 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import dbHelpers.ReadQuery;
-import jakarta.servlet.http.HttpSession;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.RegisteredUser;
 
 /**
  *
  * @author Bokaj
  */
-@WebServlet(name = "Profile", urlPatterns = {"/profile"})
-public class Profile extends HttpServlet {
-    
+@WebServlet(name = "Home", urlPatterns = {"/home"})
+public class Home extends HttpServlet {
     private ResultSet results;
+
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -44,10 +44,10 @@ public class Profile extends HttpServlet {
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet Profile</title>");            
+            out.println("<title>Servlet Home</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet Profile at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Servlet Home at " + request.getContextPath() + "</h1>");
             out.println("</body>");
             out.println("</html>");
         }
@@ -65,6 +65,41 @@ public class Profile extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
+        try {
+            //Create a ReadQuery helper object
+            ReadQuery readQuery = new ReadQuery();
+            //Get the HTML table from the ReadQuery object
+            
+            // Get the new value from the form
+            String newValue = request.getParameter("newValueName");
+            String query = "";
+            
+            if (newValue == null || newValue == "") {
+                query = "SELECT * FROM Ingredients;";
+            } else {
+                query = "SELECT * FROM craveconnect.FoodItem where FoodsupplierID = "+newValue+";"; // Code to be executed if the boolean expression is false
+            }
+            
+            results = readQuery.ReadTableData(query);
+            
+            String table = readQuery.outputResultAsHtmlTable(results);
+            
+            //Pass execution control to read.jsp along with the table.
+            request.setAttribute("table", table);
+            String url ="/home.jsp";
+            
+            RequestDispatcher dispatcher = request.getRequestDispatcher(url);
+            dispatcher.forward(request, response);
+        
+        
+        processRequest(request, response);
+        } catch (SQLException ex) {
+            Logger.getLogger(Read.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        
+        
         processRequest(request, response);
     }
 
@@ -79,33 +114,7 @@ public class Profile extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        
-        // Retrieve the session userName, assigned at login
-        String sessionUserName = (String) request.getSession().getAttribute("sessionUserName");
-        
-        
-        ReadQuery readQuery;
-        try {
-            readQuery = new ReadQuery();
-            String query = "SELECT * FROM craveconnect.Rating where UserId = (SELECT UserId FROM craveconnect.User where UserName = '"+sessionUserName+"');";
-            //System.out.println(query);
-            results = readQuery.ReadTableData(query);
-            //System.out.println(results);
-            String table = readQuery.outputResultAsHtmlTable(results);
-            //System.out.println(table);
-            //Pass execution control to read.jsp along with the table.
-            request.setAttribute("table", table);
-            String url ="/profile.jsp";
-            
-            
-             // Forward the request to the profile.jsp page
-            RequestDispatcher dispatcher = request.getRequestDispatcher(url);
-            dispatcher.forward(request, response);
-        } catch (SQLException ex) {
-            Logger.getLogger(Profile.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
+        processRequest(request, response);
     }
 
     /**

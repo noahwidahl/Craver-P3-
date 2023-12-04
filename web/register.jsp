@@ -44,12 +44,9 @@
             <p class="error-message"><%= errorMessage %></p>
             
             <form action="register" method="post">
-                <label>Fulde navn</label><br/>
-                <input type="text" placeholder="Indtast fulde navn" name="fname"><br/>
                 
                 <label>Brugernavn</label><br/>
                 <input type="text" placeholder="Indtast brugernavn" name="uname"><br/>
-                
                 
                 <label>Password</label><br/><!-- comment -->
                 <input type="password" placeholder="Indtast password" name="pword"><br/>

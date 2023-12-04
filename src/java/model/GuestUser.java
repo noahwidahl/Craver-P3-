@@ -9,5 +9,7 @@ package model;
  * @author Bokaj
  */
 public class GuestUser extends User {
-    
+    public GuestUser(String UserName) {
+        super(UserName);
+    }
 }

@@ -12,6 +12,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import model.RegisteredUser;
 
 /**
@@ -73,31 +74,7 @@ public class Login extends HttpServlet {
     /*@Override
 protected void doPost(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
-    // Retrieve the username and password from the request parameters
-    String username = request.getParameter("uname");
-    String password = request.getParameter("pword");
-
-    // Perform the Login check using your LoginQuery class
-    UserBean loggedInUser = loginquery.checkLogin(username, password);
-
-    if (loggedInUser != null) {
-        // If Login is successful, set user information in the session
-        request.getSession().setAttribute("loggedInUser", loggedInUser);
-
-        // Redirect based on the role or to a general page
-        if (loggedInUser.getRole() == 3) {
-            // Admin user, redirect to admin page
-            response.sendRedirect("adminhomepage.jsp");
-        } else {
-            // Regular user, redirect to a dashboard or home page
-            response.sendRedirect("index.jsp");
-        }
-    } else {
-        // If Login fails, display message
-        RequestDispatcher dispatcher = request.getRequestDispatcher("Login.jsp");
-        request.setAttribute("error", "Invalid username or password");
-        dispatcher.forward(request, response);
-    }
+   
 }*/
 
     
@@ -115,13 +92,22 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
         System.out.println(username);
         System.out.println(password);
         
-        // Perform the Login check using your RegisteredUser class and checkLogin method
-        boolean isValidUser = RegisteredUser.checkLogin(username, password);
+        RegisteredUser userLogginIn = new RegisteredUser(username);
+
+// Perform the Login check using your RegisteredUser class and checkLogin method
+        boolean isValidUser = userLogginIn.checkLogin(username, password);
 
         if (isValidUser) {
             // If Login is successful, you might want to set user information in the session
-            request.getSession().setAttribute("username", username);
-
+            request.getSession().setAttribute("sessionUserName", username);
+            request.getSession().setAttribute("sessionUserID", userLogginIn.getUserID());
+            request.getSession().setAttribute("sessionUserRole", userLogginIn.getUserRole());
+            request.getSession().setAttribute("sessionUserRoleDescription", userLogginIn.getUserRoleDescription());
+            //System.out.println("her: "+request.getSession().getAttribute("userID"));
+            
+            //Updating LastSeen column in DB
+            userLogginIn.LastLogin();
+            //System.out.println("UserID is: "+userLogginIn.getUserID());
             // Redirect to a dashboard or home page
             response.sendRedirect("home.jsp");
         } else {

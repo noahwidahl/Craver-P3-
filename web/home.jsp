@@ -17,10 +17,14 @@
 <body>
     
 <!-- Menu elements start -->    
-        <%-- Set the userName attribute --%>
+        <%-- getting the session variables used in the form --%>
     <%
-        String userName = "Jakob";
-        request.setAttribute("userName", userName);
+        String userName = (String) session.getAttribute("sessionUserName");
+        request.setAttribute("varUserName", userName);
+        int userID = (int) session.getAttribute("sessionUserID");
+        request.setAttribute("varUserID", userID);
+        int userRole = (int) session.getAttribute("sessionUserRole");
+        request.setAttribute("varUserRole", userRole);
     %>
     <div id="square1" class="square">
     <nav>    
@@ -28,8 +32,11 @@
       <a href="${pageContext.request.contextPath}\home.jsp">Home</a>
       <a href="${pageContext.request.contextPath}\searchFoodSupplierProfile.jsp">Search</a>
       <a href="${pageContext.request.contextPath}\profile.jsp">User profile</a> 
-      <div id="user-name-placeholder" class="user-name-placeholder">${userName}</div>
-
+      <div id="user-name-placeholder" class="user-name-placeholder">${varUserName}</div>
+      <script>
+        document.getElementById("user-name-placeholder").innerText = "User: ${varUserName}";
+        
+    </script>
     </nav>
   </div>
 
@@ -42,10 +49,7 @@
   <div id="square3" class="square">
   </div>
 
-    <script>
-        document.getElementById("user-name-placeholder").innerText = "User: ${userName}";
-        
-    </script>
+
 <!-- Menu elements stop -->
 
   
@@ -53,9 +57,13 @@
     <p class="title">Hvad Craver du i dag?</p>
   </div>
 
-  <div id="search-bar" class="square">
-    <input type="text" placeholder="Skriv en ingrediens eller brug filtrene under til at finde din ret">
-  </div>
+    <form action="home" method="get">
+        <input type="text" id="search-bar" name="newValueName" placeholder="Skriv en ingrediens eller brug filtrene under til at finde din ret">
+        <button type="submit">Update Table</button>
+    </form>
+
+    <% String tableValue = (String) request.getAttribute("table"); %>
+    <%= tableValue %>
 
 </body>
 

@@ -74,20 +74,18 @@ public class Register extends HttpServlet {
 protected void doPost(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
     // Retrieve form parameters
-    String fullName = request.getParameter("fname");
     String username = request.getParameter("uname");
     String password = request.getParameter("pword");
     String email = request.getParameter("email");
     
     // Check if any of the required fields is empty
-    if (fullName.isEmpty() || username.isEmpty() || password.isEmpty() || email.isEmpty()) {
+    if ( username.isEmpty() || password.isEmpty() || email.isEmpty()) {
         // If any required field is empty, redirect back to the registration page with an error message
         response.sendRedirect("register.jsp?error=1");
         return;
     }
     // Call method in registerquery to insert data into the database
-    RegisteredUser registeredUser = new RegisteredUser();
-    boolean nextStep = registeredUser.registerUser(fullName,username,password,email);
+    boolean nextStep = RegisteredUser.registerUser(username,password,email);
     
     if(nextStep==true){
         // You can add further logic for success or failure and redirect the user accordingly

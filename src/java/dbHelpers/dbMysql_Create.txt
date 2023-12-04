@@ -16,25 +16,27 @@ CREATE TABLE User (
     UserID INT AUTO_INCREMENT PRIMARY KEY,
     UserName VARCHAR(100) UNIQUE NOT NULL,
     Password VARCHAR(25) NOT NULL,
+    Email VARCHAR(100) UNIQUE NOT NULL,
     UserRoleID INT,
     AddDate DATETIME DEFAULT CURRENT_TIMESTAMP,
     ModifiedDate DATETIME ON UPDATE CURRENT_TIMESTAMP,
+    LastSeen DATETIME ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (UserRoleID) REFERENCES Roles(RoleID)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- Inserting values into User
-INSERT INTO craveconnect.User (UserName, Password, UserRoleID, AddDate, ModifiedDate)
+INSERT INTO craveconnect.User (UserName, Password, Email, UserRoleID, AddDate, ModifiedDate,LastSeen)
 VALUES
-    ('Jakob', 'password123', 1, '2023-11-26', '2023-11-26'),
-    ('Tim', 'password456', 2, '2023-11-26', '2023-11-26'),
-    ('Søren', 'password789', 3, '2023-11-26', '2023-11-26'),
-    ('Niels', 'pass123word', 1, '2023-11-26', '2023-11-26'),
-    ('Andreas', 'securepass', 3, '2023-11-26', '2023-11-26'),
-    ('Noah', 'userpass', 1, '2023-11-26', '2023-11-26'),
-    ('User7', 'passuser', 2, '2023-11-26', '2023-11-26'),
-    ('User8', 'randompass', 1, '2023-11-26', '2023-11-26'),
-    ('User9', 'pass1234', 2, '2023-11-26', '2023-11-26'),
-    ('User10', '1234pass', 1, '2023-11-26', '2023-11-26');
+    ('Jakob', '1234','Jakob@test.dk', 1, '2023-11-26', '2023-11-26',null),
+    ('Tim', 'password456','Tim@test.dk', 2, '2023-11-26', '2023-11-26',null),
+    ('Søren', 'password789','Søren@test.dk', 3, '2023-11-26', '2023-11-26',null),
+    ('Niels', 'pass123word','Niels@test.dk', 1, '2023-11-26', '2023-11-26',null),
+    ('Andreas', 'securepass','Andreas@test.dk', 3, '2023-11-26', '2023-11-26',null),
+    ('Noah', 'userpass','Noah@test.dk', 1, '2023-11-26', '2023-11-26',null),
+    ('User7', 'passuser','User7@test.dk', 2, '2023-11-26', '2023-11-26',null),
+    ('User8', 'randompass','User8@test.dk', 1, '2023-11-26', '2023-11-26',null),
+    ('User9', 'pass1234','User9@test.dk', 2, '2023-11-26', '2023-11-26',null),
+    ('User10', '1234pass','User10@test.dk', 1, '2023-11-26', '2023-11-26',null);
 
 
 -- Creating the FoodSupplierStates Table
@@ -256,10 +258,9 @@ VALUES
     -- Creating the Ingredients Table
 CREATE TABLE Ingredients (
     IngredientID INT AUTO_INCREMENT PRIMARY KEY,
-    IngredientName VARCHAR(100) NOT NULL,
+    IngredientName VARCHAR(100) UNIQUE NOT NULL,
     AddDate DATETIME DEFAULT CURRENT_TIMESTAMP,
-    ModifiedDate DATETIME ON UPDATE CURRENT_TIMESTAMP,
-    CONSTRAINT uc_IngredientName UNIQUE (IngredientName)
+    ModifiedDate DATETIME ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO Ingredients (IngredientName) VALUES
@@ -332,7 +333,9 @@ INSERT INTO FoodItemIngredients (FoodItemID, IngredientID) VALUES
 (4,11),
 (4,34);
 
-
+create view v_UserAndRoles as
+SELECT UserID, UserName, PassWord, Email, UserRoleID, RoleDescription, LastSeen  FROM craveconnect.User T1
+inner join craveconnect.Roles T2 on T1.UserRoleID = T2.RoleID;
 
 
 

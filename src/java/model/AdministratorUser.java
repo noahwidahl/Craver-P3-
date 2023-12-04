@@ -9,5 +9,7 @@ package model;
  * @author Bokaj
  */
 public class AdministratorUser extends User {
-    
+    public AdministratorUser(String UserName) {
+        super(UserName);
+    }
 }

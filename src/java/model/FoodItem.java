@@ -10,4 +10,6 @@ package model;
  */
 public abstract class FoodItem {
     
+   
+    
 }
