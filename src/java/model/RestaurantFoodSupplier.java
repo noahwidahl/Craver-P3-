@@ -10,4 +10,10 @@ package model;
  */
 public class RestaurantFoodSupplier extends FoodSupplier {
     
+    //Constructor der læser fra superclassen
+    public RestaurantFoodSupplier(int FoodsupplierID) {
+        super(FoodsupplierID);
+    }
+    
+    
 }

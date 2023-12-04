@@ -9,5 +9,7 @@ package model;
  * @author Bokaj
  */
 public class RecipeSiteFoodSupplier extends FoodSupplier{
-    
+    public RecipeSiteFoodSupplier(int FoodsupplierID) {
+        super(FoodsupplierID);
+    }
 }
