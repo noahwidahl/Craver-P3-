@@ -1,0 +1,96 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this template
+*/
+/* 
+    Created on : 29. nov. 2023, 15.08.20
+    Author     : Bokaj
+
+      /*Menu syling*/
+        nav {
+          display: flex;
+        }
+
+        nav a {
+          color: white;
+          text-decoration: none;
+          padding: 3vh;
+          font-size: 2.5vh;
+          font-weight: bold;
+        }
+        
+        /*Username placing*/
+        .user-name-placeholder {
+          color: white;
+          text-decoration: none;
+          padding: 3vh;
+          font-size: 2.5vh;
+          font-weight: bold;
+          padding-left: 120vh;
+        }
+        
+        /*Main attributes for square "class"*/
+        .square {
+          background-color: white;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 10vh; /* adjusting the height off all squares, default value */
+        }
+        
+        /* Customize the content inside the squares */
+        .square-content {
+          text-align: center;
+          color: white;
+          margin-bottom: 10px;
+          padding-top: 10px;
+        }
+
+          /*Classes under main "square" class that can have local values based on use*/
+          #square1 {
+            background-color: #CBBBA0;
+            justify-content: left;
+            
+          }
+
+          #square2 {
+            background-color: #4C654B;
+            height: 2vh;
+            color: white;
+            font-size: 8px;  
+          }
+
+          #square3 {
+            background-color: #0D0E19; /*black'ish background'*/
+            height: 10vh;
+          }
+
+        /* Style for the search bar */        
+        .search-bar {
+          width: 70%;
+          padding-top: 100px;
+          border:1px solid #0D0E19;
+          border-color: red; /* Replace 'yourBorderColor' with the color you want */
+        }
+
+        /*input so you can fill out the search bar*/
+        input[type="text"] {
+          width: 70%;
+          padding: 5px;
+          /*border: none;*/
+          border-radius: 5px 0 0 5px;
+          font-size: 20px;
+          border-color: darkblue; /* Replace 'yourBorderColor' with the color you want */
+        }
+            
+        .title {
+          text-align: center;
+          position: absolute;
+          color: #0D0E19;
+          font-weight: bold;
+          font-size: 36px;
+          margin-bottom: 100px;
+          margin-top: 100px;
+        }
+
+
