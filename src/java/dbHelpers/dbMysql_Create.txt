@@ -337,5 +337,9 @@ create view v_UserAndRoles as
 SELECT UserID, UserName, PassWord, Email, UserRoleID, RoleDescription, LastSeen  FROM craveconnect.User T1
 inner join craveconnect.Roles T2 on T1.UserRoleID = T2.RoleID;
 
-
+create table craveconnect.UserGuestLog (
+	GuestID INT AUTO_INCREMENT PRIMARY KEY,
+    Token  varchar(255), -- Unique
+    AddDate datetime
+);
 

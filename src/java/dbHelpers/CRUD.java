@@ -21,7 +21,8 @@ public abstract class CRUD {
     private String url;
     private String user;
     private String password;
-
+    
+    //Constructor
     public CRUD() throws SQLException {
         //Reading dbConn.properties for database credentials
         Properties props = new Properties(); //MWC
@@ -45,12 +46,13 @@ public abstract class CRUD {
 
         // Establish the connection to the database
         try {  
+            Class.forName("com.mysql.cj.jdbc.Driver");  //Loading driver before this.connection - Removes the error Cannot invoke "java.sql.Connection.prepareStatement(String)" because "this.connection" is null
             this.connection = DriverManager.getConnection(url, user, password);
 
             if (connection != null) {
                 System.out.println("Connected to MySQL server");
             }
-        } catch (SQLException e) {
+        } catch (ClassNotFoundException | SQLException e) {
             System.err.println("Connection failed: " + e.getMessage());
         } 
     }

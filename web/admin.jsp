@@ -85,12 +85,11 @@
 
   
   <div class="square">
-    <p class="title">Hvad Craver du i dag?</p>
+    <p class="title">Disse står til godkendelse</p>
   </div>
 
-    <form action="home" method="get">
-        <input type="text" id="search-bar" name="newValueName" placeholder="Skriv en ingrediens eller brug filtrene under til at finde din ret">
-        <button type="submit">Update Table</button>
+    <form action="admin" method="post">
+        <button type="submit">Søg</button>
     </form>
 
     <% String tableValue = (String) request.getAttribute("table"); %>

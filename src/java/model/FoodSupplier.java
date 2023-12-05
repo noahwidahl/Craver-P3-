@@ -4,6 +4,7 @@
  */
 package model;
 
+import dbHelpers.CreateQuery;
 import dbHelpers.ReadQuery;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -62,8 +63,45 @@ public abstract class FoodSupplier {
     
     
     
-    
-    
+    // registerFoodSupplier method
+    public static boolean registerFoodSupplier(String FoodSupplierUsername, String FoodsupplierPassword, String FoodsupplierEmail, String FoodsupplierName, String FoodsupplierAddress, String FoodsupplierPostNr,String FoodsupplierCity, String FoodsupplierPhoneNumber, String FoodsuFoodsupplierExternalLinkpplierAddress, String FoodSupplierCategoryID) {
+        try {
+            // Define your SQL INSERT statement
+            String sql = "INSERT INTO craveconnect.User (username, password, Email, UserRoleID) VALUES ('"+FoodSupplierUsername+"', '"+FoodsupplierPassword+"','"+FoodsupplierEmail+"', 4);";
+            //String sql = "INSERT INTO craveconnect.User (fullName, username, password, email) VALUES ('"+fullName+"', '"+userName+"', '"+password+"', '"+email+"');";
+             System.out.println(sql);   
+            CreateQuery createInstanceUserRegisting = new CreateQuery();   //Creating ReadQuery object    
+            // Use executeInsert for INSERT statements
+        int rowsAffected = createInstanceUserRegisting.executeInsert(sql);
+        
+        // Check rowsAffected to ensure the insertion was successful
+        if (rowsAffected > 0) {
+            System.out.println("Registration successful!");
+
+            sql = "insert into craveconnect.Foodsupplier (FoodsupplierName, Address, PostNr, City, PhoneNumber, ExternalLink, StateID, FoodSupplierCategoryID) values('"+FoodsupplierName+"','"+FoodsupplierAddress+"','"+FoodsupplierPostNr+"','"+FoodsupplierCity+"','"+FoodsupplierPhoneNumber+"','"+FoodsuFoodsupplierExternalLinkpplierAddress+"',3,"+FoodSupplierCategoryID+");";
+            System.out.println(sql);   
+            CreateQuery createInstanceFoodsupplierData = new CreateQuery();   //Creating ReadQuery object  
+            rowsAffected = createInstanceFoodsupplierData.executeInsert(sql);
+            if(rowsAffected > 0){
+                System.out.println("Foodsupplier data is successful!");
+                return true;
+            }else {
+                System.out.println("Food supplier data failed!");
+                return false;
+            }   
+        } else {
+            System.out.println("Registration failed!");
+            return false;
+        }  
+
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+            System.out.println("fejl i Class registerUser");
+            return false;
+        }
+    }
+
     public String getFoodsupplierName(){
         System.out.println("getFoodsupplierName: "+this.FoodsupplierName);
         return this.FoodsupplierName;

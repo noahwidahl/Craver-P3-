@@ -13,7 +13,11 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import model.RegisteredUser;
+import model.GuestUser;
 
 /**
  *
@@ -88,13 +92,16 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
         // Retrieve the username and password from the request parameters
         String username = request.getParameter("uname");
         String password = request.getParameter("pword");
+        String loginType = request.getParameter("loginType");
         
         System.out.println(username);
         System.out.println(password);
-        
-        RegisteredUser userLogginIn = new RegisteredUser(username);
+        System.out.println("Login type: " + loginType);
 
-// Perform the Login check using your RegisteredUser class and checkLogin method
+        if("user".equals(loginType)){
+            RegisteredUser userLogginIn = new RegisteredUser(username);
+
+        // Perform the Login check using your RegisteredUser class and checkLogin method
         boolean isValidUser = userLogginIn.checkLogin(username, password);
 
         if (isValidUser) {
@@ -115,7 +122,23 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
             RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
             request.setAttribute("error", "Invalid username or password");
             dispatcher.forward(request, response);
+        }  
+        }else if("guest".equals(loginType)){
+            request.getSession().setAttribute("sessionUserName", "Guest");
+            request.getSession().setAttribute("sessionUserID", 0);
+            request.getSession().setAttribute("sessionUserRole", 3);
+            request.getSession().setAttribute("sessionUserRoleDescription", "Guest");
+            
+            GuestUser guest = new GuestUser("guest");
+            try {
+                guest.guestLogin();
+            } catch (SQLException ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            response.sendRedirect("home.jsp");
         }
+        
     }
     
 

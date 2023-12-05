@@ -93,4 +93,18 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
           margin-top: 100px;
         }
 
+        /* Style for the logout button */
+            .logout-button {
+                display: inline-block;
+                padding: 10px 20px;
+                background-color: red; /* Choose your desired background color */
+                color: #fff; /* Choose your desired text color */
+                text-decoration: none;
+                border-radius: 5px;
+                font-weight: bold;
+            }
 
+            /* Style for hover effect */
+            .logout-button:hover {
+                background-color: green; /* Change color on hover */
+            }
