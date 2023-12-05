@@ -82,6 +82,8 @@ public class ReadQuery extends CRUD {
     return table;
     }
     
+    
+    
     public String outputResultAsHtmlTableWithButtons(ResultSet results, HashMap<String, String> hashMap) {
     // Generating SQL datatable as an HTML table
     String table = "<table border=1>";
@@ -109,8 +111,13 @@ public class ReadQuery extends CRUD {
                 
             }
             //System.out.println(results.getString(1));
-            table += "<td value='"+results.getString(1)+"'><button> Approved</button></td>";
-            table += "<td><button> Deny</button></td>";
+            for (String key : hashMap.keySet()) {
+                //System.out.println("Key: " + key + ", Value: " + hashMap.get(key));
+                //<form action="admin" method="post"><input type="hidden" name="parameterName" value="parameterValue"><button type="submit">Søg</button></form>   
+                //table += "<td><button type='submit' class='"+key+"' id='BtnDeny' value='"+results.getString(1)+"'>"+hashMap.get(key)+"</button></td>";
+                table += "<td><form action='admin' method='post'><input type='hidden' name='parameterName' value='"+key+": "+results.getString(1)+"'><button type='submit'>"+hashMap.get(key)+"</button></form></td>";
+                //System.out.println(table);
+            }
             table += "</tr>";
         }
     } catch (SQLException ex) {

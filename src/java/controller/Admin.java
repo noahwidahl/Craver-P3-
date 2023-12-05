@@ -5,6 +5,7 @@
 package controller;
 
 import dbHelpers.ReadQuery;
+import dbHelpers.UpdateQuery;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -89,10 +90,11 @@ public class Admin extends HttpServlet {
             String query = "select * from craveconnect.v_FoodsuppliersPending;";
             results = readQuery.ReadTableData(query);
             
-            
+            //Using a HashMap to dyniamicly make buttons, key = button name, value = button text
             HashMap<String, String> hashMap = new HashMap<>();
-            hashMap.put("Approve", "Approve");
-            hashMap.put("Deny", "Deny");
+            hashMap.put("BtnDeny", "Deny");
+            hashMap.put("BtnApprove", "Approve");
+            //hashMap.put("test", "test");
             
             
             String table = readQuery.outputResultAsHtmlTableWithButtons(results,hashMap);
@@ -103,15 +105,45 @@ public class Admin extends HttpServlet {
             
             RequestDispatcher dispatcher = request.getRequestDispatcher(url);
             dispatcher.forward(request, response);
-        
-        
-        processRequest(request, response);
+            
+            processRequest(request, response);
         } catch (SQLException ex) {
             Logger.getLogger(Read.class.getName()).log(Level.SEVERE, null, ex);
         }
         
+        //Handling what happens when the added Deny and Approve buttons are pressed
+        String parameterValue = request.getParameter("parameterName");
+        try {    
+                UpdateQuery updateInstance = new UpdateQuery();
+                if(parameterValue == null || "".equals(parameterValue)){
+                   
+                }else if(parameterValue.contains("BtnDeny")){
+                    //what to do
+                    String[] parts = parameterValue.split(":");
+                    //System.out.println("testing here: "+parts[1].trim());  
+                    String query = "Update craveconnect.Foodsupplier set StateID = 2 where FoodsupplierID = "+parts[1].trim()+";";
+                    System.out.println(query); 
+                    updateInstance.executeInsertUpdate(query);
+                }else if(parameterValue.contains("BtnApprove")){
+                    //what to do
+                    String[] parts = parameterValue.split(":");
+                    String query = "Update craveconnect.Foodsupplier set StateID = 1 where FoodsupplierID = "+parts[1].trim()+";";
+                    System.out.println(query); 
+                    updateInstance.executeInsertUpdate(query);
+                }else{
+                    System.out.println(parameterValue); 
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(Admin.class.getName()).log(Level.SEVERE, null, ex);
+            }
         
-        processRequest(request, response);
+        
+
+
+        
+        
+        
+        //processRequest(request, response);
     }
 
     /**

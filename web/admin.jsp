@@ -94,6 +94,8 @@
 
     <% String tableValue = (String) request.getAttribute("table"); %>
     <%= tableValue %>
+    
+    
 
 </body>
 
