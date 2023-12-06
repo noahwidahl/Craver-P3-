@@ -102,7 +102,7 @@ public class Read extends HttpServlet {
             
             results = readQuery.ReadTableData(query);
             
-            String table = readQuery.outputResultAsHtmlTable(results);
+            String table = readQuery.outputResultAsHtmlTableWithInteractiveButtons(results,2);
             
             //Pass execution control to read.jsp along with the table.
             request.setAttribute("table", table);

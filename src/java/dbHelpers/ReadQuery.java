@@ -82,6 +82,47 @@ public class ReadQuery extends CRUD {
     return table;
     }
     
+    public String outputResultAsHtmlTableWithInteractiveButtons(ResultSet results, int ColumnIdAsButton) {
+    // Generating SQL datatable as an HTML table
+    String table = "<table border=1>";
+
+    try {
+        // Get the ResultSetMetaData to obtain column names
+        ResultSetMetaData metaData = results.getMetaData();
+        int columnCount = metaData.getColumnCount();
+
+        // Create table headers based on column names
+        table += "<tr>";
+        for (int i = 1; i <= columnCount; i++) {
+            String columnName = metaData.getColumnName(i);
+            table += "<th>" + columnName + "</th>";
+        }
+        table += "</tr>";
+
+        // Loop through the result set and generate data rows
+        while (results.next()) {
+            table += "<tr>";
+            for (int i = 1; i <= columnCount; i++) {
+                String columnValue = results.getString(i);
+                //If statement der bestemmer hvilke kolonner der skal se anderleds ud
+                if(i == ColumnIdAsButton){
+                    table += "<td>"+"<button class='TableButtons' type='button'>"+columnValue+"</button>" + "</td>"; 
+                }else{
+                    table += "<td>" + columnValue + "</td>";  
+                        }
+                
+            }
+            //System.out.println(results.getString(1));
+            table += "</tr>";
+        }
+    } catch (SQLException ex) {
+        Logger.getLogger(ReadQuery.class.getName()).log(Level.SEVERE, null, ex);
+    }
+
+    table += "</table>";
+    return table;
+    }
+    
     
     
     public String outputResultAsHtmlTableWithButtons(ResultSet results, HashMap<String, String> hashMap) {
