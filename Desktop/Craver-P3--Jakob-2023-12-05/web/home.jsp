@@ -48,17 +48,23 @@
         <a href="${pageContext.request.contextPath}/home.jsp">Home</a>
         <a href="${pageContext.request.contextPath}/searchFoodSupplierProfile.jsp">Search</a>
         <a href="${pageContext.request.contextPath}/profile.jsp">User profile</a> 
+        <a href="${pageContext.request.contextPath}/foodsupplier">View all the FoodSuppliers</a> <!-- New Button -->
+
 <%
    }else if (userRole == 3) {  //Menubar guest
 %>
         <a href="${pageContext.request.contextPath}/home.jsp">Home</a>
         <a href="${pageContext.request.contextPath}/searchFoodSupplierProfile.jsp">Search</a>
+        <a href="${pageContext.request.contextPath}/foodsupplier">View all the FoodSuppliers</a> <!-- New Button -->
+
 <%
    }else if (userRole == 4) {  //Menubar foodsupplier 
 %>
         <a href="${pageContext.request.contextPath}/home.jsp">Home</a>
         <a href="${pageContext.request.contextPath}/searchFoodSupplierProfile.jsp">Search</a>
         <a href="${pageContext.request.contextPath}/profile.jsp">User profile</a> 
+        <a href="${pageContext.request.contextPath}/foodsupplier">View all the FoodSuppliers</a> <!-- New Button -->
+
 <%
    } 
 %>

@@ -5,22 +5,44 @@
 <head>
     <title>Food Items</title>
     <style>
-        /* Add your CSS styles here */
-        /* Example: */
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Times New Roman', Times, serif;
+            background-color: #f3f3f3;
+            text-align: center;
         }
         h2 {
             color: #4C654B;
+            margin-bottom: 30px;
         }
         ul {
             list-style-type: none;
             padding: 0;
+            margin: auto;
+            width: 50%;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+            padding: 20px;
         }
         li {
-            margin-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+            padding: 10px;
+            font-size: 18px;
         }
-        /* Add other styles from your provided CSS as needed */
+        li:last-child {
+            border-bottom: none;
+        }
+        a {
+            text-decoration: none;
+            color: #0D0E19;
+        }
+        a:hover {
+            color: #CBBBA0;
+        }
+        .price {
+            float: right;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -33,9 +55,11 @@
     if(foodItems != null) {
         for(FoodItem item : foodItems) { 
     %>
-        <li><%= item.getFoodItemName() %> - Price: <%= item.getPrice() %></li>
+        <li><%= item.getFoodItemName() %> <span class="price">Price: <%= item.getPrice() %> </span></li>
     <% 
         }
+    } else {
+        %><p>No food items found.</p><%
     } 
     %>
 </ul>

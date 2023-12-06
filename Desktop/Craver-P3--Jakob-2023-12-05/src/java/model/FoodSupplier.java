@@ -107,7 +107,7 @@ public abstract class FoodSupplier {
         return this.FoodsupplierName;
     }
     
-    // In FoodSupplier class
+    // MEthod to get FoodsupplierNames
    public static List<String> getAllFoodSupplierNames() {
         List<String> foodSupplierNames = new ArrayList<>();
         try {
@@ -123,6 +123,7 @@ public abstract class FoodSupplier {
         }
         return foodSupplierNames;
     }
+   // Method to get FoodSupplier ID
     public static List<Integer> getAllFoodSupplierIDs() {
         List<Integer> foodSupplierIDs = new ArrayList<>();
         try {
