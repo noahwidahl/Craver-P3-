@@ -10,6 +10,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -56,7 +58,6 @@ public class FoodSupplier {
             Logger.getLogger(RegisteredUser.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
     
     
     //Methods
@@ -108,6 +109,15 @@ public class FoodSupplier {
     }
     
     
+    public List<Double> getCoordinates(){
+        // List of double-precision floating-point numbers
+        List<Double> doubleList = new ArrayList<>();
+        doubleList.add(this.Latitude);
+        doubleList.add(this.Longitude);
+        return doubleList;
+    }
+    
+    
     
     // Testing example
    public static void main(String[] args) {
@@ -116,8 +126,13 @@ public class FoodSupplier {
        //RegisteredUser test = new RegisteredUser("Dennis123");  //id 24
        //System.out.println(test.UserID); //id 
         
-
-          
+       FoodSupplier test = new FoodSupplier(1);
+       List<Double> doubleList = test.getCoordinates();
+       double Latitude = doubleList.get(0);
+       double Longitude = doubleList.get(1);
+       System.out.println(Latitude); 
+       System.out.println(Longitude); 
+       
 
     }
 }

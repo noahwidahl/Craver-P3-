@@ -12,6 +12,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Restaurant Map</title>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAylpg3tnqQLq7Jmm8qA-bZXSV70njxzok&libraries=places&callback=initMap" async defer></script>
+
+    <%@ page import="model.FoodSupplier" %>
+    <%@ page import="java.util.ArrayList" %>
+    <%@ page import="java.util.List" %>
+    <% 
+        FoodSupplier restaurant = new FoodSupplier(8);
+        List<Double> doubleList = restaurant.getCoordinates();
+        double Latitude = doubleList.get(0);
+        double Longitude = doubleList.get(1);
+    %>
+    
+    
     <script>
         var map;
         var restaurantLocation;
@@ -21,7 +33,7 @@
 
         function initMap() {
             // Set the restaurant's location
-            restaurantLocation = { lat: 57.048869, lng: 9.921543 }; // Replace with your restaurant's coordinates
+            restaurantLocation = { lat: <%= Latitude %>, lng: <%= Longitude %> }; // Replace with your restaurant's coordinates
 
             // Create a map centered at the restaurant's location
             map = new google.maps.Map(document.getElementById('map'), {
