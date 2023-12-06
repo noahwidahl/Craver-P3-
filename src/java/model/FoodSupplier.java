@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  *
  * @author Bokaj
  */
-public abstract class FoodSupplier {
+public class FoodSupplier {
     //Attributes
     protected int FoodsupplierID;
     protected String FoodsupplierName;
@@ -117,8 +117,7 @@ public abstract class FoodSupplier {
        //System.out.println(test.UserID); //id 
         
 
-           RestaurantFoodSupplier id1 = new RestaurantFoodSupplier(1);
-           id1.getFoodsupplierName();
+          
 
     }
 }

@@ -8,6 +8,6 @@ package model;
  *
  * @author Bokaj
  */
-public abstract class Rating {
+public class Rating {
     
 }

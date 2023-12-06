@@ -8,7 +8,7 @@ package model;
  *
  * @author Bokaj
  */
-public abstract class FoodItem {
+public class FoodItem {
     
    
     
