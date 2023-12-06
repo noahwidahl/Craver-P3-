@@ -8,12 +8,17 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Hashtable;
 import java.util.HashMap;
+import model.FoodSupplier;
+
+import model.FoodItem;
+
 
 public class ReadQuery extends CRUD {
     
@@ -201,31 +206,69 @@ public class ReadQuery extends CRUD {
         }
         return outputPlaceholder;
     }
-        
+                // In ReadQuery class
+
+    public String outputFoodSuppliersAsHtmlTable(List<String> suppliers) {
+        String table = "<table border='1'>";
+        table += "<tr><th>Supplier Name</th><th>Supplier ID</th></tr>";
+        for (String supplier : suppliers) {
+            String[] parts = supplier.split(" \\(");
+            String name = parts[0];
+            String id = parts[1].replace(")", "");
+            table += "<tr><td>" + name + "</td><td>" + id + "</td></tr>";
+        }
+        table += "</table>";
+        return table;
+    }
+
+    public String outputFoodItemsAsHtmlTable(List<FoodItem> foodItems) {
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     
-    // Testing example
+    StringBuilder table = new StringBuilder("<table border='1'>");
+    table.append("<tr><th>Food Item Name</th><th>Price</th><th>Link to Image</th><th>Supplier ID</th><th>Add Date</th><th>Modified Date</th><th>Category ID</th></tr>");
+
+    for (FoodItem item : foodItems) {
+        table.append("<tr>");
+        table.append("<td>").append(item.getFoodItemName()).append("</td>");
+        table.append("<td>").append(item.getPrice()).append("</td>");
+        table.append("<td><a href='").append(item.getLinkToFoodImage()).append("'>Image Link</a></td>");
+        table.append("<td>").append(item.getFoodSupplierID()).append("</td>");
+        table.append("<td>").append(dateFormat.format(item.getAddDate())).append("</td>");
+        table.append("<td>").append(dateFormat.format(item.getModifiedDate())).append("</td>");
+        table.append("<td>").append(item.getFoodItemCategoryID()).append("</td>");
+        table.append("</tr>");
+    }
+
+    table.append("</table>");
+    return table.toString();
+}
+
     public static void main(String[] args) {
         try {
             ReadQuery readInstance = new ReadQuery();
+            // Fetch data from the model and display as HTML table
+            List<String> supplierList = FoodSupplier.getAllFoodSupplierNamesWithIDs();
+            String htmlTable = readInstance.outputFoodSuppliersAsHtmlTable(supplierList);
+            System.out.println(htmlTable);
 
-            // Reading table data
+            // Other example usage of ReadQuery methods
             ResultSet result = readInstance.ReadTableData("SELECT * FROM craveconnect.Roles;");
-            //Using the result from previous line, and uses in the the method getHTMLTable
             System.out.println(readInstance.outputResultAsHtmlTable(result));
-            //making a new object to hold the result from the query
             ResultSet resultText = readInstance.ReadTableData("SELECT * FROM craveconnect.Foodsupplier;");
-            //Using the method outputResult to show the result as text.
             System.out.println(readInstance.outputResultAsText(resultText));
-           
 
-
-            // Disconnecting from the database - disconnect() is a method from the abstract class CRUD
+            // Disconnect from the database
             readInstance.disconnect();
-
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
+    public Object getConnection() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 
+    public ResultSet ReadTableData(String query, int supplierID) {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }

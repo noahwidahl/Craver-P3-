@@ -40,6 +40,7 @@
         <a href="${pageContext.request.contextPath}/searchFoodSupplierProfile.jsp">Search</a>
         <a href="${pageContext.request.contextPath}/profile.jsp">User profile</a> 
         <a href="${pageContext.request.contextPath}/admin.jsp">Admin</a> 
+        <a href="${pageContext.request.contextPath}/foodsupplier">Se alle restauranter her</a> <!-- New Button -->
         <a href="${pageContext.request.contextPath}/Navigation.jsp">Navigation her</a>
 
 <%
@@ -48,12 +49,14 @@
         <a href="${pageContext.request.contextPath}/home.jsp">Home</a>
         <a href="${pageContext.request.contextPath}/searchFoodSupplierProfile.jsp">Search</a>
         <a href="${pageContext.request.contextPath}/profile.jsp">User profile</a> 
+        <a href="${pageContext.request.contextPath}/foodsupplier">Se alle restauranter her </a> <!-- New Button -->
         <a href="${pageContext.request.contextPath}/Navigation.jsp">Navigation her</a>
 <%
    }else if (userRole == 3) {  //Menubar guest
 %>
         <a href="${pageContext.request.contextPath}/home.jsp">Home</a>
         <a href="${pageContext.request.contextPath}/searchFoodSupplierProfile.jsp">Search</a>
+        <a href="${pageContext.request.contextPath}/foodsupplier">Se alle restauranter her</a> <!-- New Button -->
         <a href="${pageContext.request.contextPath}/Navigation.jsp">Navigation her</a>
 <%
    }else if (userRole == 4) {  //Menubar foodsupplier 

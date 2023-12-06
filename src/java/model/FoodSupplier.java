@@ -116,8 +116,61 @@ public class FoodSupplier {
         doubleList.add(this.Longitude);
         return doubleList;
     }
-    
-    
+      // MEthod to get FoodsupplierNames
+   public static List<String> getAllFoodSupplierNames() {
+        List<String> foodSupplierNames = new ArrayList<>();
+        try {
+            ReadQuery readInstance = new ReadQuery();
+            String query = "SELECT FoodsupplierName FROM craveconnect.Foodsupplier;";
+            ResultSet resultSet = readInstance.ReadTableData(query);
+
+            while (resultSet.next()) {
+                foodSupplierNames.add(resultSet.getString("FoodsupplierName"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(FoodSupplier.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return foodSupplierNames;
+        
+    }
+     // Method to get FoodSupplier ID
+    public static List<Integer> getAllFoodSupplierIDs() {
+        List<Integer> foodSupplierIDs = new ArrayList<>();
+        try {
+            ReadQuery readInstance = new ReadQuery();
+            String query = "SELECT FoodsupplierID FROM craveconnect.Foodsupplier;";
+            ResultSet resultSet = readInstance.ReadTableData(query);
+
+        while (resultSet.next()) {
+            foodSupplierIDs.add(resultSet.getInt("FoodsupplierID"));
+        }
+        } catch (SQLException ex) {
+            Logger.getLogger(FoodSupplier.class.getName()).log(Level.SEVERE, null, ex);
+    }
+    return foodSupplierIDs;
+}
+    // Method to fetch all FoodSupplier names and their IDs
+    public static List<String> getAllFoodSupplierNamesWithIDs() {
+        List<String> supplierList = new ArrayList<>();
+        try {
+            ReadQuery readInstance = new ReadQuery();
+            String query = "SELECT FoodsupplierID, FoodsupplierName FROM craveconnect.Foodsupplier;";
+            ResultSet resultSet = readInstance.ReadTableData(query);
+
+            while (resultSet.next()) {
+                int id = resultSet.getInt("FoodsupplierID");
+                String name = resultSet.getString("FoodsupplierName");
+                String combinedInfo = name + " (" + id + ")";
+                supplierList.add(combinedInfo);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(FoodSupplier.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return supplierList;
+    }
+
+
+
     
     // Testing example
    public static void main(String[] args) {
