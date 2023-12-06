@@ -21,7 +21,7 @@ public class GuestUser extends User {
     }
     
     
-    public void guestLogin() throws SQLException{
+    public void setGuestLogin() throws SQLException{
         
                     //Getting the current local time
             LocalDateTime currentDateTime = LocalDateTime.now();

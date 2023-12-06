@@ -115,7 +115,7 @@ public class ReadQuery extends CRUD {
                 //System.out.println("Key: " + key + ", Value: " + hashMap.get(key));
                 //<form action="admin" method="post"><input type="hidden" name="parameterName" value="parameterValue"><button type="submit">Søg</button></form>   
                 //table += "<td><button type='submit' class='"+key+"' id='BtnDeny' value='"+results.getString(1)+"'>"+hashMap.get(key)+"</button></td>";
-                table += "<td><form action='admin' method='post'><input type='hidden' name='parameterName' value='"+key+": "+results.getString(1)+"'><button type='submit'>"+hashMap.get(key)+"</button></form></td>";
+                table += "<td><form action='admin' method='post'><input type='hidden' name='parameterName' value='"+key+": "+results.getString(1)+"'><button type='submit' onclick='reloadPage()'>"+hashMap.get(key)+"</button></form></td>";
                 //System.out.println(table);
             }
             table += "</tr>";

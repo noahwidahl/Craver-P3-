@@ -129,7 +129,7 @@ private static boolean hasSingleRow(ResultSet resultSet) throws SQLException {
         
 
            RegisteredUser test = new RegisteredUser("Jakob");
-           test.LastLogin();
+           test.SetLastLogin();
 
 }
     

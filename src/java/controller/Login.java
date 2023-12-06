@@ -113,7 +113,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
             //System.out.println("her: "+request.getSession().getAttribute("userID"));
             
             //Updating LastSeen column in DB
-            userLogginIn.LastLogin();
+            userLogginIn.SetLastLogin();
             //System.out.println("UserID is: "+userLogginIn.getUserID());
             // Redirect to a dashboard or home page
             response.sendRedirect("home.jsp");
@@ -131,7 +131,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
             
             GuestUser guest = new GuestUser("guest");
             try {
-                guest.guestLogin();
+                guest.setGuestLogin();
             } catch (SQLException ex) {
                 Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
             }

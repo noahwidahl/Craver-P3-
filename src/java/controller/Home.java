@@ -114,6 +114,24 @@ public class Home extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        
+        // DETTE ER TIL TEST
+        try {
+            ReadQuery read = new ReadQuery();
+            results = read.ReadTableData("SELECT * FROM craveconnect.Ingredients;");
+            read.outputResultAsHtmlTable(results);
+            System.out.println(); 
+        } catch (SQLException ex) {
+            Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        System.out.println("Home test");  
+                    String url ="/home.jsp";
+            
+            RequestDispatcher dispatcher = request.getRequestDispatcher(url);
+            dispatcher.forward(request, response);
+        
+        
         processRequest(request, response);
     }
 

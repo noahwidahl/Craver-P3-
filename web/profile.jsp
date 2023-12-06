@@ -118,6 +118,7 @@
     
 <% 
     String tableValue = (String) request.getAttribute("table");
+    
     if (tableValue != null) {
 %>
     <%= tableValue %>

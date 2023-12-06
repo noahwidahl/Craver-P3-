@@ -91,12 +91,43 @@
     <form action="admin" method="post">
         <button type="submit">Søg</button>
     </form>
+    <script>
+    function reloadPage() {
+        location.reload();
+    }
+</script>
+    
+    <%! // Should be a servlet, but can't find a way to automatic load using a servlet%>
+    <%@ page import="java.sql.ResultSet" %>
+    <%@ page import="java.sql.SQLException" %>
+    <%@ page import="java.util.HashMap" %>
+    <%@ page import="dbHelpers.ReadQuery" %>
+    
+    <%! // Declaration block for variables and methods
+    private ResultSet results;
+    private ReadQuery readQuery;
+    String tableValue = "";
+    %>
+    <%// Get the new value from the form
+            // Initialization block
+            results = null;
+            readQuery = new ReadQuery();
 
-    <% String tableValue = (String) request.getAttribute("table"); %>
+            // Get the new value from the form
+            String query = "select * from craveconnect.v_FoodsuppliersPending;";
+            results = readQuery.ReadTableData(query);
+            
+            //Using a HashMap to dyniamicly make buttons, key = button name, value = button text
+            HashMap<String, String> hashMap = new HashMap<>();
+            hashMap.put("BtnDeny", "Deny");
+            hashMap.put("BtnApprove", "Approve");
+            //hashMap.put("test", "test");
+            
+            
+            String table = readQuery.outputResultAsHtmlTableWithButtons(results,hashMap);
+            tableValue = table;
+    %>
     <%= tableValue %>
-    
-    
-
 </body>
 
 </html>

@@ -25,8 +25,8 @@ public abstract class User {
     protected String RoleDescription;
     protected String LastSeen;  //Could be a datetime variable? but havent found one
  
-    
-        public User(String userName){
+    //Constructor
+    public User(String userName){
         try {
             ReadQuery readInstance = new ReadQuery();
             String query = "SELECT * FROM craveconnect.v_UserAndRoles where UserName = '"+userName+"';";
@@ -58,7 +58,8 @@ public abstract class User {
         
     }
     
-    public void LastLogin(){
+    //Methods
+    public void SetLastLogin(){
         //Getting the current local time
         LocalDateTime currentDateTime = LocalDateTime.now();
         // Format the current date and time using a DateTimeFormatter
