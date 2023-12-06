@@ -15,5 +15,6 @@
         <h1>Hello World!</h1>
         Today is: <%= new java.util.Date().toString()%>
         <a href="read">View All Friends</a>
+        <a href="Navigation.jsp">Navigation her</a>
     </body>
 </html>
