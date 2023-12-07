@@ -55,6 +55,7 @@
         out.print(foodItemsTable);
     } else {
         %><p>No food items found.</p><%
+            
     } 
 %>
 
