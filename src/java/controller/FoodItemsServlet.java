@@ -16,40 +16,30 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import model.FoodSupplier;
+import model.FoodItem;
 
 /**
  *
  * @author Bokaj
  */
-@WebServlet(name = "FoodSupplierServlet", urlPatterns = {"/foodSupplier"})
-public class FoodSupplierServlet extends HttpServlet {
+@WebServlet(name = "FoodItemsServlet", urlPatterns = {"/foodItems"})
+public class FoodItemsServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         try {
-            System.out.println("FoodSupplierServlet"); 
-            // Fetching supplier names and IDs from the model
-            List<String> foodSupplierInfo = FoodSupplier.getAllFoodSupplierNamesWithIDs();
-            request.setAttribute("foodSupplierNames", foodSupplierInfo);
+            int supplierId = Integer.parseInt(request.getParameter("supplierId"));
+            List<FoodItem> foodItems = FoodItem.getFoodItemsBySupplierID(supplierId);
+            String htmlTable = FoodItem.getAllFoodItems(foodItems);
 
-            String url = "/foodSupplier.jsp"; // JSP page to display Food Suppliers
+            request.setAttribute("foodItemsTable", htmlTable);
+            String url = "/foodItems.jsp"; // JSP page to display Food Items
+            System.out.println("FoodSupplierServlet tester"); 
             RequestDispatcher dispatcher = request.getRequestDispatcher(url);
             dispatcher.forward(request, response);
-        } catch (Exception ex) {
-            Logger.getLogger(FoodSupplierServlet.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NumberFormatException ex) {
+            Logger.getLogger(FoodItemsServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
-            throws ServletException, IOException {
-        // Implement any POST method logic if needed
-    }
-
-    @Override
-    public String getServletInfo() {
-        return "FoodSupplier Servlet";
     }
 }

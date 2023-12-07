@@ -30,6 +30,14 @@ public class ReadQuery extends CRUD {
         PreparedStatement preparedStatement = connection.prepareStatement(query);
         return preparedStatement.executeQuery();
     }
+    
+    // Updated method to handle query with parameters
+    public ResultSet ReadTableData(String query, int supplierID) throws SQLException {
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+        preparedStatement.setInt(1, supplierID); // Set the supplierID parameter
+        return preparedStatement.executeQuery();
+    }
+    
     //Get specific user
     public ResultSet ReadUser(List<String> parameters, String baseQuery) throws SQLException {
         
@@ -221,28 +229,6 @@ public class ReadQuery extends CRUD {
         return table;
     }
 
-    public String outputFoodItemsAsHtmlTable(List<FoodItem> foodItems) {
-    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    
-    StringBuilder table = new StringBuilder("<table border='1'>");
-    table.append("<tr><th>Food Item Name</th><th>Price</th><th>Link to Image</th><th>Supplier ID</th><th>Add Date</th><th>Modified Date</th><th>Category ID</th></tr>");
-
-    for (FoodItem item : foodItems) {
-        table.append("<tr>");
-        table.append("<td>").append(item.getFoodItemName()).append("</td>");
-        table.append("<td>").append(item.getPrice()).append("</td>");
-        table.append("<td><a href='").append(item.getLinkToFoodImage()).append("'>Image Link</a></td>");
-        table.append("<td>").append(item.getFoodSupplierID()).append("</td>");
-        table.append("<td>").append(dateFormat.format(item.getAddDate())).append("</td>");
-        table.append("<td>").append(dateFormat.format(item.getModifiedDate())).append("</td>");
-        table.append("<td>").append(item.getFoodItemCategoryID()).append("</td>");
-        table.append("</tr>");
-    }
-
-    table.append("</table>");
-    return table.toString();
-}
-
     public static void main(String[] args) {
         try {
             ReadQuery readInstance = new ReadQuery();
@@ -262,13 +248,5 @@ public class ReadQuery extends CRUD {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    public Object getConnection() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
-
-    public ResultSet ReadTableData(String query, int supplierID) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
 }

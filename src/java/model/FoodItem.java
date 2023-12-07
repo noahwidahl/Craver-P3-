@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 
 
 
@@ -93,6 +94,30 @@ public static List<FoodItem> getFoodItemsBySupplierID(int supplierID) {
     }
     return foodItems;
 }
+
+
+        // Method with a List of foodItems as input, returning af HTML table to show on the webpage
+        public static String getAllFoodItems(List<FoodItem> foodItems) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+        StringBuilder table = new StringBuilder("<table border='1'>");
+        table.append("<tr><th>Food Item Name</th><th>Price</th><th>Link to Image</th><th>Supplier ID</th><th>Add Date</th><th>Modified Date</th><th>Category ID</th></tr>");
+
+        for (FoodItem item : foodItems) {
+            table.append("<tr>");
+            table.append("<td>").append(item.getFoodItemName()).append("</td>");
+            table.append("<td>").append(item.getPrice()).append("</td>");
+            table.append("<td><a href='").append(item.getLinkToFoodImage()).append("'>Image Link</a></td>");
+            table.append("<td>").append(item.getFoodSupplierID()).append("</td>");
+            table.append("<td>").append(dateFormat.format(item.getAddDate())).append("</td>");
+            table.append("<td>").append(dateFormat.format(item.getModifiedDate())).append("</td>");
+            table.append("<td>").append(item.getFoodItemCategoryID()).append("</td>");
+            table.append("</tr>");
+        }
+
+        table.append("</table>");
+        return table.toString();
+    }
 
  // Getters
     public int getFoodItemID() {
