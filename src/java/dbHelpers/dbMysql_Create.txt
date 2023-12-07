@@ -9,7 +9,7 @@ CREATE TABLE Roles (
     RoleDescription VARCHAR(100) UNIQUE NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO Roles (RoleDescription) VALUES ('Administrator'), ('User'), ('Guest');
+INSERT INTO Roles (RoleDescription) VALUES ('Administrator'), ('User'), ('Guest'),('FoodSupplier');
 
 -- Creating the User Table
 CREATE TABLE User (
@@ -33,7 +33,7 @@ VALUES
     ('Niels', 'pass123word','Niels@test.dk', 1, '2023-11-26', '2023-11-26',null),
     ('Andreas', 'securepass','Andreas@test.dk', 3, '2023-11-26', '2023-11-26',null),
     ('Noah', 'userpass','Noah@test.dk', 1, '2023-11-26', '2023-11-26',null),
-    ('User7', 'passuser','User7@test.dk', 2, '2023-11-26', '2023-11-26',null),
+    ('Foodsupplier', '1234','User7@test.dk', 4, '2023-11-26', '2023-11-26',null),
     ('User8', 'randompass','User8@test.dk', 1, '2023-11-26', '2023-11-26',null),
     ('User9', 'pass1234','User9@test.dk', 2, '2023-11-26', '2023-11-26',null),
     ('User10', '1234pass','User10@test.dk', 1, '2023-11-26', '2023-11-26',null);
@@ -83,16 +83,16 @@ VALUES
 ('Thai to go', 'Boulevarden 14', '9000', 'Aalborg', '+45 98 8944 8836', 'www.thai-to-go.dk', '1', '2023-11-14', '2023-11-14', 57.046610, 9.919220, 1),
 ('Taste of India', 'Boulevarden 30', '9000', 'Aalborg', '+45 98 6612 9982', 'www.tasteofindia.dk', '1', '2023-11-14', '2023-11-14',57.045020, 9.918080, 1),
 ('Den store gode danske', 'Algade 39', '9000', 'Aalborg', '+45 98 4782 1004', 'www.Denstoregodedanske.dk', '1', '2023-11-14', '2023-11-14', 57.047570, 9.919540, 1),
-('Jakobs fisk', 'Myrdalstræde 279', '9220', 'Aalborg Øst', '+45 98 6893 4433', 'www.Jakobsfisk.dk', '1', '2023-11-14', '2023-11-14', 57.014431, 10.12345678, 1),
-('Dos Caminos', 'Fredericagade 21', '9000', 'Aalborg', '+45 98 8877 1102', 'www.Dos.Caminos.dk', '1', '2023-11-14', '2023-11-14', 57.051450, 9.904340, 1),
+('Jakobs fisk', 'Myrdalstræde 279', '9220', 'Aalborg Øst', '+45 98 6893 4433', 'www.Jakobsfisk.dk', '3', '2023-11-14', '2023-11-14', 57.014431, 10.12345678, 1),
+('Dos Caminos', 'Fredericagade 21', '9000', 'Aalborg', '+45 98 8877 1102', 'www.Dos.Caminos.dk', '3', '2023-11-14', '2023-11-14', 57.051450, 9.904340, 1),
 ('Japani', 'Sjællandsgade 83', '9000', 'Aalborg', '+45 98 6212 3830', 'www.japani-DK-aalborg.dk', '1', '2023-11-15', '2023-11-15', 57.044100, 9.944410, 1),
 ('Savory Haven', 'Danmarksgade 42', '9000', 'Aalborg', '+45 98 7654 3210', 'www.labellavita-aalborg.dk', '1', '2023-11-14', '2023-11-14', 57.045490, 9.922190, 1),
 ('Culinary Oasis', Null, Null, Null, Null, 'https://www.valdemarsro.dk/', '1', '2023-11-14', '2023-11-14',null,null, 2),
-('Gourmet Junction', Null, Null, Null, Null, 'https://www.arla.dk/produkter/arla-karolines-kokken/', '1', '2023-11-14', '2023-11-14',null,null, 2),
-('Flavor Fusion', Null, Null, Null, Null, 'https://www.valdemarsro.dk/', '1', '2023-11-14', '2023-11-14',null,null, 2),
-('Epicurean Delight', Null, Null, Null, Null, 'https://www.arla.dk/produkter/arla-karolines-kokken/', '1', '2023-11-14', '2023-11-14',null,null, 2),
+('Gourmet Junction', Null, Null, Null, Null, 'https://www.arla.dk/produkter/arla-karolines-kokken/', '3', '2023-11-14', '2023-11-14',null,null, 2),
+('Flavor Fusion', Null, Null, Null, Null, 'https://www.valdemarsro.dk/', '3', '2023-11-14', '2023-11-14',null,null, 2),
+('Epicurean Delight', Null, Null, Null, Null, 'https://www.arla.dk/produkter/arla-karolines-kokken/', '3', '2023-11-14', '2023-11-14',null,null, 2),
 ('Tasty Trails', Null, Null, Null, Null, 'https://www.valdemarsro.dk/', '1', '2023-11-14', '2023-11-14',null,null, 2),
-('Palate Paradise', Null, Null, Null, Null, 'https://www.arla.dk/produkter/arla-karolines-kokken/', '1', '2023-11-14', '2023-11-14',null,null, 2);
+('Palate Paradise', Null, Null, Null, Null, 'https://www.arla.dk/produkter/arla-karolines-kokken/', '3', '2023-11-14', '2023-11-14',null,null, 2);
 
 -- Creating the FoodItem Table
 CREATE TABLE FoodCategory (
@@ -343,3 +343,5 @@ create table craveconnect.UserGuestLog (
     AddDate datetime
 );
 
+create view craveconnect.v_FoodsuppliersPending as
+SELECT FoodsupplierID, FoodsupplierName, StateID FROM craveconnect.Foodsupplier where StateID = 3;

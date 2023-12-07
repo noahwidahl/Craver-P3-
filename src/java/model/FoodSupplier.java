@@ -132,7 +132,5 @@ public class FoodSupplier {
        double Longitude = doubleList.get(1);
        System.out.println(Latitude); 
        System.out.println(Longitude); 
-       
-
     }
 }
