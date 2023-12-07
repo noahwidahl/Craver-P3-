@@ -41,7 +41,7 @@
         <a href="${pageContext.request.contextPath}/profile.jsp">User profile</a> 
         <a href="${pageContext.request.contextPath}/admin.jsp">Admin</a> 
         <a href="${pageContext.request.contextPath}/foodsupplier">Se alle restauranter her</a> <!-- New Button -->
-        <a href="${pageContext.request.contextPath}/Navigation.jsp">Navigation her</a>
+        <a href="${pageContext.request.contextPath}/navigation.jsp">Navigation her</a>
 
 <%
    } else if (userRole == 2) {  //Menubar User
