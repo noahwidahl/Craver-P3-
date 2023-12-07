@@ -1,10 +1,15 @@
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="java.util.List"%>
+<%@page import="model.FoodItem"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="java.util.Map"%>
+
 <%-- 
     Document   : Home
     Created on : 26. nov. 2023, 21.16.05
     Author     : Bokaj
 --%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!Doctype HTML>
 
 <html>
@@ -88,20 +93,64 @@
   </div>
 
 
-<!-- Menu elements stop -->
+<!-- Søgeformular til at bruge SearchDishesServlet -->
+<form action="${pageContext.request.contextPath}/SearchDishes" method="get" class="search-form">
+    <input type="text" id="search-bar" name="searchTerm" placeholder="Skriv en ret eller brug filtrene under til at finde din ret">
+    <button type="submit">Søg</button>
+</form>
 
-  
-  <div class="square">
-    <p class="title">Hvad Craver du i dag?</p>
-  </div>
+    <!-- Tags for kategorier -->
+<div class="category-tags">
+    <%
+        System.out.println("her");
+        Map<Integer, String> categories = FoodItem.getAllCategories();
+        request.setAttribute("categories", categories);
+    
+        if (categories != null && !categories.isEmpty()) {
+            // Loop gennem kategorier og opret knapper for hver kategori
+            for (Map.Entry<Integer, String> entry : categories.entrySet()) {
+                
+                int id = entry.getKey();
+                String value = entry.getValue();
+    %>
+                <a href='<%= request.getContextPath() %>/SearchDishes?category=<%= id %>' class='category-tag'><%= value %></a>
+    <%
+            }
+        }
+    %>
+</div>
+    
+<!-- Visning af søgeresultater HUSK MIG! -->
+    <div class="search-results">
+        <% 
+            List<FoodItem> dishes = (List<FoodItem>) request.getAttribute("dishes");
+            if (dishes != null && !dishes.isEmpty()) {
+                out.println("<ul class='dishes-list'>");
+                for (FoodItem dish : dishes) {
+                    out.println("<li class='dish-item'>");
+                    out.println("<img src='" + dish.getLinkToFoodImage() + "' alt='" + dish.getFoodItemName() + "' class='dish-image'>"); // Viser billedet
+                    out.println("<div class='dish-details'>");
+                    out.println("<h3 class='dish-name'>" + dish.getFoodItemName() + "</h3>"); // Viser navn
+                    out.println("<p class='dish-price'>Pris: " + dish.getPrice() + " kr.</p>"); // Viser pris
+                    
+                    // Tilføjelse for at vise ingredienser
+                    if (dish.getIngredients() != null && !dish.getIngredients().isEmpty()) {
+                        out.println("<ul class='dish-ingredients'>");
+                        for (String ingredient : dish.getIngredients()) {
+                            out.println("<li class='ingredient'>" + ingredient + "</li>");
+                        }
+                        out.println("</ul>");
+                    }
 
-    <form action="home" method="get">
-        <input type="text" id="search-bar" name="newValueName" placeholder="Skriv en ingrediens eller brug filtrene under til at finde din ret">
-        <button type="submit">Update Table</button>
-    </form>
-
-    <% String tableValue = (String) request.getAttribute("table"); %>
-    <%= tableValue %>
+                    out.println("</div>");
+                    out.println("</li>");
+                }
+                out.println("</ul>");
+            } else if (request.getParameter("searchTerm") != null) {
+                out.println("<p>Ingen resultater fundet.</p>");
+            }
+        %>
+    </div>
 
 </body>
 

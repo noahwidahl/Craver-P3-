@@ -228,6 +228,26 @@ public class ReadQuery extends CRUD {
         table += "</table>";
         return table;
     }
+    
+    // Metode til at udføre en forespørgsel med parametre (til FoodItem og Ingredient søgning)
+    public ResultSet readTableDataWithParameters(String query, List<Object> params) throws SQLException {
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+        // Sætter parametrene for PreparedStatement
+        for (int i = 0; i < params.size(); i++) {
+            preparedStatement.setObject(i + 1, params.get(i));
+        }
+
+        return preparedStatement.executeQuery();
+    }
+
+// Metode til at læse kategorier
+    public ResultSet readCategories() throws SQLException {
+        String query = "SELECT * FROM FoodCategory";
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+        return preparedStatement.executeQuery();
+    } 
+    
 
     public static void main(String[] args) {
         try {
