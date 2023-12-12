@@ -15,13 +15,15 @@ import java.util.List;
  * @author Bokaj
  */
 public class Ingredient {
+    int ingredientID;
+    String ingredientName;
     
     public static void getAllIngredients(String ingredientsQuery) {
         try {
             System.out.println(ingredientsQuery);
             ReadQuery readInstance = new ReadQuery();   //Creating ReadQuery object
             
-            ResultSet result = readInstance.ReadTableData(ingredientsQuery);
+            ResultSet result = readInstance.readTableData(ingredientsQuery);
             //System.out.println(readInstance.outputResultAsHtmlTable(result));
             System.out.println(readInstance.outputResultAsText(result));
             
@@ -40,7 +42,7 @@ public class Ingredient {
             System.out.println(ingredientsQuery);
             ReadQuery readInstance = new ReadQuery();   //Creating ReadQuery object
             
-            ResultSet result = readInstance.ReadTableData(ingredientsQuery);
+            ResultSet result = readInstance.readTableData(ingredientsQuery);
             //System.out.println(readInstance.outputResultAsHtmlTable(result));
             System.out.println(readInstance.outputResultAsText(result));
  

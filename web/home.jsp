@@ -3,6 +3,7 @@
 <%@page import="model.FoodItem"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.Map"%>
+<%@page import="model.RegisteredUser"%>
 
 <%-- 
     Document   : Home
@@ -24,14 +25,16 @@
 <!-- Menu elements start -->    
         <%-- getting the session variables used in the form --%>
     <%
-        String userName = (String) session.getAttribute("sessionUserName");
-        request.setAttribute("varUserName", userName);
-        int userID = (int) session.getAttribute("sessionUserID");
-        request.setAttribute("varUserID", userID);
-        int userRole = (int) session.getAttribute("sessionUserRole");
-        request.setAttribute("varUserRole", userRole);
-        String UserRoleDescription = (String) session.getAttribute("sessionUserRoleDescription");
-        request.setAttribute("varUserRoleDescription", UserRoleDescription);
+        int userRole = 0;
+
+        try {
+            RegisteredUser userLoggedIn = (RegisteredUser) session.getAttribute("sessionUserObject");
+            userRole = userLoggedIn.getUserID();
+            request.setAttribute("varUserName", userLoggedIn.getUserName());
+        } catch (Exception ex) {
+            userRole = 3;
+            request.setAttribute("varUserName", "Guest");
+        }
     %>
     
     

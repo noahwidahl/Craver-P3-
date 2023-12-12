@@ -1,3 +1,4 @@
+<%@page import="model.RegisteredUser"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -11,14 +12,15 @@
 <!-- Menu elements start -->    
         <%-- getting the session variables used in the form --%>
     <%
-        String userName = (String) session.getAttribute("sessionUserName");
-        request.setAttribute("varUserName", userName);
-        int userID = (int) session.getAttribute("sessionUserID");
-        request.setAttribute("varUserID", userID);
-        int userRole = (int) session.getAttribute("sessionUserRole");
-        request.setAttribute("varUserRole", userRole);
-        String UserRoleDescription = (String) session.getAttribute("sessionUserRoleDescription");
-        request.setAttribute("varUserRoleDescription", UserRoleDescription);
+        RegisteredUser userLoggedIn = (RegisteredUser) session.getAttribute("sessionUserObject");
+        int userRole = userLoggedIn.getUserID();
+        request.setAttribute("varUserName", userLoggedIn.getUserName());
+        request.setAttribute("varUserID", userRole);
+        request.setAttribute("varUserRole", userLoggedIn.getUserRole());  // Assuming you have a getUserRole() method in RegisteredUser
+        request.setAttribute("varUserRoleDescription", userLoggedIn.getUserRoleDescription());  // Assuming you have a getUserRoleDescription() method
+        request.setAttribute("Addresse", userLoggedIn.getAddress());
+        request.setAttribute("PostNr", userLoggedIn.getAddress());
+        request.setAttribute("PostBy", userLoggedIn.getAddress());
     %>
     
     

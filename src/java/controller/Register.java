@@ -85,7 +85,7 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
         return;
     }
     // Call method in registerquery to insert data into the database
-    boolean nextStep = RegisteredUser.registerUser(username,password,email);
+    boolean nextStep = RegisteredUser.createOwnUser(username,password,email);
     
     if(nextStep==true){
         // You can add further logic for success or failure and redirect the user accordingly

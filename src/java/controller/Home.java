@@ -81,7 +81,7 @@ public class Home extends HttpServlet {
                 query = "SELECT * FROM craveconnect.FoodItem where FoodsupplierID = "+newValue+";"; // Code to be executed if the boolean expression is false
             }
             
-            results = readQuery.ReadTableData(query);
+            results = readQuery.readTableData(query);
             
             String table = readQuery.outputResultAsHtmlTable(results);
             
@@ -118,7 +118,7 @@ public class Home extends HttpServlet {
         // DETTE ER TIL TEST
         try {
             ReadQuery read = new ReadQuery();
-            results = read.ReadTableData("SELECT * FROM craveconnect.Ingredients;");
+            results = read.readTableData("SELECT * FROM craveconnect.Ingredients;");
             read.outputResultAsHtmlTable(results);
             System.out.println(); 
         } catch (SQLException ex) {

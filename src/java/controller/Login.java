@@ -94,51 +94,58 @@ protected void doPost(HttpServletRequest request, HttpServletResponse response)
         String password = request.getParameter("pword");
         String loginType = request.getParameter("loginType");
         
-        System.out.println(username);
-        System.out.println(password);
+        //System.out.println(username);
+        //System.out.println(password);
         System.out.println("Login type: " + loginType);
 
         if("user".equals(loginType)){
+            System.out.println("step 1");
             RegisteredUser userLogginIn = new RegisteredUser(username);
 
-        // Perform the Login check using your RegisteredUser class and checkLogin method
-        boolean isValidUser = userLogginIn.checkLogin(username, password);
+            // Perform the Login check using your RegisteredUser class and checkLogin method
+            boolean isValidUser = userLogginIn.checkLogin(username, password);
 
-        if (isValidUser) {
-            // If Login is successful, you might want to set user information in the session
-            request.getSession().setAttribute("sessionUserName", username);
-            request.getSession().setAttribute("sessionUserID", userLogginIn.getUserID());
-            request.getSession().setAttribute("sessionUserRole", userLogginIn.getUserRole());
-            request.getSession().setAttribute("sessionUserRoleDescription", userLogginIn.getUserRoleDescription());
-            //System.out.println("her: "+request.getSession().getAttribute("userID"));
+            if (isValidUser) {
+                
+                // If Login is successful, you might want to set user information in the session
+                request.getSession().setAttribute("sessionUserObject", userLogginIn);
+                //System.out.println("her: "+request.getSession().getAttribute("userID"));
+
+                //Updating LastSeen column in DB
+                userLogginIn.setLastLogin();
+                //System.out.println("UserID is: "+userLogginIn.getUserID());
+                // Redirect to a dashboard or home page
+                response.sendRedirect("home.jsp");
+            }  else {
+                System.out.println("step 3");
+                // If Login fails, display message
+                RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
+                request.setAttribute("error", "Invalid username or password");
+                dispatcher.forward(request, response);
+            } 
             
-            //Updating LastSeen column in DB
-            userLogginIn.SetLastLogin();
-            //System.out.println("UserID is: "+userLogginIn.getUserID());
-            // Redirect to a dashboard or home page
-            response.sendRedirect("home.jsp");
-        } else {
-            // If Login fails, display message
-            RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
-            request.setAttribute("error", "Invalid username or password");
-            dispatcher.forward(request, response);
-        }  
         }else if("guest".equals(loginType)){
-            request.getSession().setAttribute("sessionUserName", "Guest");
-            request.getSession().setAttribute("sessionUserID", 0);
-            request.getSession().setAttribute("sessionUserRole", 3);
-            request.getSession().setAttribute("sessionUserRoleDescription", "Guest");
-            
-            GuestUser guest = new GuestUser("guest");
-            try {
-                guest.setGuestLogin();
-            } catch (SQLException ex) {
-                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
-            response.sendRedirect("home.jsp");
-        }
-        
+                System.out.println("step 2");
+                // If Login is successful, you might want to set user information in the session
+                GuestUser guestUserLogginIn = new GuestUser("Guest");
+                System.out.println("UserID is: "+guestUserLogginIn.getUserID());
+                request.getSession().setAttribute("sessionUserObject", guestUserLogginIn);
+                
+                //request.getSession().setAttribute("sessionUserName", "Guest");
+                //request.getSession().setAttribute("sessionUserID", 0);
+                //request.getSession().setAttribute("sessionUserRole", 3);
+                //request.getSession().setAttribute("sessionUserRoleDescription", "Guest");
+
+                GuestUser guest = new GuestUser("guest");
+                try {
+                    guest.setGuestLogin();
+                } catch (SQLException ex) {
+                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                response.sendRedirect("home.jsp");
+            } 
+        System.out.println("step 4");
     }
     
 

@@ -100,7 +100,7 @@ public class Read extends HttpServlet {
                 query = "SELECT * FROM craveconnect.FoodItem where FoodsupplierID = "+newValue+";"; // Code to be executed if the boolean expression is false
             }
             
-            results = readQuery.ReadTableData(query);
+            results = readQuery.readTableData(query);
             
             String table = readQuery.outputResultAsHtmlTableWithInteractiveButtons(results,2);
             

@@ -26,20 +26,20 @@ public class ReadQuery extends CRUD {
         super(); // Calls the constructor of the CRUD class to establish a database connection
     }
     //Generic method to get all table data
-    public ResultSet ReadTableData(String query) throws SQLException {
+    public ResultSet readTableData(String query) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(query);
         return preparedStatement.executeQuery();
     }
     
     // Updated method to handle query with parameters
-    public ResultSet ReadTableData(String query, int supplierID) throws SQLException {
+    public ResultSet readTableData(String query, int supplierID) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(query);
         preparedStatement.setInt(1, supplierID); // Set the supplierID parameter
         return preparedStatement.executeQuery();
     }
     
     //Get specific user
-    public ResultSet ReadUser(List<String> parameters, String baseQuery) throws SQLException {
+    public ResultSet readUser(List<String> parameters, String baseQuery) throws SQLException {
         
         // StringBuilder to build the query dynamically
         StringBuilder queryBuilder = new StringBuilder(baseQuery);
@@ -138,48 +138,47 @@ public class ReadQuery extends CRUD {
     
     
     
-    public String outputResultAsHtmlTableWithButtons(ResultSet results, HashMap<String, String> hashMap) {
-    // Generating SQL datatable as an HTML table
-    String table = "<table border=1>";
+    public String outputResultAsHtmlTableWithButtons(ResultSet results, HashMap<String, String> hashMap, String action) {
+        // Generating SQL datatable as an HTML table
+        StringBuilder tableBuilder = new StringBuilder("<table border=1>");
 
-    try {
-        // Get the ResultSetMetaData to obtain column names
-        ResultSetMetaData metaData = results.getMetaData();
-        int columnCount = metaData.getColumnCount();
+        try {
+            // Get the ResultSetMetaData to obtain column names
+            ResultSetMetaData metaData = results.getMetaData();
+            int columnCount = metaData.getColumnCount();
 
-        // Create table headers based on column names
-        table += "<tr>";
-        for (int i = 1; i <= columnCount; i++) {
-            String columnName = metaData.getColumnName(i);
-            table += "<th>" + columnName + "</th>";
-        }
-        table += "</tr>";
-
-        // Loop through the result set and generate data rows
-        while (results.next()) {
-            table += "<tr>";
+            // Create table headers based on column names
+            tableBuilder.append("<tr>");
             for (int i = 1; i <= columnCount; i++) {
-                String columnValue = results.getString(i);
-                table += "<td>" + columnValue + "</td>";
-                
-                
+                String columnName = metaData.getColumnName(i);
+                tableBuilder.append("<th>").append(columnName).append("</th>");
             }
-            //System.out.println(results.getString(1));
-            for (String key : hashMap.keySet()) {
-                //System.out.println("Key: " + key + ", Value: " + hashMap.get(key));
-                //<form action="admin" method="post"><input type="hidden" name="parameterName" value="parameterValue"><button type="submit">Søg</button></form>   
-                //table += "<td><button type='submit' class='"+key+"' id='BtnDeny' value='"+results.getString(1)+"'>"+hashMap.get(key)+"</button></td>";
-                table += "<td><form action='admin' method='post'><input type='hidden' name='parameterName' value='"+key+": "+results.getString(1)+"'><button type='submit' onclick='reloadPage()'>"+hashMap.get(key)+"</button></form></td>";
-                //System.out.println(table);
-            }
-            table += "</tr>";
-        }
-    } catch (SQLException ex) {
-        Logger.getLogger(ReadQuery.class.getName()).log(Level.SEVERE, null, ex);
-    }
+            tableBuilder.append("</tr>");
 
-    table += "</table>";
-    return table;
+            // Loop through the result set and generate data rows
+            while (results.next()) {
+                tableBuilder.append("<tr>");
+                for (int i = 1; i <= columnCount; i++) {
+                    String columnValue = results.getString(i);
+                    tableBuilder.append("<td>").append(columnValue).append("</td>");
+                }
+
+                for (String key : hashMap.keySet()) {
+                    tableBuilder.append("<td><form action='").append(action)
+                        .append("' method='post'><input type='hidden' name='parameterName' value='")
+                        .append(key).append(": ").append(results.getString(1))
+                        .append("'><button type='submit' onclick='reloadPage()'>")
+                        .append(hashMap.get(key)).append("</button></form></td>");
+                }
+
+                tableBuilder.append("</tr>");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ReadQuery.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        tableBuilder.append("</table>");
+        return tableBuilder.toString();
     }
     
     
@@ -258,9 +257,9 @@ public class ReadQuery extends CRUD {
             System.out.println(htmlTable);
 
             // Other example usage of ReadQuery methods
-            ResultSet result = readInstance.ReadTableData("SELECT * FROM craveconnect.Roles;");
+            ResultSet result = readInstance.readTableData("SELECT * FROM craveconnect.Roles;");
             System.out.println(readInstance.outputResultAsHtmlTable(result));
-            ResultSet resultText = readInstance.ReadTableData("SELECT * FROM craveconnect.Foodsupplier;");
+            ResultSet resultText = readInstance.readTableData("SELECT * FROM craveconnect.Foodsupplier;");
             System.out.println(readInstance.outputResultAsText(resultText));
 
             // Disconnect from the database

@@ -13,11 +13,15 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import dbHelpers.ReadQuery;
+import dbHelpers.UpdateQuery;
 import jakarta.servlet.http.HttpSession;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.Rating;
+import model.RegisteredUser;
 
 /**
  *
@@ -65,6 +69,20 @@ public class Profile extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // Retrieve the session User Object, assigned at login
+        RegisteredUser userLoggedIn = (RegisteredUser) request.getSession().getAttribute("sessionUserObject");
+        
+        // Default behavior, e.g., display profile information
+        System.out.println("Profile2");
+            
+        String table = userLoggedIn.getOwnRatings();
+        request.setAttribute("table", table);
+            
+        String url ="/profile.jsp";
+        // Forward the request to the profile.jsp page
+        RequestDispatcher dispatcher = request.getRequestDispatcher(url);
+        dispatcher.forward(request, response);
+
         processRequest(request, response);
     }
 
@@ -79,33 +97,82 @@ public class Profile extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        //Reading the hidden first column value in a table, the value in the hashtable parsed
+        String parameterValue = request.getParameter("parameterName");
+          
+                if(parameterValue == null || "".equals(parameterValue)){
+                //what to do when is doesnt have data.
+                }else if(parameterValue.contains("BtnDelete")){
+                    //splitting the hash table
+                    String[] parts = parameterValue.split(":");
+                    //System.out.println("testing here: "+parts[1].trim()); 
+                    //creating rating obj and running the method to delete rating.
+                    Rating deleteRating = new Rating(Integer.parseInt(parts[1].trim()));
+                    deleteRating.deleteRating();
+                    
+                    String url ="/profile.jsp";
+                    // Forward the request to the profile.jsp page
+                    RequestDispatcher dispatcher = request.getRequestDispatcher(url);
+                    dispatcher.forward(request, response); 
+                }else{
+                    System.out.println(parameterValue); 
+                }
         
-        
-        // Retrieve the session userName, assigned at login
-        String sessionUserName = (String) request.getSession().getAttribute("sessionUserName");
-        
-        
-        ReadQuery readQuery;
-        try {
-            readQuery = new ReadQuery();
-            String query = "SELECT * FROM craveconnect.Rating where UserId = (SELECT UserId FROM craveconnect.User where UserName = '"+sessionUserName+"');";
-            //System.out.println(query);
-            results = readQuery.ReadTableData(query);
-            //System.out.println(results);
-            String table = readQuery.outputResultAsHtmlTable(results);
-            //System.out.println(table);
-            //Pass execution control to read.jsp along with the table.
-            request.setAttribute("table", table);
-            String url ="/profile.jsp";
-            
-            
-             // Forward the request to the profile.jsp page
-            RequestDispatcher dispatcher = request.getRequestDispatcher(url);
-            dispatcher.forward(request, response);
-        } catch (SQLException ex) {
-            Logger.getLogger(Profile.class.getName()).log(Level.SEVERE, null, ex);
+        parameterValue = request.getParameter("DeleteUseraction");
+        if(parameterValue == null || "".equals(parameterValue)){
+                //what to do when is doesnt have data.
+        }else if(parameterValue.contains("DeleteUser")){
+            System.out.println("DeleteUseraction: "+parameterValue); 
+            //Getting the current user obj
+            RegisteredUser deleteUser = (RegisteredUser) request.getSession().getAttribute("sessionUserObject");
+            //Deleting the user obj
+            deleteUser.deleteOwnUser(deleteUser.getUserID());
+            //Cleanup of seesion variable
+            request.getSession().setAttribute("sessionUserObject", null);
+            //Redirecting to login page
+            response.sendRedirect("login.jsp");  
         }
+                
+        // Retrieve the session User Object, assigned at login
+        RegisteredUser userLoggedIn = (RegisteredUser) request.getSession().getAttribute("sessionUserObject");
         
+        String action = request.getParameter("Updateaction");
+        
+        if ("updateInfo".equals(action)) {
+            System.out.println("Updateaction: "+action);
+            // Handle the "Update Info" action
+            String address = request.getParameter("Addresse");
+            String postNr = request.getParameter("PostNr");
+            String postBy = request.getParameter("PostBy");
+
+            //System.out.println("Profile");
+            //System.out.println("Address: " + address);
+            //System.out.println("PostNr: " + postNr);
+            //System.out.println("PostBy: " + postBy);
+               // Extract the first four letters of postNr
+            String truncatedPostNr = postNr.substring(0, Math.min(postNr.length(), 4));
+            
+            RegisteredUser updateUser = new RegisteredUser(userLoggedIn.getUserName());
+            boolean control = updateUser.updateOwnUser(address, truncatedPostNr, postBy);
+            System.out.println("control: " + control);
+            if (control) {
+            // Update the session object with the new information
+            userLoggedIn.setAddress(address);
+            userLoggedIn.setPostNr(postNr);
+            userLoggedIn.setPostBy(postBy);
+            request.getSession().setAttribute("sessionUserObject", userLoggedIn);
+            System.out.println("User information updated successfully.");
+            } else {
+                System.out.println("Failed to update user information.");
+                // Handle failure scenario, e.g., display an error message
+            }
+          String url ="/profile.jsp";
+        // Forward the request to the profile.jsp page
+        RequestDispatcher dispatcher = request.getRequestDispatcher(url);
+        dispatcher.forward(request, response);         
+        }   
+         
+                
     }
 
     /**

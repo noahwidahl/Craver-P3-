@@ -3,7 +3,7 @@
     Created on : 26. nov. 2023, 21.15.56
     Author     : Bokaj
 --%>
-
+<%@page import="model.RegisteredUser"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!Doctype HTML>
 
@@ -19,14 +19,15 @@
 <!-- Menu elements start -->    
         <%-- getting the session variables used in the form --%>
     <%
-        String userName = (String) session.getAttribute("sessionUserName");
-        request.setAttribute("varUserName", userName);
-        int userID = (int) session.getAttribute("sessionUserID");
-        request.setAttribute("varUserID", userID);
-        int userRole = (int) session.getAttribute("sessionUserRole");
-        request.setAttribute("varUserRole", userRole);
-        String UserRoleDescription = (String) session.getAttribute("sessionUserRoleDescription");
-        request.setAttribute("varUserRoleDescription", UserRoleDescription);
+        RegisteredUser userLoggedIn = (RegisteredUser) session.getAttribute("sessionUserObject");
+        int userRole = userLoggedIn.getUserID();
+        request.setAttribute("varUserName", userLoggedIn.getUserName());
+        request.setAttribute("varUserID", userRole);
+        request.setAttribute("varUserRole", userLoggedIn.getUserRole());  // Assuming you have a getUserRole() method in RegisteredUser
+        request.setAttribute("varUserRoleDescription", userLoggedIn.getUserRoleDescription());  // Assuming you have a getUserRoleDescription() method
+        request.setAttribute("Addresse", userLoggedIn.getAddress());
+        request.setAttribute("PostNr", userLoggedIn.getPostNr());
+        request.setAttribute("PostBy", userLoggedIn.getPostBy());
     %>
     
     
@@ -91,7 +92,7 @@
 <!-- Menu elements stop -->
     
 
- <div id="square4" class="square">
+
   
 
         <label for="userID">UserID:</label>
@@ -104,22 +105,38 @@
         <input type="text" id="userRole" name="userRole" disabled value="${varUserRoleDescription}"><br>
 
 
-    </div>
-        <div id="square4" class="square">
-            <form id="deleteForm" action="/delete" method="post">
-            <button type="button" onclick="confirmDelete()">Delete</button>
-            
-        </form>
-            
-        </div>  <br> 
+
         
-         </div>
-        <div id="square4" class="square">
+        <form action="profile" method="post">
+            <!-- Adding a hidden input to identify the action -->
+             <label for="LabelAddresse">Addresse:</label>
+            <input type="text" id="Addresse" name="Addresse" value="${Addresse}"><br>
+
+            <label for="PostNr">PostNr</label>
+            <input type="text" id="PostNr" name="PostNr" value="${PostNr}"><br>
+
+            <label for="PostBy">PostBy</label>
+            <input type="text" id="PostBy" name="PostBy" value="${PostBy}"><br><br>
+            
+            <input type="hidden" name="Updateaction" value="updateInfo">
+            <button id="UpdateInfo" type="submit" style="background-color: lightgreen;">Update info</button>
+            
+        </form><br> 
+            
+        <form action="profile" method="post">
+            <input type="hidden" name="DeleteUseraction" value="DeleteUser">
+            <button id="BtnDeleteUser" type="submit" style="background-color: red;">Delete user</button>   
+        </form>    
+            
+            <br> 
+        
+        
+        
             <h1>Your ratings</h1>  
             
-        </div> <br> 
+      
 
-        <div id="square4" class="square">
+    
             <div id="tableContent" ></div>
     
     
@@ -176,7 +193,7 @@
             }
         };
 
-        xhr.open("POST", "profile", true); //http://localhost:8080/Crave/profile
+        xhr.open("GET", "profile", true); //http://localhost:8080/Crave/profile
         xhr.send();
     };
 </script>

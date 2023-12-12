@@ -79,7 +79,7 @@ public class Admin extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-            
+        //Handling onload    
         try {
             //Create a ReadQuery helper object
             ReadQuery readQuery = new ReadQuery();
@@ -87,7 +87,7 @@ public class Admin extends HttpServlet {
             
             // Get the new value from the form
             String query = "select * from craveconnect.v_FoodsuppliersPending;";
-            results = readQuery.ReadTableData(query);
+            results = readQuery.readTableData(query);
             
             //Using a HashMap to dyniamicly make buttons, key = button name, value = button text
             HashMap<String, String> hashMap = new HashMap<>();
@@ -96,7 +96,7 @@ public class Admin extends HttpServlet {
             //hashMap.put("test", "test");
             
             
-            String table = readQuery.outputResultAsHtmlTableWithButtons(results,hashMap);
+            String table = readQuery.outputResultAsHtmlTableWithButtons(results,hashMap,"admin");
             
             //Pass execution control to read.jsp along with the table.
             request.setAttribute("table", table);
@@ -110,7 +110,7 @@ public class Admin extends HttpServlet {
             Logger.getLogger(Read.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        //Handling what happens when the added Deny and Approve buttons are pressed
+        //Reading the hidden first column value in a table
         String parameterValue = request.getParameter("parameterName");
         try {    
                 UpdateQuery updateInstance = new UpdateQuery();
@@ -132,6 +132,11 @@ public class Admin extends HttpServlet {
                 }else{
                     System.out.println(parameterValue); 
                 }
+                
+                String url ="/admin.jsp";
+
+                RequestDispatcher dispatcher = request.getRequestDispatcher(url);
+                dispatcher.forward(request, response);
             } catch (SQLException ex) {
                 Logger.getLogger(Admin.class.getName()).log(Level.SEVERE, null, ex);
             }

@@ -1,22 +1,22 @@
 <%@page import="model.RegisteredUser"%>
-<%-- 
-    Document   : Home
-    Created on : 26. nov. 2023, 21.16.05
-    Author     : Bokaj
---%>
-
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
-<!Doctype HTML>
-
+<%@page import="model.FoodItem"%>
+<%@page import="java.util.List"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>CraveConnect</title>
+<head>
+    <title>Food Items</title>
     <link href="${pageContext.request.contextPath}/style.css" rel="stylesheet">
 
-  </head>
+</head>
+
+        <%@page import="model.FoodItem"%>
+    <%
+        FoodItem specificFoodItem = (FoodItem) session.getAttribute("sessionFoodItemID");
+        request.setAttribute("varFoodItemID", specificFoodItem.getFoodItemID());
+        request.setAttribute("varFoodItemName", specificFoodItem.getFoodItemName());
+        request.setAttribute("varPrice", specificFoodItem.getPrice());  // Assuming you have a getUserRole() method in RegisteredUser
+    %>
 <body>
-    
 <!-- Menu elements start -->    
         <%-- getting the session variables used in the form --%>
     <%
@@ -91,52 +91,38 @@
 
 
 <!-- Menu elements stop -->
-
-  
-  <div class="square">
-    <p class="title">Disse står til godkendelse</p>
-  </div>
-
-    <form action="admin" method="post">
-        <button type="submit">Søg</button>
-    </form>
-    <script>
-    function reloadPage() {
-        location.reload();
-    }
-</script>
     
-    <%! // Should be a servlet, but can't find a way to automatic load using a servlet%>
-    <%@ page import="java.sql.ResultSet" %>
-    <%@ page import="java.sql.SQLException" %>
-    <%@ page import="java.util.HashMap" %>
-    <%@ page import="dbHelpers.ReadQuery" %>
-    
-    <%! // Declaration block for variables and methods
-    private ResultSet results;
-    private ReadQuery readQuery;
-    String tableValue = "";
-    %>
-    <%// Get the new value from the form
-            // Initialization block
-            results = null;
-            readQuery = new ReadQuery();
 
-            // Get the new value from the form
-            String query = "select * from craveconnect.v_FoodsuppliersPending;";
-            results = readQuery.readTableData(query);
+<h2>Food Items</h2>
+
+
+    <form action="foodItem" method="post">
+            <label for="foodItemID">Food Item ID:</label>
+            <span id="foodItemID">${varFoodItemID}</span><br>
             
-            //Using a HashMap to dyniamicly make buttons, key = button name, value = button text
-            HashMap<String, String> hashMap = new HashMap<>();
-            hashMap.put("BtnDeny", "Deny");
-            hashMap.put("BtnApprove", "Approve");
-            //hashMap.put("test", "test");
+            <label for="foodItemName">Food Item Name:</label>
+            <span id="foodItemName">${varFoodItemName}</span><br>
+            
+            <label for="price">Price:</label>
+            <span id="price">${varPrice}</span><br><br>
             
             
-            String table = readQuery.outputResultAsHtmlTableWithButtons(results,hashMap,"admin");
-            tableValue = table;
-    %>
-    <%= tableValue %>
+            <label for="multiLineInput">Submit rating her!</label><br>
+            
+            <label for="rating">Rate from 1 to 5:</label><br>
+            <select id="rating" name="rating">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3" selected>3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select><br>
+            
+            <label for="multiLineInput">Enter comment here:</label><br>
+            <textarea id="multiLineInput" name="multiLineInputCommentSection" rows="4" cols="50" maxlength="250" placeholder="Type your text here... Max 250 chars"></textarea><br>
+            
+            <input type="submit" value="Submit rating">
+        </form>
+
 </body>
-
 </html>

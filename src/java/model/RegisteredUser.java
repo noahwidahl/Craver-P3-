@@ -4,11 +4,14 @@
  */
 package model;
 
+import controller.Profile;
 import dbHelpers.ReadQuery;
 import dbHelpers.CreateQuery;
+import jakarta.servlet.RequestDispatcher;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,49 +21,14 @@ import java.util.logging.Logger;
  * @author Bokaj
  */
 public class RegisteredUser extends User {
+    private ResultSet results;
+    
     public RegisteredUser(String UserName) {
         super(UserName);
     }
  
-    
-// Helper method to check if a ResultSet has exactly one row
-private static boolean hasSingleRow(ResultSet resultSet) throws SQLException {
-    return resultSet.next() && !resultSet.next();
-}   
-    
-    public boolean checkLogin(String userName, String password) {
-       
-    try {
-        ReadQuery readInstance = new ReadQuery();   //Creating ReadQuery object
-        List<String> stringList = new ArrayList<>();    //Creating an ArrayList to store data
-        stringList.add(userName);
-        stringList.add(password);
-
-        // Getting the result from the ReadQuery object, using the ReadUser method
-        ResultSet result = readInstance.ReadUser(stringList, "SELECT * FROM craveconnect.User");
-        System.out.println("testing");
-        
-        // Check amount of rows
-        if (hasSingleRow(result)) {
-            System.out.println("One row");
-            return true;    // User can login
-            
-        } else {
-            System.out.println("Not One row");
-            return false;   //User is denied
-        }
-
-    } catch (SQLException e) {
-        
-        e.printStackTrace();
-        System.out.println("fejl");
-        return false;
-    }
-
-}
-
     // registerUser method
-    public static boolean registerUser(String userName, String password, String email) {
+    public static boolean createOwnUser(String userName, String password, String email) {
         try {
          // Define your SQL INSERT statement
             String sql = "INSERT INTO craveconnect.User (username, password) VALUES ('"+userName+"', '"+password+"');";
@@ -86,6 +54,31 @@ private static boolean hasSingleRow(ResultSet resultSet) throws SQLException {
             return false;
         }
     }
+    
+    public String getOwnRatings(){
+        try {
+                
+            ReadQuery readQuery = new ReadQuery();
+                String query = "SELECT * FROM craveconnect.Rating where UserId = (SELECT UserId FROM craveconnect.User where UserID = "+this.userID+");";
+                //System.out.println(query);
+                results = readQuery.readTableData(query);
+                //System.out.println(results);
+                
+                //Using a HashMap to dyniamicly make buttons, key = button name, value = button text
+                HashMap<String, String> hashMap = new HashMap<>();
+                hashMap.put("BtnDelete", "Delete Rating");
+                
+                String table = readQuery.outputResultAsHtmlTableWithButtons(results,hashMap,"profile");
+                return table;
+                //System.out.println(table);
+                //Pass execution control to read.jsp along with the table.
+
+            } catch (SQLException ex) {
+                Logger.getLogger(Profile.class.getName()).log(Level.SEVERE, null, ex);
+                return "fejl";
+            }
+    }
+    
 /*
    // Testing example
    public static void main(String[] args) {
@@ -121,7 +114,9 @@ private static boolean hasSingleRow(ResultSet resultSet) throws SQLException {
     }
 }*/
   // Testing example
-   public static void main(String[] args) {
+   
+    
+    public static void main(String[] args) {
        //RegisteredUser test = new RegisteredUser();
        //boolean var = RegisteredUser.registerUser("Dennis","Dennis123","123","D@D.dk");  //Insert into DB - Dette er det tættest på en funktion i java
        //RegisteredUser test = new RegisteredUser("Dennis123");  //id 24
@@ -129,7 +124,7 @@ private static boolean hasSingleRow(ResultSet resultSet) throws SQLException {
         
 
            RegisteredUser test = new RegisteredUser("Jakob");
-           test.SetLastLogin();
+           test.setLastLogin();
 
 }
     

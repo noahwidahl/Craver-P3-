@@ -6,6 +6,7 @@ package model;
 
 import dbHelpers.CreateQuery;
 import dbHelpers.ReadQuery;
+import model.FoodItem;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -19,37 +20,37 @@ import java.util.List;
  */
 public class FoodSupplier {
     //Attributes
-    protected int FoodsupplierID;
-    protected String FoodsupplierName;
-    protected String Address;
-    protected String PostNr;
-    protected String City;
-    protected String ExternalLink;
-    protected int StateID;
-    protected double Latitude;
-    protected double Longitude;
-    protected int FoodSupplierCategoryID;
+    protected int foodsupplierID;
+    protected String foodsupplierName;
+    protected String address;
+    protected String postNr;
+    protected String city;
+    protected String externalLink;
+    protected int stateID;
+    protected double latitude;
+    protected double longitude;
+    protected int foodSupplierCategoryID;
 
     //Constructoren
     public FoodSupplier(int FoodsupplierID){
         try {
             ReadQuery readInstance = new ReadQuery();
             String query = "SELECT * FROM craveconnect.Foodsupplier where FoodsupplierID = "+FoodsupplierID+";";
-            ResultSet resultSet = readInstance.ReadTableData(query);
+            ResultSet resultSet = readInstance.readTableData(query);
             System.out.println(query);
             System.out.println(resultSet);       
             boolean hasFirstRow = resultSet.next();
             if(hasFirstRow){
-                this.FoodsupplierID = Integer.parseInt(resultSet.getString("FoodsupplierID"));     //Parsing string to Int
-                this.FoodsupplierName = resultSet.getString("FoodsupplierName");
-                this.Address = resultSet.getString("Address");
-                this.PostNr = resultSet.getString("PostNr");    
-                this.City = resultSet.getString("City");
-                this.ExternalLink = resultSet.getString("ExternalLink");
-                this.StateID = Integer.parseInt(resultSet.getString("StateID"));     //Parsing string to Int
-                this.Latitude = Double.parseDouble(resultSet.getString("Latitude"));     //Parsing string to Int
-                this.Longitude = Double.parseDouble(resultSet.getString("Longitude"));   //Parsing string to Int
-                this.FoodSupplierCategoryID = Integer.parseInt(resultSet.getString("FoodSupplierCategoryID"));     //Parsing string to Int
+                this.foodsupplierID = Integer.parseInt(resultSet.getString("FoodsupplierID"));     //Parsing string to Int
+                this.foodsupplierName = resultSet.getString("FoodsupplierName");
+                this.address = resultSet.getString("Address");
+                this.postNr = resultSet.getString("PostNr");    
+                this.city = resultSet.getString("City");
+                this.externalLink = resultSet.getString("ExternalLink");
+                this.stateID = Integer.parseInt(resultSet.getString("StateID"));     //Parsing string to Int
+                this.latitude = Double.parseDouble(resultSet.getString("Latitude"));     //Parsing string to Int
+                this.longitude = Double.parseDouble(resultSet.getString("Longitude"));   //Parsing string to Int
+                this.foodSupplierCategoryID = Integer.parseInt(resultSet.getString("FoodSupplierCategoryID"));     //Parsing string to Int
                 //Dennis, lav password tjekker, send password med i constructor, hvis de ikke er ens, smid exception
                 //System.out.println(this.FoodsupplierID);
             }
@@ -61,8 +62,18 @@ public class FoodSupplier {
     
     
     //Methods
-    
-    
+    public void createFoodItem(String name, double price, String link, int category){
+        System.out.println("Running: CreateFoodItem"); //id 
+        //FoodItem test = new FoodItem();
+        CreateQuery createInstance;
+        try {
+            createInstance = new CreateQuery();
+            String query = "insert into craveconnect.FoodItem (FoodItemName,Price,LinkToFoodImage,FoodsupplierID,FoodItemCategoryID) values ('"+name+"',"+price+",'"+link+"',"+this.foodsupplierID+","+category+");";
+            createInstance.executeInsert(query);
+        } catch (SQLException ex) {
+            Logger.getLogger(FoodSupplier.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     
     // registerFoodSupplier method
     public static boolean registerFoodSupplier(String FoodSupplierUsername, String FoodsupplierPassword, String FoodsupplierEmail, String FoodsupplierName, String FoodsupplierAddress, String FoodsupplierPostNr,String FoodsupplierCity, String FoodsupplierPhoneNumber, String FoodsuFoodsupplierExternalLinkpplierAddress, String FoodSupplierCategoryID) {
@@ -103,17 +114,14 @@ public class FoodSupplier {
         }
     }
 
-    public String getFoodsupplierName(){
-        System.out.println("getFoodsupplierName: "+this.FoodsupplierName);
-        return this.FoodsupplierName;
-    }
+
     
     
     public List<Double> getCoordinates(){
         // List of double-precision floating-point numbers
         List<Double> doubleList = new ArrayList<>();
-        doubleList.add(this.Latitude);
-        doubleList.add(this.Longitude);
+        doubleList.add(this.latitude);
+        doubleList.add(this.longitude);
         return doubleList;
     }
       // MEthod to get FoodsupplierNames
@@ -122,7 +130,7 @@ public class FoodSupplier {
         try {
             ReadQuery readInstance = new ReadQuery();
             String query = "SELECT FoodsupplierName FROM craveconnect.Foodsupplier;";
-            ResultSet resultSet = readInstance.ReadTableData(query);
+            ResultSet resultSet = readInstance.readTableData(query);
 
             while (resultSet.next()) {
                 foodSupplierNames.add(resultSet.getString("FoodsupplierName"));
@@ -139,7 +147,7 @@ public class FoodSupplier {
         try {
             ReadQuery readInstance = new ReadQuery();
             String query = "SELECT FoodsupplierID FROM craveconnect.Foodsupplier;";
-            ResultSet resultSet = readInstance.ReadTableData(query);
+            ResultSet resultSet = readInstance.readTableData(query);
 
         while (resultSet.next()) {
             foodSupplierIDs.add(resultSet.getInt("FoodsupplierID"));
@@ -155,7 +163,7 @@ public class FoodSupplier {
         try {
             ReadQuery readInstance = new ReadQuery();
             String query = "SELECT FoodsupplierID, FoodsupplierName FROM craveconnect.Foodsupplier;";
-            ResultSet resultSet = readInstance.ReadTableData(query);
+            ResultSet resultSet = readInstance.readTableData(query);
 
             while (resultSet.next()) {
                 int id = resultSet.getInt("FoodsupplierID");
@@ -168,8 +176,15 @@ public class FoodSupplier {
         }
         return supplierList;
     }
-
-
+    
+    
+    //Getters
+    public String getFoodsupplierName(){
+        System.out.println("getFoodsupplierName: "+this.foodsupplierName);
+        return this.foodsupplierName;
+    }
+    
+    //Setters
 
     
     // Testing example
@@ -178,14 +193,18 @@ public class FoodSupplier {
        //boolean var = RegisteredUser.registerUser("Dennis","Dennis123","123","D@D.dk");  //Insert into DB - Dette er det tættest på en funktion i java
        //RegisteredUser test = new RegisteredUser("Dennis123");  //id 24
        //System.out.println(test.UserID); //id 
-        
+        /*
        FoodSupplier test = new FoodSupplier(1);
        List<Double> doubleList = test.getCoordinates();
        double Latitude = doubleList.get(0);
        double Longitude = doubleList.get(1);
        System.out.println(Latitude); 
        System.out.println(Longitude); 
-       
+       */
+        
+        FoodSupplier test = new FoodSupplier(1);
+        System.out.println("main"); //id 
+        test.createFoodItem("tarte", 5, "www.jakob.dk", 5);
 
     }
 }

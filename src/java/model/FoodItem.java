@@ -24,21 +24,17 @@ public class FoodItem {
     private double price;
     private String linkToFoodImage;
     private int foodSupplierID;
-    private Date addDate;
-    private Date modifiedDate;
     private int foodItemCategoryID;
     private List<String> ingredients;
 
     // Constructor
     public FoodItem(int foodItemID, String foodItemName, double price, String linkToFoodImage, 
-                    int foodSupplierID, Date addDate, Date modifiedDate, int foodItemCategoryID) {
+                    int foodSupplierID, int foodItemCategoryID) {
         this.foodItemID = foodItemID;
         this.foodItemName = foodItemName;
         this.price = price;
         this.linkToFoodImage = linkToFoodImage;
         this.foodSupplierID = foodSupplierID;
-        this.addDate = addDate;
-        this.modifiedDate = modifiedDate;
         this.foodItemCategoryID = foodItemCategoryID;
     }
     
@@ -49,6 +45,30 @@ public class FoodItem {
         this.linkToFoodImage = linkToFoodImage; // Setting the URL for the food item's image.
     }
     
+    //Constructor taking FoodItemID as input to get information in DB
+    public FoodItem(int FoodItemID){
+        try {
+            ReadQuery readInstance = new ReadQuery();
+            String query = "SELECT * FROM craveconnect.FoodItem where FoodItemID = "+FoodItemID+";";
+            ResultSet resultSet = readInstance.readTableData(query);
+            //System.out.println(query);
+            //System.out.println(resultSet);       
+            boolean hasFirstRow = resultSet.next();
+            if(hasFirstRow){
+                this.foodItemID = Integer.parseInt(resultSet.getString("foodItemID"));
+                this.foodItemName = resultSet.getString("foodItemName");
+                this.price = (int) Double.parseDouble(resultSet.getString("price"));
+                this.linkToFoodImage = resultSet.getString("linkToFoodImage");
+                this.foodSupplierID = Integer.parseInt(resultSet.getString("foodSupplierID"));
+                this.foodItemCategoryID = Integer.parseInt(resultSet.getString("foodItemCategoryID"));
+                //this.ingredients = Integer.parseInt(resultSet.getString("UserID"));
+            }
+                    
+        } catch (SQLException ex) {
+            Logger.getLogger(RegisteredUser.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
 
     // Method to fetch all FoodItems from the database
     public static List<FoodItem> getAllFoodItems() {
@@ -56,7 +76,7 @@ public class FoodItem {
         try {
             ReadQuery readInstance = new ReadQuery();
             String query = "SELECT * FROM craveconnect.FoodItem;";
-            ResultSet resultSet = readInstance.ReadTableData(query);
+            ResultSet resultSet = readInstance.readTableData(query);
 
             while (resultSet.next()) {
                 FoodItem foodItem = new FoodItem(
@@ -65,8 +85,6 @@ public class FoodItem {
                     resultSet.getDouble("Price"),
                     resultSet.getString("LinkToFoodImage"),
                     resultSet.getInt("FoodsupplierID"),
-                    resultSet.getDate("AddDate"),
-                    resultSet.getDate("ModifiedDate"),
                     resultSet.getInt("FoodItemCategoryID")
                 );
                 foodItems.add(foodItem);
@@ -82,7 +100,7 @@ public static List<FoodItem> getFoodItemsBySupplierID(int supplierID) {
     try {
         ReadQuery readInstance = new ReadQuery();
         String query = "SELECT * FROM craveconnect.FoodItem WHERE FoodsupplierID = ?;";
-        ResultSet resultSet = readInstance.ReadTableData(query, supplierID);
+        ResultSet resultSet = readInstance.readTableData(query, supplierID);
 
         while (resultSet.next()) {
             FoodItem foodItem = new FoodItem(
@@ -91,8 +109,6 @@ public static List<FoodItem> getFoodItemsBySupplierID(int supplierID) {
                 resultSet.getDouble("Price"),
                 resultSet.getString("LinkToFoodImage"),
                 resultSet.getInt("FoodsupplierID"),
-                resultSet.getDate("AddDate"),
-                resultSet.getDate("ModifiedDate"),
                 resultSet.getInt("FoodItemCategoryID")
             );
             foodItems.add(foodItem);
@@ -111,16 +127,15 @@ public static List<FoodItem> getFoodItemsBySupplierID(int supplierID) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
         StringBuilder table = new StringBuilder("<table border='1'>");
-        table.append("<tr><th>Food Item Name</th><th>Price</th><th>Link to Image</th><th>Supplier ID</th><th>Add Date</th><th>Modified Date</th><th>Category ID</th></tr>");
+        table.append("<tr><th>Food Item Name</th><th>Price</th><th>Link to Image</th><th>Supplier ID</th><th>Category ID</th></tr>");
 
         for (FoodItem item : foodItems) {
             table.append("<tr>");
-            table.append("<td>").append(item.getFoodItemName()).append("</td>");
+            //table.append("<td>").append(item.getFoodItemName()).append("</td>");
+            table.append("<td><a href='foodItem?FoodItemID=").append(item.getFoodItemID()).append("'>"+item.getFoodItemName()+"</a></td>");
             table.append("<td>").append(item.getPrice()).append("</td>");
             table.append("<td><a href='").append(item.getLinkToFoodImage()).append("'>Image Link</a></td>");
             table.append("<td>").append(item.getFoodSupplierID()).append("</td>");
-            table.append("<td>").append(dateFormat.format(item.getAddDate())).append("</td>");
-            table.append("<td>").append(dateFormat.format(item.getModifiedDate())).append("</td>");
             table.append("<td>").append(item.getFoodItemCategoryID()).append("</td>");
             table.append("</tr>");
         }
@@ -273,14 +288,6 @@ public static List<FoodItem> getFoodItemsBySupplierID(int supplierID) {
         return foodSupplierID;
     }
 
-    public Date getAddDate() {
-        return addDate;
-    }
-
-    public Date getModifiedDate() {
-        return modifiedDate;
-    }
-
     public int getFoodItemCategoryID() {
         return foodItemCategoryID;
     }
@@ -306,14 +313,6 @@ public static List<FoodItem> getFoodItemsBySupplierID(int supplierID) {
         this.foodSupplierID = foodSupplierID;
     }
 
-    public void setAddDate(Date addDate) {
-        this.addDate = addDate;
-    }
-
-    public void setModifiedDate(Date modifiedDate) {
-        this.modifiedDate = modifiedDate;
-    }
-
     public void setFoodItemCategoryID(int foodItemCategoryID) {
         this.foodItemCategoryID = foodItemCategoryID;
     }
@@ -326,7 +325,7 @@ public static List<FoodItem> getFoodItemsBySupplierID(int supplierID) {
     public void setIngredients(List<String> ingredients) {
         this.ingredients = ingredients;
     }
-
+/*
   // Testing example
    public static void main(String[] args) throws SQLException {
        //RegisteredUser test = new RegisteredUser();
@@ -334,7 +333,7 @@ public static List<FoodItem> getFoodItemsBySupplierID(int supplierID) {
        //RegisteredUser test = new RegisteredUser("Dennis123");  //id 24
        //System.out.println(test.UserID); //id 
         
-       /*
+       
            Map<Integer, String> categories = FoodItem.getAllCategories();
            // Splitting the string based on '='
             for (Map.Entry<Integer, String> entry : categories.entrySet()) {
@@ -344,12 +343,12 @@ public static List<FoodItem> getFoodItemsBySupplierID(int supplierID) {
              System.out.println("ID: " + id + ", Value: " + value);
          }
 
-        */
-       List<FoodItem> dishes = new ArrayList<>();
-       dishes= FoodItem.searchDishesByCategory("4");
-       System.out.println(dishes.get(0).getIngredients());
         
+       //List<FoodItem> dishes = new ArrayList<>();
+       //dishes= FoodItem.searchDishesByCategory("4");
+       //System.out.println(dishes.get(0).getIngredients());
+        FoodItem test = new FoodItem(1);
 
 }
-
+*/
 }

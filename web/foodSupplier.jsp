@@ -1,3 +1,4 @@
+<%@page import="model.RegisteredUser"%>
 <%@page import="java.util.List"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
@@ -33,14 +34,15 @@
 <!-- Menu elements start -->    
         <%-- getting the session variables used in the form --%>
     <%
-        String userName = (String) session.getAttribute("sessionUserName");
-        request.setAttribute("varUserName", userName);
-        int userID = (int) session.getAttribute("sessionUserID");
-        request.setAttribute("varUserID", userID);
-        int userRole = (int) session.getAttribute("sessionUserRole");
-        request.setAttribute("varUserRole", userRole);
-        String UserRoleDescription = (String) session.getAttribute("sessionUserRoleDescription");
-        request.setAttribute("varUserRoleDescription", UserRoleDescription);
+        RegisteredUser userLoggedIn = (RegisteredUser) session.getAttribute("sessionUserObject");
+        int userRole = userLoggedIn.getUserID();
+        request.setAttribute("varUserName", userLoggedIn.getUserName());
+        request.setAttribute("varUserID", userRole);
+        request.setAttribute("varUserRole", userLoggedIn.getUserRole());  // Assuming you have a getUserRole() method in RegisteredUser
+        request.setAttribute("varUserRoleDescription", userLoggedIn.getUserRoleDescription());  // Assuming you have a getUserRoleDescription() method
+        request.setAttribute("Addresse", userLoggedIn.getAddress());
+        request.setAttribute("PostNr", userLoggedIn.getAddress());
+        request.setAttribute("PostBy", userLoggedIn.getAddress());
     %>
     
     
@@ -120,10 +122,13 @@
                 String[] parts = supplierInfo.split(" \\("); // Split the string
                 if (parts.length == 2) { // Ensure there are exactly two parts
                     //System.out.println("4"); 
-                    String name = parts[0];
-                    String id = parts[1].replace(")", "");
-                    String link = "foodItems?supplierId=" + id;
+                    String name = parts[0]; //name on restaurant
+                    String id = parts[1].replace(")", ""); //ID of restaurant
+                    String link = "foodItems?supplierId=" + id; //Link
+                    //System.out.println(id); 
                     //System.out.println(link); 
+                    //System.out.println(name); 
+                    //Creating the page .jsp file foodItems?supplierId={parameter}
                     %><li><a href="<%= link %>"><%= name %></a></li><%
                 }
             }

@@ -17,6 +17,9 @@ CREATE TABLE User (
     UserName VARCHAR(100) UNIQUE NOT NULL,
     Password VARCHAR(25) NOT NULL,
     Email VARCHAR(100) UNIQUE NOT NULL,
+    Address VARCHAR(100),
+    PostNr VARCHAR(4),
+    PostBy VARCHAR(100),
     UserRoleID INT,
     AddDate DATETIME DEFAULT CURRENT_TIMESTAMP,
     ModifiedDate DATETIME ON UPDATE CURRENT_TIMESTAMP,
@@ -78,18 +81,18 @@ CREATE TABLE craveconnect.Foodsupplier (
 
 INSERT INTO Foodsupplier (FoodsupplierName, Address, PostNr, City, PhoneNumber, ExternalLink, StateID, AddDate, ModifiedDate,Latitude,Longitude, FoodSupplierCategoryID)
 VALUES 
-('The American House', 'Borgergade 32', '9000', 'Aalborg', '+45 98 9813 4591', 'www.americanhouse', '1', '2023-11-14', '2023-11-14', 57.051860, 9.913610, 1),
-('Hanoi House', 'Borgergade 4', '9000', 'Aalborg', '+45 98 9572 3848', 'www.hanoi-house', '1', '2023-11-14', '2023-11-14', 57.051150, 9.918010, 1),
+('The American House', 'Borgergade 32', '9000', 'Aalborg', '+45 98 9813 4591', 'www.americanhouse', '2', '2023-11-14', '2023-11-14', 57.051860, 9.913610, 1),
+('Hanoi House', 'Borgergade 4', '9000', 'Aalborg', '+45 98 9572 3848', 'www.hanoi-house', '2', '2023-11-14', '2023-11-14', 57.051150, 9.918010, 1),
 ('Thai to go', 'Boulevarden 14', '9000', 'Aalborg', '+45 98 8944 8836', 'www.thai-to-go.dk', '1', '2023-11-14', '2023-11-14', 57.046610, 9.919220, 1),
 ('Taste of India', 'Boulevarden 30', '9000', 'Aalborg', '+45 98 6612 9982', 'www.tasteofindia.dk', '1', '2023-11-14', '2023-11-14',57.045020, 9.918080, 1),
 ('Den store gode danske', 'Algade 39', '9000', 'Aalborg', '+45 98 4782 1004', 'www.Denstoregodedanske.dk', '1', '2023-11-14', '2023-11-14', 57.047570, 9.919540, 1),
 ('Jakobs fisk', 'Myrdalstræde 279', '9220', 'Aalborg Øst', '+45 98 6893 4433', 'www.Jakobsfisk.dk', '1', '2023-11-14', '2023-11-14', 57.014431, 10.12345678, 1),
-('Dos Caminos', 'Fredericagade 21', '9000', 'Aalborg', '+45 98 8877 1102', 'www.Dos.Caminos.dk', '1', '2023-11-14', '2023-11-14', 57.051450, 9.904340, 1),
+('Dos Caminos', 'Fredericagade 21', '9000', 'Aalborg', '+45 98 8877 1102', 'www.Dos.Caminos.dk', '3', '2023-11-14', '2023-11-14', 57.051450, 9.904340, 1),
 ('Japani', 'Sjællandsgade 83', '9000', 'Aalborg', '+45 98 6212 3830', 'www.japani-DK-aalborg.dk', '1', '2023-11-15', '2023-11-15', 57.044100, 9.944410, 1),
 ('Savory Haven', 'Danmarksgade 42', '9000', 'Aalborg', '+45 98 7654 3210', 'www.labellavita-aalborg.dk', '1', '2023-11-14', '2023-11-14', 57.045490, 9.922190, 1),
-('Culinary Oasis', Null, Null, Null, Null, 'https://www.valdemarsro.dk/', '1', '2023-11-14', '2023-11-14',null,null, 2),
+('Culinary Oasis', Null, Null, Null, Null, 'https://www.valdemarsro.dk/', '3', '2023-11-14', '2023-11-14',null,null, 2),
 ('Gourmet Junction', Null, Null, Null, Null, 'https://www.arla.dk/produkter/arla-karolines-kokken/', '1', '2023-11-14', '2023-11-14',null,null, 2),
-('Flavor Fusion', Null, Null, Null, Null, 'https://www.valdemarsro.dk/', '1', '2023-11-14', '2023-11-14',null,null, 2),
+('Flavor Fusion', Null, Null, Null, Null, 'https://www.valdemarsro.dk/', '3', '2023-11-14', '2023-11-14',null,null, 2),
 ('Epicurean Delight', Null, Null, Null, Null, 'https://www.arla.dk/produkter/arla-karolines-kokken/', '1', '2023-11-14', '2023-11-14',null,null, 2),
 ('Tasty Trails', Null, Null, Null, Null, 'https://www.valdemarsro.dk/', '1', '2023-11-14', '2023-11-14',null,null, 2),
 ('Palate Paradise', Null, Null, Null, Null, 'https://www.arla.dk/produkter/arla-karolines-kokken/', '1', '2023-11-14', '2023-11-14',null,null, 2);
@@ -334,7 +337,7 @@ INSERT INTO FoodItemIngredients (FoodItemID, IngredientID) VALUES
 (4,34);
 
 create view v_UserAndRoles as
-SELECT UserID, UserName, PassWord, Email, UserRoleID, RoleDescription, LastSeen  FROM craveconnect.User T1
+SELECT UserID, UserName, PassWord, Email, Address, PostNr, PostBy, UserRoleID, RoleDescription, LastSeen  FROM craveconnect.User T1
 inner join craveconnect.Roles T2 on T1.UserRoleID = T2.RoleID;
 
 create table craveconnect.UserGuestLog (
@@ -343,3 +346,21 @@ create table craveconnect.UserGuestLog (
     AddDate datetime
 );
 
+create view craveconnect.v_FoodsuppliersPending as
+SELECT FoodsupplierID,FoodsupplierName, StateID FROM craveconnect.Foodsupplier  where stateID = 3;
+
+-- Eksempel of using a stored precedure to handle the sequence of deleting users
+-- drop procedure craveconnect.sp_DeleteUserProcedure;
+
+DELIMITER //
+CREATE PROCEDURE craveconnect.sp_DeleteUserProcedure(IN p_UserID INT)
+BEGIN
+    -- First we delete the ratings of the user
+    DELETE FROM craveconnect.Rating WHERE UserID = p_UserID;
+
+    -- Then we delete the user himself
+    DELETE FROM craveconnect.User WHERE UserID = p_UserID;
+END //
+DELIMITER ;
+
+-- CALL craveconnect.sp_DeleteUserProcedure(5);
