@@ -349,7 +349,6 @@ create table craveconnect.UserGuestLog (
 create view craveconnect.v_FoodsuppliersPending as
 SELECT FoodsupplierID,FoodsupplierName, StateID FROM craveconnect.Foodsupplier  where stateID = 3;
 
--- Eksempel of using a stored precedure to handle the sequence of deleting users
 -- drop procedure craveconnect.sp_DeleteUserProcedure;
 
 DELIMITER //
@@ -364,3 +363,34 @@ END //
 DELIMITER ;
 
 -- CALL craveconnect.sp_DeleteUserProcedure(5);
+
+DELIMITER //
+CREATE PROCEDURE craveconnect.sp_DeleteFoodItem(IN p_FoodItemID INT)
+BEGIN
+    -- First we delete the ratings of the foodItem
+    delete from craveconnect.Rating where FoodItemID = p_FoodItemID;
+
+    -- Then we delete the foodItem
+    delete from craveconnect.FoodItem where FoodItemID = p_FoodItemID;
+END //
+DELIMITER ;
+
+-- CALL craveconnect.sp_DeleteFoodItem(5);
+
+DELIMITER //
+CREATE PROCEDURE craveconnect.sp_DeleteFoodsupplier(IN p_foodsupplierID INT)
+BEGIN
+	-- To disable safe mode
+	SET SQL_SAFE_UPDATES = 0;
+	-- Deleting rating of the foodsuppliers foodItems
+	delete from craveconnect.Rating where FoodItemID in (select FoodItemID from craveconnect.FoodItem where FoodSupplierID = p_foodsupplierID);
+	-- Deleting the food items owned by the foodsupplier
+	delete from craveconnect.FoodItem where FoodSupplierID = p_foodsupplierID;
+	-- Deleting the foodsupplier themselv
+	delete from craveconnect.Foodsupplier where FoodSupplierID = p_foodsupplierID;
+	-- To enable safe mode
+	SET SQL_SAFE_UPDATES = 1;
+END //
+DELIMITER ;
+
+-- CALL craveconnect.sp_DeleteFoodsupplier(1);

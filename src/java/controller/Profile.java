@@ -126,7 +126,7 @@ public class Profile extends HttpServlet {
             //Getting the current user obj
             RegisteredUser deleteUser = (RegisteredUser) request.getSession().getAttribute("sessionUserObject");
             //Deleting the user obj
-            deleteUser.deleteOwnUser(deleteUser.getUserID());
+            deleteUser.deleteOwnUser();
             //Cleanup of seesion variable
             request.getSession().setAttribute("sessionUserObject", null);
             //Redirecting to login page

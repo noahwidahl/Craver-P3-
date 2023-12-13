@@ -19,6 +19,8 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.HashMap;
+import model.AdministratorUser;
+import model.RegisteredUser;
 
 /**
  *
@@ -78,25 +80,16 @@ public class Admin extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        
-        //Handling onload    
-        try {
-            //Create a ReadQuery helper object
-            ReadQuery readQuery = new ReadQuery();
-            //Get the HTML table from the ReadQuery object
             
-            // Get the new value from the form
-            String query = "select * from craveconnect.v_FoodsuppliersPending;";
-            results = readQuery.readTableData(query);
+            
             
             //Using a HashMap to dyniamicly make buttons, key = button name, value = button text
             HashMap<String, String> hashMap = new HashMap<>();
             hashMap.put("BtnDeny", "Deny");
             hashMap.put("BtnApprove", "Approve");
             //hashMap.put("test", "test");
-            
-            
-            String table = readQuery.outputResultAsHtmlTableWithButtons(results,hashMap,"admin");
+
+            String table = AdministratorUser.showFoodsuppliersToBeValidated(hashMap);
             
             //Pass execution control to read.jsp along with the table.
             request.setAttribute("table", table);
@@ -106,40 +99,35 @@ public class Admin extends HttpServlet {
             dispatcher.forward(request, response);
             
             processRequest(request, response);
-        } catch (SQLException ex) {
-            Logger.getLogger(Read.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
         
         //Reading the hidden first column value in a table
         String parameterValue = request.getParameter("parameterName");
-        try {    
-                UpdateQuery updateInstance = new UpdateQuery();
+      
+            RegisteredUser userLoggedIn = (RegisteredUser) request.getSession().getAttribute("sessionUserObject");    
+            AdministratorUser admin = new AdministratorUser(userLoggedIn.getUserName());
+            
+            
                 if(parameterValue == null || "".equals(parameterValue)){
                    
                 }else if(parameterValue.contains("BtnDeny")){
                     //what to do
                     String[] parts = parameterValue.split(":");
                     //System.out.println("testing here: "+parts[1].trim());  
-                    String query = "Update craveconnect.Foodsupplier set StateID = 2 where FoodsupplierID = "+parts[1].trim()+";";
-                    System.out.println(query); 
-                    updateInstance.executeInsertUpdate(query);
+                    admin.validateFoodSupplier("1", parts[1].trim());
                 }else if(parameterValue.contains("BtnApprove")){
                     //what to do
                     String[] parts = parameterValue.split(":");
-                    String query = "Update craveconnect.Foodsupplier set StateID = 1 where FoodsupplierID = "+parts[1].trim()+";";
-                    System.out.println(query); 
-                    updateInstance.executeInsertUpdate(query);
+                    admin.validateFoodSupplier("2", parts[1].trim());
                 }else{
                     System.out.println(parameterValue); 
                 }
                 
-                String url ="/admin.jsp";
+                url ="/admin.jsp";
 
-                RequestDispatcher dispatcher = request.getRequestDispatcher(url);
+                dispatcher = request.getRequestDispatcher(url);
                 dispatcher.forward(request, response);
-            } catch (SQLException ex) {
-                Logger.getLogger(Admin.class.getName()).log(Level.SEVERE, null, ex);
-            }
+
         
         
 

@@ -29,7 +29,7 @@
 
         try {
             RegisteredUser userLoggedIn = (RegisteredUser) session.getAttribute("sessionUserObject");
-            userRole = userLoggedIn.getUserID();
+            userRole = userLoggedIn.getUserRoleID();
             request.setAttribute("varUserName", userLoggedIn.getUserName());
         } catch (Exception ex) {
             userRole = 3;
@@ -97,7 +97,7 @@
 
 
 <!-- Søgeformular til at bruge SearchDishesServlet -->
-<form action="${pageContext.request.contextPath}/SearchDishes" method="get" class="search-form">
+<form action="${pageContext.request.contextPath}/home" method="get" class="search-form">
     <input type="text" id="search-bar" name="searchTerm" placeholder="Skriv en ret eller brug filtrene under til at finde din ret">
     <button type="submit">Søg</button>
 </form>

@@ -65,17 +65,17 @@ public abstract class User {
                         // Handle the case where Address is null, for example, assign a default value
                         this.postBy = "Unknown";
                     }
-                    System.out.println(this.address);
-                    System.out.println(this.postNr);
-                    System.out.println(this.postBy);
+                    System.out.println("address: "+this.address);
+                    System.out.println("postNr: "+this.postNr);
+                    System.out.println("postBy: "+this.postBy);
                 }
                 
-                System.out.println(this.userID);
-                System.out.println(this.userName);
-                System.out.println(this.password);
-                System.out.println(this.userRoleID);
-                System.out.println(this.roleDescription);
-                System.out.println(this.lastSeen);
+                System.out.println("userID: "+this.userID);
+                System.out.println("userName: "+this.userName);
+                System.out.println("password: "+this.password);
+                System.out.println("userRoleID: "+this.userRoleID);
+                System.out.println("roleDescription: "+this.roleDescription);
+                System.out.println("lastSeen: "+this.lastSeen);
                 
             }
                     
@@ -160,7 +160,7 @@ public abstract class User {
         return control;
     }
     
-    public boolean deleteOwnUser(int userID){
+    public boolean deleteOwnUser(){
         boolean control = true;
         try {
                 DeleteQuery deleteInsteance = new DeleteQuery();
@@ -171,7 +171,7 @@ public abstract class User {
                 
                 //Using a stored precedure on the mysql database to handle the 
                 //logic of deleting multiple tables, first rating table, then the user table
-                String query = "CALL craveconnect.sp_DeleteUserProcedure("+userID+");";
+                String query = "CALL craveconnect.sp_DeleteUserProcedure("+this.userID+");";
                 deleteInsteance.executeDelete(query);
                  
             } catch (SQLException ex) {

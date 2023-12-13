@@ -5,7 +5,9 @@
 package model;
 
 import dbHelpers.CreateQuery;
+import dbHelpers.DeleteQuery;
 import dbHelpers.ReadQuery;
+import dbHelpers.UpdateQuery;
 import model.FoodItem;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -177,6 +179,48 @@ public class FoodSupplier {
         return supplierList;
     }
     
+    public void updateFoodItem(int foodItemID,double price){
+        System.out.println("Running: updateFoodItem"); //id 
+        
+        
+        try {
+            UpdateQuery updateInstance = new UpdateQuery();
+            String query = "update craveconnect.FoodItem set Price = "+price+" where FoodItemID = "+foodItemID+";";
+            updateInstance.executeInsertUpdate(query);
+        } catch (SQLException ex) {
+            Logger.getLogger(FoodSupplier.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    
+    } 
+    
+     public void deleteFoodItem(int foodItemID){
+        System.out.println("Running: deleteFoodItem"); //id 
+        try {
+            DeleteQuery deleteInstance = new DeleteQuery();
+            String query = "CALL craveconnect.sp_DeleteFoodItem("+foodItemID+");";
+            deleteInstance.executeDelete(query);
+        } catch (SQLException ex) {
+            Logger.getLogger(FoodSupplier.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    } 
+     
+    public void deleteOwnFoodSupplier(){
+        System.out.println("Running: deleteFoodItem"); //id 
+        try {
+            DeleteQuery deleteInstance = new DeleteQuery();
+            String query = "CALL craveconnect.sp_DeleteFoodsupplier("+this.foodsupplierID+");";
+            deleteInstance.executeDelete(query);
+        } catch (SQLException ex) {
+            Logger.getLogger(FoodSupplier.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    } 
+    
+    private void test(){
+        System.out.println("i am a test");
+    }
+    
+    
+    
     
     //Getters
     public String getFoodsupplierName(){
@@ -204,7 +248,11 @@ public class FoodSupplier {
         
         FoodSupplier test = new FoodSupplier(1);
         System.out.println("main"); //id 
-        test.createFoodItem("tarte", 5, "www.jakob.dk", 5);
+        //test.createFoodItem("tarte", 5, "www.jakob.dk", 5);
+        //test.updateFoodItem(1,99);
+        //test.deleteFoodItem(1);
+        //test.deleteOwnFoodSupplier();
+        //test.test();
 
     }
 }

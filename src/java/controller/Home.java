@@ -15,8 +15,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import model.FoodItem;
 import model.RegisteredUser;
 
 /**
@@ -65,42 +68,40 @@ public class Home extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        // Retrieve the search term and category ID from the request.
+        String searchTerm = request.getParameter("searchTerm");
+        String categoryId = request.getParameter("category");
         
         try {
-            //Create a ReadQuery helper object
-            ReadQuery readQuery = new ReadQuery();
-            //Get the HTML table from the ReadQuery object
+            // Fetch all categories and set them as a request attribute for access in JSP.
             
-            // Get the new value from the form
-            String newValue = request.getParameter("newValueName");
-            String query = "";
+            Map<Integer, String> categories = FoodItem.getAllCategories();
             
-            if (newValue == null || newValue == "") {
-                query = "SELECT * FROM Ingredients;";
-            } else {
-                query = "SELECT * FROM craveconnect.FoodItem where FoodsupplierID = "+newValue+";"; // Code to be executed if the boolean expression is false
+            
+            
+            
+            request.setAttribute("categories", categories);
+            
+            // Handle search based on category ID.
+            if (categoryId != null && !categoryId.isEmpty()) {
+                // Fetch the dishes by category and set them as a request attribute.
+                List<FoodItem> dishesByCategory = FoodItem.searchDishesByCategory(categoryId);
+                request.setAttribute("dishes", dishesByCategory);
+            } 
+            // Handle search based on search term.
+            else if (searchTerm != null && !searchTerm.isEmpty()) {
+                // Fetch the dishes based on the search term and set them as a request attribute.
+                List<FoodItem> dishes = FoodItem.searchDishes(searchTerm);
+                request.setAttribute("dishes", dishes);
             }
-            
-            results = readQuery.readTableData(query);
-            
-            String table = readQuery.outputResultAsHtmlTable(results);
-            
-            //Pass execution control to read.jsp along with the table.
-            request.setAttribute("table", table);
-            String url ="/home.jsp";
-            
-            RequestDispatcher dispatcher = request.getRequestDispatcher(url);
-            dispatcher.forward(request, response);
-        
-        
-        processRequest(request, response);
-        } catch (SQLException ex) {
-            Logger.getLogger(Read.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException e) {
+            // Handle SQL exceptions and set an error message as a request attribute.
+            request.setAttribute("errorMessage", "Database error: " + e.getMessage());
         }
-        
-        
-        
-        processRequest(request, response);
+
+        // Forward the request to home.jsp to display dishes and categories.
+        RequestDispatcher dispatcher = request.getRequestDispatcher("/home.jsp");
+        dispatcher.forward(request, response);
     }
 
     /**
@@ -115,21 +116,7 @@ public class Home extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         
-        // DETTE ER TIL TEST
-        try {
-            ReadQuery read = new ReadQuery();
-            results = read.readTableData("SELECT * FROM craveconnect.Ingredients;");
-            read.outputResultAsHtmlTable(results);
-            System.out.println(); 
-        } catch (SQLException ex) {
-            Logger.getLogger(Home.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        System.out.println("Home test");  
-                    String url ="/home.jsp";
-            
-            RequestDispatcher dispatcher = request.getRequestDispatcher(url);
-            dispatcher.forward(request, response);
+
         
         
         processRequest(request, response);
