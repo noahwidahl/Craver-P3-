@@ -9,11 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.HashMap;
 import java.util.Map;
 
 // Annotation to define this class as a servlet and map it to a URL pattern.
@@ -25,16 +21,10 @@ public class SearchDishes_dead extends HttpServlet {
             throws ServletException, IOException {
         // Retrieve the search term and category ID from the request.
         String searchTerm = request.getParameter("searchTerm");
-        String categoryId = request.getParameter("category");
-        
+        String categoryId = request.getParameter("category");  
         try {
             // Fetch all categories and set them as a request attribute for access in JSP.
-            
             Map<Integer, String> categories = FoodItem.getAllCategories();
-            
-            
-            
-            
             request.setAttribute("categories", categories);
             
             // Handle search based on category ID.
@@ -53,7 +43,6 @@ public class SearchDishes_dead extends HttpServlet {
             // Handle SQL exceptions and set an error message as a request attribute.
             request.setAttribute("errorMessage", "Database error: " + e.getMessage());
         }
-
         // Forward the request to home.jsp to display dishes and categories.
         RequestDispatcher dispatcher = request.getRequestDispatcher("/home.jsp");
         dispatcher.forward(request, response);

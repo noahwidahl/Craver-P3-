@@ -1,3 +1,4 @@
+<!-- Importing java libraries -->  
 <%@page import="model.RegisteredUser"%>
 <%@page import="model.FoodItem"%>
 <%@page import="java.util.List"%>
@@ -6,104 +7,61 @@
 <head>
     <title>Food Items</title>
     <link href="${pageContext.request.contextPath}/style.css" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Times New Roman', Times, serif;
-            background-color: #f3f3f3;
-            text-align: center;
-        }
-        h2 {
-            color: #4C654B;
-            margin-bottom: 30px;
-        }
-        ul {
-            list-style-type: none;
-            padding: 0;
-            margin: auto;
-            width: 50%;
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
-            padding: 20px;
-        }
-        li {
-            border-bottom: 1px solid #ddd;
-            padding: 10px;
-            font-size: 18px;
-        }
-        li:last-child {
-            border-bottom: none;
-        }
-        a {
-            text-decoration: none;
-            color: #0D0E19;
-        }
-        a:hover {
-            color: #CBBBA0;
-        }
-        .price {
-            float: right;
-            font-weight: bold;
-        }
-    </style>
+
 </head>
 <body>
-<!-- Menu elements start -->    
-        <%-- getting the session variables used in the form --%>
+    <!-- Menu elements start -->    
+    <%-- getting the session variables used in the system --%>
     <%
-        RegisteredUser userLoggedIn = (RegisteredUser) session.getAttribute("sessionUserObject");
-        int userRole = userLoggedIn.getUserID();
-        request.setAttribute("varUserName", userLoggedIn.getUserName());
-        request.setAttribute("varUserID", userRole);
-        request.setAttribute("varUserRole", userLoggedIn.getUserRole());  // Assuming you have a getUserRole() method in RegisteredUser
-        request.setAttribute("varUserRoleDescription", userLoggedIn.getUserRoleDescription());  // Assuming you have a getUserRoleDescription() method
-        request.setAttribute("Addresse", userLoggedIn.getAddress());
-        request.setAttribute("PostNr", userLoggedIn.getAddress());
-        request.setAttribute("PostBy", userLoggedIn.getAddress());
+        int userRole = 0;
+
+        try {
+            RegisteredUser userLoggedIn = (RegisteredUser) session.getAttribute("sessionUserObject");
+            userRole = userLoggedIn.getUserRoleID();
+            request.setAttribute("varUserName", userLoggedIn.getUserName());
+        } catch (Exception ex) {
+            userRole = 3;
+            request.setAttribute("varUserName", "Guest");
+        }
     %>
     
     
     <div id="square1" class="square">
     <nav>    
-
-      <%
-   if (userRole == 1) { //Menubar Administrator
-%>
+<!-- Menu elements loaded depending of userRole -->   
+    <%
+        if (userRole == 1) { //Menubar Administrator
+    %>
         <a href="${pageContext.request.contextPath}/home.jsp">Home</a>
-        <a href="${pageContext.request.contextPath}/searchFoodSupplierProfile.jsp">Search</a>
-        <a href="${pageContext.request.contextPath}/profile.jsp">User profile</a> 
-        <a href="${pageContext.request.contextPath}/admin.jsp">Admin</a> 
         <a href="${pageContext.request.contextPath}/foodSupplier">Se alle restauranter her</a> <!-- New Button -->
         <a href="${pageContext.request.contextPath}/navigation.jsp">Navigation her</a>
-
-<%
-   } else if (userRole == 2) {  //Menubar User
-%>
-        <a href="${pageContext.request.contextPath}/home.jsp">Home</a>
-        <a href="${pageContext.request.contextPath}/searchFoodSupplierProfile.jsp">Search</a>
         <a href="${pageContext.request.contextPath}/profile.jsp">User profile</a> 
-        <a href="${pageContext.request.contextPath}/foodSupplier">Se alle restauranter her</a> <!-- New Button -->
-        <a href="${pageContext.request.contextPath}/Navigation.jsp">Navigation her</a>
-<%
-   }else if (userRole == 3) {  //Menubar guest
-%>
+        <a href="${pageContext.request.contextPath}/admin.jsp">Admin</a> 
+    <%
+        } else if (userRole == 2) {  //Menubar User
+    %>
         <a href="${pageContext.request.contextPath}/home.jsp">Home</a>
-        <a href="${pageContext.request.contextPath}/searchFoodSupplierProfile.jsp">Search</a>
-        <a href="${pageContext.request.contextPath}/foodSupplier.jsp">Se alle restauranter her</a> <!-- New Button -->
         <a href="${pageContext.request.contextPath}/foodSupplier">Se alle restauranter her</a> <!-- New Button -->
-        <a href="${pageContext.request.contextPath}/Navigation.jsp">Navigation her</a>
-<%
-   }else if (userRole == 4) {  //Menubar foodsupplier 
-%>
-        <a href="${pageContext.request.contextPath}/home.jsp">Home</a>
-        <a href="${pageContext.request.contextPath}/searchFoodSupplierProfile.jsp">Search</a>
+        <a href="${pageContext.request.contextPath}/navigation.jsp">Navigation her</a>
         <a href="${pageContext.request.contextPath}/profile.jsp">User profile</a> 
-<%
-   } 
-%>
-
+    <%
+        }else if (userRole == 3) {  //Menubar guest
+    %>
+        <a href="${pageContext.request.contextPath}/home.jsp">Home</a>
+        <a href="${pageContext.request.contextPath}/foodSupplier">Se alle restauranter her</a> <!-- New Button -->
+        <a href="${pageContext.request.contextPath}/navigation.jsp">Navigation her</a>
+    <%
+        }else if (userRole == 4) {  //Menubar foodsupplier 
+    %>
+        <a href="${pageContext.request.contextPath}/home.jsp">Home</a>
+        <a href="${pageContext.request.contextPath}/profile.jsp">User profile</a> 
+    <%
+        } 
+    %>
+    
+     <!-- Placeholder and script to load userName --> 
       <div id="user-name-placeholder" class="user-name-placeholder">${varUserName}</div>
-      <script>
+    <script> 
         document.getElementById("user-name-placeholder").innerText = "User: ${varUserName}";
         
     </script>
@@ -127,6 +85,7 @@
 <h2>Food Items</h2>
 
 <% 
+    //Reguest attributes for trhe foodItemsTable, and showcasing it on the webpage
     String foodItemsTable = (String) request.getAttribute("foodItemsTable");
     if (foodItemsTable != null && !foodItemsTable.isEmpty()) {
         out.print(foodItemsTable);

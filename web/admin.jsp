@@ -1,3 +1,4 @@
+<!-- Importing java libraries -->    
 <%@page import="model.RegisteredUser"%>
 <%-- 
     Document   : Home
@@ -17,62 +18,58 @@
   </head>
 <body>
     
-<!-- Menu elements start -->    
-        <%-- getting the session variables used in the form --%>
+    <!-- Menu elements start -->    
+    <%-- getting the session variables used in the system --%>
     <%
-        RegisteredUser userLoggedIn = (RegisteredUser) session.getAttribute("sessionUserObject");
-        int userRole = userLoggedIn.getUserID();
-        request.setAttribute("varUserName", userLoggedIn.getUserName());
-        request.setAttribute("varUserID", userRole);
-        request.setAttribute("varUserRole", userLoggedIn.getUserRole());  // Assuming you have a getUserRole() method in RegisteredUser
-        request.setAttribute("varUserRoleDescription", userLoggedIn.getUserRoleDescription());  // Assuming you have a getUserRoleDescription() method
-        request.setAttribute("Addresse", userLoggedIn.getAddress());
-        request.setAttribute("PostNr", userLoggedIn.getAddress());
-        request.setAttribute("PostBy", userLoggedIn.getAddress());
+        int userRole = 0;
+
+        try {
+            RegisteredUser userLoggedIn = (RegisteredUser) session.getAttribute("sessionUserObject");
+            userRole = userLoggedIn.getUserRoleID();
+            request.setAttribute("varUserName", userLoggedIn.getUserName());
+        } catch (Exception ex) {
+            userRole = 3;
+            request.setAttribute("varUserName", "Guest");
+        }
     %>
     
     
     <div id="square1" class="square">
     <nav>    
-
-      <%
-   if (userRole == 1) { //Menubar Administrator
-%>
+<!-- Menu elements loaded depending of userRole -->   
+    <%
+        if (userRole == 1) { //Menubar Administrator
+    %>
         <a href="${pageContext.request.contextPath}/home.jsp">Home</a>
-        <a href="${pageContext.request.contextPath}/searchFoodSupplierProfile.jsp">Search</a>
-        <a href="${pageContext.request.contextPath}/profile.jsp">User profile</a> 
-        <a href="${pageContext.request.contextPath}/admin.jsp">Admin</a> 
         <a href="${pageContext.request.contextPath}/foodSupplier">Se alle restauranter her</a> <!-- New Button -->
         <a href="${pageContext.request.contextPath}/navigation.jsp">Navigation her</a>
-
-<%
-   } else if (userRole == 2) {  //Menubar User
-%>
-        <a href="${pageContext.request.contextPath}/home.jsp">Home</a>
-        <a href="${pageContext.request.contextPath}/searchFoodSupplierProfile.jsp">Search</a>
         <a href="${pageContext.request.contextPath}/profile.jsp">User profile</a> 
-        <a href="${pageContext.request.contextPath}/foodSupplier">Se alle restauranter her</a> <!-- New Button -->
-        <a href="${pageContext.request.contextPath}/Navigation.jsp">Navigation her</a>
-<%
-   }else if (userRole == 3) {  //Menubar guest
-%>
+        <a href="${pageContext.request.contextPath}/admin.jsp">Admin</a> 
+    <%
+        } else if (userRole == 2) {  //Menubar User
+    %>
         <a href="${pageContext.request.contextPath}/home.jsp">Home</a>
-        <a href="${pageContext.request.contextPath}/searchFoodSupplierProfile.jsp">Search</a>
-        <a href="${pageContext.request.contextPath}/foodSupplier.jsp">Se alle restauranter her</a> <!-- New Button -->
         <a href="${pageContext.request.contextPath}/foodSupplier">Se alle restauranter her</a> <!-- New Button -->
-        <a href="${pageContext.request.contextPath}/Navigation.jsp">Navigation her</a>
-<%
-   }else if (userRole == 4) {  //Menubar foodsupplier 
-%>
-        <a href="${pageContext.request.contextPath}/home.jsp">Home</a>
-        <a href="${pageContext.request.contextPath}/searchFoodSupplierProfile.jsp">Search</a>
+        <a href="${pageContext.request.contextPath}/navigation.jsp">Navigation her</a>
         <a href="${pageContext.request.contextPath}/profile.jsp">User profile</a> 
-<%
-   } 
-%>
-
+    <%
+        }else if (userRole == 3) {  //Menubar guest
+    %>
+        <a href="${pageContext.request.contextPath}/home.jsp">Home</a>
+        <a href="${pageContext.request.contextPath}/foodSupplier">Se alle restauranter her</a> <!-- New Button -->
+        <a href="${pageContext.request.contextPath}/navigation.jsp">Navigation her</a>
+    <%
+        }else if (userRole == 4) {  //Menubar foodsupplier 
+    %>
+        <a href="${pageContext.request.contextPath}/home.jsp">Home</a>
+        <a href="${pageContext.request.contextPath}/profile.jsp">User profile</a> 
+    <%
+        } 
+    %>
+    
+     <!-- Placeholder and script to load userName --> 
       <div id="user-name-placeholder" class="user-name-placeholder">${varUserName}</div>
-      <script>
+    <script> 
         document.getElementById("user-name-placeholder").innerText = "User: ${varUserName}";
         
     </script>
@@ -96,7 +93,7 @@
   <div class="square">
     <p class="title">Disse står til godkendelse</p>
   </div>
-
+    <!-- form interact with Admin.java servlet -->
     <form action="admin" method="post">
         <button type="submit">Søg</button>
     </form>
@@ -106,7 +103,7 @@
     }
 </script>
     
-    <%! // Should be a servlet, but can't find a way to automatic load using a servlet%>
+    <%! // Should be a servlet, but can't find a way to automatic load using a servlet. Found a way, but no time to change it....%>
     <%@ page import="java.sql.ResultSet" %>
     <%@ page import="java.sql.SQLException" %>
     <%@ page import="java.util.HashMap" %>
@@ -117,12 +114,12 @@
     private ReadQuery readQuery;
     String tableValue = "";
     %>
-    <%// Get the new value from the form
+    <%
             // Initialization block
             results = null;
             readQuery = new ReadQuery();
 
-            // Get the new value from the form
+            // Getting data as a results object from ReadQuery dbHelper 
             String query = "select * from craveconnect.v_FoodsuppliersPending;";
             results = readQuery.readTableData(query);
             
@@ -132,11 +129,13 @@
             hashMap.put("BtnApprove", "Approve");
             //hashMap.put("test", "test");
             
-            
+            //Creating the HTML table and showcasing on the admin.jsp
             String table = readQuery.outputResultAsHtmlTableWithButtons(results,hashMap,"admin");
             tableValue = table;
     %>
     <%= tableValue %>
+    
+    
 </body>
 
 </html>

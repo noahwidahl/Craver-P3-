@@ -1,3 +1,4 @@
+<!-- Importing java libraries -->  
 <%@page import="model.RegisteredUser"%>
 <%@page import="java.util.List"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -5,88 +6,60 @@
 <head>
     <title>Food Suppliers</title>
     <link href="${pageContext.request.contextPath}/style.css" rel="stylesheet">
-    <style>
-        /* Add your CSS styles here */
-        body {
-            font-family: Arial, sans-serif;
-        }
-        h2 {
-            color: #4C654B;
-        }
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        li {
-            margin-bottom: 10px;
-        }
-        a {
-            text-decoration: none;
-            color: #0D0E19;
-        }
-        a:hover {
-            color: red;
-        }
-        /* Add other styles from your provided CSS as needed */
-    </style>
 </head>
 <body>
-<!-- Menu elements start -->    
-        <%-- getting the session variables used in the form --%>
+    <!-- Menu elements start -->    
+    <%-- getting the session variables used in the system --%>
     <%
-        RegisteredUser userLoggedIn = (RegisteredUser) session.getAttribute("sessionUserObject");
-        int userRole = userLoggedIn.getUserID();
-        request.setAttribute("varUserName", userLoggedIn.getUserName());
-        request.setAttribute("varUserID", userRole);
-        request.setAttribute("varUserRole", userLoggedIn.getUserRole());  // Assuming you have a getUserRole() method in RegisteredUser
-        request.setAttribute("varUserRoleDescription", userLoggedIn.getUserRoleDescription());  // Assuming you have a getUserRoleDescription() method
-        request.setAttribute("Addresse", userLoggedIn.getAddress());
-        request.setAttribute("PostNr", userLoggedIn.getAddress());
-        request.setAttribute("PostBy", userLoggedIn.getAddress());
+        int userRole = 0;
+
+        try {
+            RegisteredUser userLoggedIn = (RegisteredUser) session.getAttribute("sessionUserObject");
+            userRole = userLoggedIn.getUserRoleID();
+            request.setAttribute("varUserName", userLoggedIn.getUserName());
+        } catch (Exception ex) {
+            userRole = 3;
+            request.setAttribute("varUserName", "Guest");
+        }
     %>
     
     
     <div id="square1" class="square">
     <nav>    
-
-      <%
-   if (userRole == 1) { //Menubar Administrator
-%>
+<!-- Menu elements loaded depending of userRole -->   
+    <%
+        if (userRole == 1) { //Menubar Administrator
+    %>
         <a href="${pageContext.request.contextPath}/home.jsp">Home</a>
-        <a href="${pageContext.request.contextPath}/searchFoodSupplierProfile.jsp">Search</a>
-        <a href="${pageContext.request.contextPath}/profile.jsp">User profile</a> 
-        <a href="${pageContext.request.contextPath}/admin.jsp">Admin</a> 
         <a href="${pageContext.request.contextPath}/foodSupplier">Se alle restauranter her</a> <!-- New Button -->
         <a href="${pageContext.request.contextPath}/navigation.jsp">Navigation her</a>
-
-<%
-   } else if (userRole == 2) {  //Menubar User
-%>
-        <a href="${pageContext.request.contextPath}/home.jsp">Home</a>
-        <a href="${pageContext.request.contextPath}/searchFoodSupplierProfile.jsp">Search</a>
         <a href="${pageContext.request.contextPath}/profile.jsp">User profile</a> 
-        <a href="${pageContext.request.contextPath}/foodSupplier">Se alle restauranter her</a> <!-- New Button -->
-        <a href="${pageContext.request.contextPath}/Navigation.jsp">Navigation her</a>
-<%
-   }else if (userRole == 3) {  //Menubar guest
-%>
+        <a href="${pageContext.request.contextPath}/admin.jsp">Admin</a> 
+    <%
+        } else if (userRole == 2) {  //Menubar User
+    %>
         <a href="${pageContext.request.contextPath}/home.jsp">Home</a>
-        <a href="${pageContext.request.contextPath}/searchFoodSupplierProfile.jsp">Search</a>
-        <a href="${pageContext.request.contextPath}/foodSupplier.jsp">Se alle restauranter her</a> <!-- New Button -->
         <a href="${pageContext.request.contextPath}/foodSupplier">Se alle restauranter her</a> <!-- New Button -->
-        <a href="${pageContext.request.contextPath}/Navigation.jsp">Navigation her</a>
-<%
-   }else if (userRole == 4) {  //Menubar foodsupplier 
-%>
-        <a href="${pageContext.request.contextPath}/home.jsp">Home</a>
-        <a href="${pageContext.request.contextPath}/searchFoodSupplierProfile.jsp">Search</a>
+        <a href="${pageContext.request.contextPath}/navigation.jsp">Navigation her</a>
         <a href="${pageContext.request.contextPath}/profile.jsp">User profile</a> 
-<%
-   } 
-%>
-
+    <%
+        }else if (userRole == 3) {  //Menubar guest
+    %>
+        <a href="${pageContext.request.contextPath}/home.jsp">Home</a>
+        <a href="${pageContext.request.contextPath}/foodSupplier">Se alle restauranter her</a> <!-- New Button -->
+        <a href="${pageContext.request.contextPath}/navigation.jsp">Navigation her</a>
+    <%
+        }else if (userRole == 4) {  //Menubar foodsupplier 
+    %>
+        <a href="${pageContext.request.contextPath}/home.jsp">Home</a>
+        <a href="${pageContext.request.contextPath}/profile.jsp">User profile</a> 
+    <%
+        } 
+    %>
+    
+     <!-- Placeholder and script to load userName --> 
       <div id="user-name-placeholder" class="user-name-placeholder">${varUserName}</div>
-      <script>
+    <script> 
         document.getElementById("user-name-placeholder").innerText = "User: ${varUserName}";
         
     </script>
@@ -111,23 +84,17 @@
 
 <ul>
     <% 
+    //Creating the list to showcase all foodSupplier and enables the option to click on them to see all foodItems    
     List<String> foodSupplierInfo = (List<String>) request.getAttribute("foodSupplierNames");
-    System.out.println("foodSupplier.jsp"); 
     if(foodSupplierInfo != null && !foodSupplierInfo.isEmpty()) {
-        //System.out.println("1"); 
         for(String supplierInfo : foodSupplierInfo) {
-            //System.out.println("2"); 
             if (supplierInfo.contains(" (")) { // Check if the string contains the expected format
-                //System.out.println("3"); 
                 String[] parts = supplierInfo.split(" \\("); // Split the string
                 if (parts.length == 2) { // Ensure there are exactly two parts
-                    //System.out.println("4"); 
                     String name = parts[0]; //name on restaurant
                     String id = parts[1].replace(")", ""); //ID of restaurant
                     String link = "foodItems?supplierId=" + id; //Link
-                    //System.out.println(id); 
-                    //System.out.println(link); 
-                    //System.out.println(name); 
+                    
                     //Creating the page .jsp file foodItems?supplierId={parameter}
                     %><li><a href="<%= link %>"><%= name %></a></li><%
                 }

@@ -4,20 +4,14 @@ import dbHelpers.ReadQuery;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.PreparedStatement;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
 
-public class FoodItem {
+public class FoodItem  {
     // Attributes
     private int foodItemID;
     private String foodItemName;
@@ -25,9 +19,9 @@ public class FoodItem {
     private String linkToFoodImage;
     private int foodSupplierID;
     private int foodItemCategoryID;
-    private List<String> ingredients;
+    private List<String> ingredients;    //Should had been an object of ingrediens
 
-    // Constructor
+    // Constructor 1, used in method getAllFoodItems
     public FoodItem(int foodItemID, String foodItemName, double price, String linkToFoodImage, 
                     int foodSupplierID, int foodItemCategoryID) {
         this.foodItemID = foodItemID;
@@ -38,22 +32,22 @@ public class FoodItem {
         this.foodItemCategoryID = foodItemCategoryID;
     }
     
-    // Constructor
+    // Constructor 2, used in method searchDishes
     public FoodItem(String foodItemName, double price, String linkToFoodImage) {
         this.foodItemName = foodItemName;   // Setting the food item's name.
         this.price = price;         // Setting the food item's price.
         this.linkToFoodImage = linkToFoodImage; // Setting the URL for the food item's image.
     }
     
-    //Constructor taking FoodItemID as input to get information in DB
+    //Constructor 3, taking FoodItemID as input to get information in DB
     public FoodItem(int FoodItemID){
         try {
+            //Getting the foodItem information using the dbHelpers 
             ReadQuery readInstance = new ReadQuery();
             String query = "SELECT * FROM craveconnect.FoodItem where FoodItemID = "+FoodItemID+";";
-            ResultSet resultSet = readInstance.readTableData(query);
-            //System.out.println(query);
-            //System.out.println(resultSet);       
+            ResultSet resultSet = readInstance.readTableData(query);     
             boolean hasFirstRow = resultSet.next();
+            //Controlling if statement, did the query return a result
             if(hasFirstRow){
                 this.foodItemID = Integer.parseInt(resultSet.getString("foodItemID"));
                 this.foodItemName = resultSet.getString("foodItemName");
@@ -61,23 +55,53 @@ public class FoodItem {
                 this.linkToFoodImage = resultSet.getString("linkToFoodImage");
                 this.foodSupplierID = Integer.parseInt(resultSet.getString("foodSupplierID"));
                 this.foodItemCategoryID = Integer.parseInt(resultSet.getString("foodItemCategoryID"));
-                //this.ingredients = Integer.parseInt(resultSet.getString("UserID"));
-            }
-                    
+            }           
         } catch (SQLException ex) {
             Logger.getLogger(RegisteredUser.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
 
-    // Method to fetch all FoodItems from the database
+    //Static method to fetch all FoodItems from the database
+    //Returning a List of the FoodItem objects
     public static List<FoodItem> getAllFoodItems() {
         List<FoodItem> foodItems = new ArrayList<>();
         try {
             ReadQuery readInstance = new ReadQuery();
             String query = "SELECT * FROM craveconnect.FoodItem;";
             ResultSet resultSet = readInstance.readTableData(query);
-
+            
+            //while loop to go over each desired column from the table and creating an instance of the Fooditem using the constructor. 
+            while (resultSet.next()) {
+                FoodItem foodItem = new FoodItem(
+                        //This is contructor 1, being used
+                    resultSet.getInt("FoodItemID"),
+                    resultSet.getString("FoodItemName"),
+                    resultSet.getDouble("Price"),
+                    resultSet.getString("LinkToFoodImage"),
+                    resultSet.getInt("FoodsupplierID"),
+                    resultSet.getInt("FoodItemCategoryID")
+                );
+                //Adding the foodItem object to the list.
+                foodItems.add(foodItem);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(FoodItem.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return foodItems;
+    }
+    
+    //Static method to get fooditems based on suppliers ID
+    //Returning a List of the fooditem objects
+    public static List<FoodItem> getFoodItemsBySupplierID(int supplierID) {
+        List<FoodItem> foodItems = new ArrayList<>();
+        try {
+            ReadQuery readInstance = new ReadQuery();
+            String query = "SELECT * FROM craveconnect.FoodItem WHERE FoodsupplierID = "+supplierID+";";
+            
+            ResultSet resultSet = readInstance.readTableData(query);
+            
+            //while loop to go over each desired column from the table and creating an instance of the Fooditem using the constructor. 
             while (resultSet.next()) {
                 FoodItem foodItem = new FoodItem(
                     resultSet.getInt("FoodItemID"),
@@ -87,6 +111,7 @@ public class FoodItem {
                     resultSet.getInt("FoodsupplierID"),
                     resultSet.getInt("FoodItemCategoryID")
                 );
+                //Adding the foodItem object to the list.
                 foodItems.add(foodItem);
             }
         } catch (SQLException ex) {
@@ -94,65 +119,38 @@ public class FoodItem {
         }
         return foodItems;
     }
-    
-public static List<FoodItem> getFoodItemsBySupplierID(int supplierID) {
-    List<FoodItem> foodItems = new ArrayList<>();
-    try {
-        ReadQuery readInstance = new ReadQuery();
-        String query = "SELECT * FROM craveconnect.FoodItem WHERE FoodsupplierID = ?;";
-        ResultSet resultSet = readInstance.readTableData(query, supplierID);
-
-        while (resultSet.next()) {
-            FoodItem foodItem = new FoodItem(
-                resultSet.getInt("FoodItemID"),
-                resultSet.getString("FoodItemName"),
-                resultSet.getDouble("Price"),
-                resultSet.getString("LinkToFoodImage"),
-                resultSet.getInt("FoodsupplierID"),
-                resultSet.getInt("FoodItemCategoryID")
-            );
-            foodItems.add(foodItem);
-        }
-        
-        
-    } catch (SQLException ex) {
-        Logger.getLogger(FoodItem.class.getName()).log(Level.SEVERE, null, ex);
-    }
-    return foodItems;
-}
 
 
-        // Method with a List of foodItems as input, returning af HTML table to show on the webpage
-        public static String getAllFoodItems(List<FoodItem> foodItems) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-        StringBuilder table = new StringBuilder("<table border='1'>");
-        table.append("<tr><th>Food Item Name</th><th>Price</th><th>Link to Image</th><th>Supplier ID</th><th>Category ID</th></tr>");
-
+    //Static method with a List of foodItems as input, returning af HTML table to show on the home.jsp webpage
+    public static String getAllFoodItems(List<FoodItem> foodItems) {
+        //Using a stringbuilder to store the html table data.
+        StringBuilder table = new StringBuilder("<table border='1'>");                                                                               //Start of table
+        //Appending the headers to the html table.
+        table.append("<tr><th>Food Item Name</th><th>Price</th><th>Link to Image</th><th>Supplier ID</th><th>Category ID</th></tr>");                //Headers of table
+        //Appending each table data and table row based on the data from the FoodItem object. 
         for (FoodItem item : foodItems) {
-            table.append("<tr>");
+            table.append("<tr>");                                                                                                                    //table row start
             //table.append("<td>").append(item.getFoodItemName()).append("</td>");
-            table.append("<td><a href='foodItem?FoodItemID=").append(item.getFoodItemID()).append("'>"+item.getFoodItemName()+"</a></td>");
-            table.append("<td>").append(item.getPrice()).append("</td>");
-            table.append("<td><a href='").append(item.getLinkToFoodImage()).append("'>Image Link</a></td>");
-            table.append("<td>").append(item.getFoodSupplierID()).append("</td>");
-            table.append("<td>").append(item.getFoodItemCategoryID()).append("</td>");
-            table.append("</tr>");
+            table.append("<td><a href='foodItem?FoodItemID=").append(item.getFoodItemID()).append("'>"+item.getFoodItemName()+"</a></td>");        //Name of the food item
+            table.append("<td>").append(item.getPrice()).append("</td>");                                                                       //Price of the food item
+            table.append("<td><a href='").append(item.getLinkToFoodImage()).append("'>Image Link</a></td>");                                   //Link to the image
+            table.append("<td>").append(item.getFoodSupplierID()).append("</td>");                                                              //Foodsuppliers ID
+            table.append("<td>").append(item.getFoodItemCategoryID()).append("</td>");                                                          //food items category
+            table.append("</tr>");                                                                                                                   //table row end
         }
-
-        table.append("</table>");
+        table.append("</table>");                                                                                                                    //End of table 
         return table.toString();
     }
-        
-        
-        
+    
+    //Static method to render categories on home.jsp
+    //returning a HashMap which stores the categoryID and item description from the database table.
     public static  Map<Integer, String> getAllCategories() throws SQLException {
+        //Creating a HashMap of int and string
         Map<Integer, String> categories = new HashMap<>();
         // Creating an instance of ReadQuery to facilitate database interaction.
         ReadQuery readQuery = new ReadQuery();
         String query = "SELECT * FROM FoodCategory";
-
-        try (ResultSet results = readQuery.readCategories()) {
+        try (ResultSet results = readQuery.readTableData(query)) {
             // Looping through the ResultSet to extract category data.
             while (results.next()) {
                 // Extracting category ID and description from the current row.
@@ -168,26 +166,26 @@ public static List<FoodItem> getFoodItemsBySupplierID(int supplierID) {
             // Closing database connection.
             readQuery.disconnect();
         }
-
         return categories;
     }   
         
         
         
-      // Method to search dishes based on a search term.
+    //Static method to search dishes based on a search term.
+    //Returning a List of objects (FoodItem) 
     public static List<FoodItem> searchDishes(String searchTerm) throws SQLException {
         List<FoodItem> dishes = new ArrayList<>();
         // SQL query to fetch dishes based on a search term.
         String query = "SELECT FoodItemID, FoodItemName, Price, LinkToFoodImage FROM craveconnect.FoodItem WHERE FoodItemName LIKE ?";
         List<Object> params = new ArrayList<>();
+        //Like search param for the query to the database.
         params.add("%" + searchTerm + "%");
-        
         ReadQuery ReadInstance = new ReadQuery();
         
         // Executing the query and processing the result set.
         try (ResultSet results = ReadInstance.readTableDataWithParameters(query, params)) {
             while (results.next()) {
-                 // Extracting FoodItem attributes from the result set.
+                //Extracting FoodItem attributes from the result set.
                 int foodItemId = results.getInt("FoodItemID");
                 String name = results.getString("FoodItemName");
                 double price = results.getDouble("Price");
@@ -205,29 +203,30 @@ public static List<FoodItem> getFoodItemsBySupplierID(int supplierID) {
             //Closing the database connection.
             ReadInstance.disconnect();
         }
-
         return dishes;
     }
     
-    // Method to search dishes based on category ID.
+    //Static method to search dishes based on category ID.
+    //Returning a List of objects (FoodItem) 
     public static List<FoodItem> searchDishesByCategory(String categoryId) throws SQLException {
         List<FoodItem> dishes = new ArrayList<>();
         // SQL query to fetch dishes based on category ID.
         String query = "SELECT FoodItemID, FoodItemName, Price, LinkToFoodImage FROM craveconnect.FoodItem WHERE FoodItemCategoryID = ?";
+        //Making a List of objects to store the query statement paramters. 
         List<Object> params = new ArrayList<>();
         params.add(categoryId);
         
-        ReadQuery ReadInstance = new ReadQuery();
-        
         // Executing the query and processing the result set.
+        ReadQuery ReadInstance = new ReadQuery();
         try (ResultSet results = ReadInstance.readTableDataWithParameters(query, params)) {
             while (results.next()) {
-                 // Similar extraction and object creation as in searchDishes method.
+                //Extracting FoodItem attributes from the result set.
                 int foodItemId = results.getInt("FoodItemID");
                 String name = results.getString("FoodItemName");
                 double price = results.getDouble("Price");
                 String imageUrl = results.getString("LinkToFoodImage");
-
+                
+                //Creating a FoodItem object and setting its ingredients.
                 FoodItem item = new FoodItem(name, price, imageUrl);
                 List<String> ingredients = getIngredientsForFoodItem(foodItemId);
                 item.setIngredients(ingredients);
@@ -239,34 +238,32 @@ public static List<FoodItem> getFoodItemsBySupplierID(int supplierID) {
             // Closing the database connection.
             ReadInstance.disconnect();
         }
-
         return dishes;
     }
 
-     // Method to get ingredients for a specific dish.
+    //Static method to get ingredients for a specific dish.
+    //Returning a List of Strings storing the ingredients information.
     private static List<String> getIngredientsForFoodItem(int foodItemId) throws SQLException {
         List<String> ingredients = new ArrayList<>();
-        // INNER JOIN between Ingredients and FoodItemIngredients tables to fetch names of ingredients associated with a specific food item.
+        // INNER JOIN between Ingredients and FoodItemIngredients tables to fetch names of ingredients associated with a specific food item. (Maybe make a vies to this)
         String query = "SELECT i.IngredientName " +
                        "FROM Ingredients i " +
                        "JOIN FoodItemIngredients fi ON i.IngredientID = fi.IngredientID " +
                        "WHERE fi.FoodItemID = ?";
+        //Making a List of objects to store the query statement paramters. 
         List<Object> params = new ArrayList<>();
         params.add(foodItemId);
         
-        ReadQuery ReadInstance = new ReadQuery();
-        
         // Executing the query and adding ingredients to the list.
+        ReadQuery ReadInstance = new ReadQuery();
         try (ResultSet results = ReadInstance.readTableDataWithParameters(query, params)) {
             while (results.next()) {
                 ingredients.add(results.getString("IngredientName"));
             }
         }
-
         return ingredients;
     }   
-          
-
+ 
  // Getters
     public int getFoodItemID() {
         return foodItemID;
@@ -326,27 +323,24 @@ public static List<FoodItem> getFoodItemsBySupplierID(int supplierID) {
         this.ingredients = ingredients;
     }
 /*
-  // Testing example
-   public static void main(String[] args) throws SQLException {
-       //RegisteredUser test = new RegisteredUser();
-       //boolean var = RegisteredUser.registerUser("Dennis","Dennis123","123","D@D.dk");  //Insert into DB - Dette er det tættest på en funktion i java
-       //RegisteredUser test = new RegisteredUser("Dennis123");  //id 24
-       //System.out.println(test.UserID); //id 
-        
-       
-           Map<Integer, String> categories = FoodItem.getAllCategories();
-           // Splitting the string based on '='
-            for (Map.Entry<Integer, String> entry : categories.entrySet()) {
-             int id = entry.getKey();
-             String value = entry.getValue();
-
-             System.out.println("ID: " + id + ", Value: " + value);
-         }
+    //main is solely used to test the the current file.
+    public static void main(String[] args) throws SQLException {
+        //RegisteredUser test = new RegisteredUser();
+        //boolean var = RegisteredUser.registerUser("Dennis","Dennis123","123","D@D.dk");  //Insert into DB - Dette er det tættest på en funktion i java
+        //RegisteredUser test = new RegisteredUser("Dennis123");  //id 24
+        //System.out.println(test.UserID); //id 
+        Map<Integer, String> categories = FoodItem.getAllCategories();
+        // Splitting the string based on '='
+        for (Map.Entry<Integer, String> entry : categories.entrySet()) {
+            int id = entry.getKey();
+            String value = entry.getValue();
+            System.out.println("ID: " + id + ", Value: " + value);
+        }
 
         
-       //List<FoodItem> dishes = new ArrayList<>();
-       //dishes= FoodItem.searchDishesByCategory("4");
-       //System.out.println(dishes.get(0).getIngredients());
+        //List<FoodItem> dishes = new ArrayList<>();
+        //dishes= FoodItem.searchDishesByCategory("4");
+        //System.out.println(dishes.get(0).getIngredients());
         FoodItem test = new FoodItem(1);
 
 }

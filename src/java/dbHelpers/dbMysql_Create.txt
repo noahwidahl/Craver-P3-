@@ -9,7 +9,7 @@ CREATE TABLE Roles (
     RoleDescription VARCHAR(100) UNIQUE NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO Roles (RoleDescription) VALUES ('Administrator'), ('User'), ('Guest');
+INSERT INTO Roles (RoleDescription) VALUES ('Administrator'), ('User'), ('Guest'), ('Foodsupplier');
 
 -- Creating the User Table
 CREATE TABLE User (

@@ -21,6 +21,7 @@ import java.util.List;
  * @author Bokaj
  */
 public abstract class User {
+    //Attributes
     protected int userID;
     protected String userName;
     protected String password;
@@ -34,13 +35,16 @@ public abstract class User {
     //Constructor
     public User(String userName){
         try {
+            //Getting the user information using the dbHelpers 
+            //ReadQuery and the view form the DB v_UserAndRoles
             ReadQuery readInstance = new ReadQuery();
             String query = "SELECT * FROM craveconnect.v_UserAndRoles where UserName = '"+userName+"';";
             ResultSet resultSet = readInstance.readTableData(query);
-            System.out.println(query);
-            System.out.println(resultSet);       
+            
+            //Controlling if statement, did the query return a result
             boolean hasFirstRow = resultSet.next();
             if(hasFirstRow){
+                //Assigning all the attributes with values from the DB
                 this.userID = Integer.parseInt(resultSet.getString("UserID"));     //Parsing string to Int
                 this.userName = resultSet.getString("UserName");
                 this.password = resultSet.getString("Password");
@@ -65,50 +69,41 @@ public abstract class User {
                         // Handle the case where Address is null, for example, assign a default value
                         this.postBy = "Unknown";
                     }
-                    System.out.println("address: "+this.address);
-                    System.out.println("postNr: "+this.postNr);
-                    System.out.println("postBy: "+this.postBy);
                 }
-                
-                System.out.println("userID: "+this.userID);
-                System.out.println("userName: "+this.userName);
-                System.out.println("password: "+this.password);
-                System.out.println("userRoleID: "+this.userRoleID);
-                System.out.println("roleDescription: "+this.roleDescription);
-                System.out.println("lastSeen: "+this.lastSeen);
-                
             }
                     
         } catch (SQLException ex) {
             Logger.getLogger(RegisteredUser.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
     }
     
     //Methods
-    public void setLastLogin(){
+    
+    //Method to update the LastSeen field in the DB table craveconnect.User
+    public boolean setLastLogin(){
         //Getting the current local time
         LocalDateTime currentDateTime = LocalDateTime.now();
         // Format the current date and time using a DateTimeFormatter
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         String formattedDateTime = currentDateTime.format(formatter);
         
-        // Updating LastSeen in the DB
         try {
             UpdateQuery updateInstance = new UpdateQuery();
             String query = "Update craveconnect.User set LastSeen = '"+formattedDateTime+"' where UserID = '+"+this.userID+"';";
-            updateInstance.executeInsertUpdate(query);
-            System.out.println("LastLogin running" );         
+            updateInstance.executeInsertUpdate(query); 
+            return true;
         } catch (SQLException ex) {
             Logger.getLogger(RegisteredUser.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
     }   
     
-        // Helper method to check if a ResultSet has exactly one row
+    // Helper method to check if a ResultSet has exactly one row
     private static boolean hasSingleRow(ResultSet resultSet) throws SQLException {
         return resultSet.next() && !resultSet.next();
     } 
     
+    //Method handling the login validating to the system.
     public boolean checkLogin(String userName, String password) { 
         try {
             ReadQuery readInstance = new ReadQuery();   //Creating ReadQuery object
@@ -119,71 +114,56 @@ public abstract class User {
 
             // Getting the result from the ReadQuery object, using the ReadUser method
             ResultSet result = readInstance.readUser(stringList, "SELECT * FROM craveconnect.User");
-            System.out.println("testing");
+            //System.out.println("testing");
 
             // Check amount of rows
             if (hasSingleRow(result)) {
-                //System.out.println("One row");
                 return true;    // User can login
-
             } else {
-                //System.out.println("Not One row");
                 return false;   //User is denied
             }
-
         } catch (SQLException e) {
-
             e.printStackTrace();
-            //System.out.println("fejl");
             return false;
         }
-
     }
     
-    
-    public boolean updateOwnUser(String Address, String PostNr, String PostBy){
-        boolean control = true;
+    //Method to update the current users information, such as address, zipcode and city
+    //returning a boolean, which can be used to control if the change happened or not.
+    public boolean updateOwnUser(String address, String zipcode, String city, int userID){
         try {
-                UpdateQuery updateInsteance = new UpdateQuery();
-                String query = "UPDATE craveconnect.User " +
-                "SET Address = '"+Address+"', " +
-                "    PostNr = '"+PostNr+"', " +
-                "    PostBy = '"+PostBy+"' " +
-                "WHERE UserID = 1;";
-                updateInsteance.executeInsertUpdate(query);
-                
-                
-            } catch (SQLException ex) {
-                Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
-                control = false;
-            }
-        return control;
+            UpdateQuery updateInsteance = new UpdateQuery();
+            String query = "UPDATE craveconnect.User " +
+            "SET Address = '"+address+"', " +
+            "    PostNr = '"+zipcode+"', " +
+            "    PostBy = '"+city+"' " +
+            "WHERE UserID = "+userID+";";
+            updateInsteance.executeInsertUpdate(query); 
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
+        }
     }
     
+    //Method to delete the current users information.
+    //returning a boolean, which can be used to control if the change happened or not.
     public boolean deleteOwnUser(){
         boolean control = true;
         try {
-                DeleteQuery deleteInsteance = new DeleteQuery();
-                //First we delete the ratings of the user, maybe make a stored procedured on the DB
-                //Then we delete the user himself
-                //String query = "Delete from craveconnect.User where UserID = "+userID+";" +
-                //"Delete FROM craveconnect.Rating where UserID = "+userID+";" +
-                
-                //Using a stored precedure on the mysql database to handle the 
-                //logic of deleting multiple tables, first rating table, then the user table
-                String query = "CALL craveconnect.sp_DeleteUserProcedure("+this.userID+");";
-                deleteInsteance.executeDelete(query);
-                 
-            } catch (SQLException ex) {
-                Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
-                control = false;
-            }
+            DeleteQuery deleteInsteance = new DeleteQuery();
+            //Using a stored precedure on the mysql database to handle the 
+            //logic of deleting multiple tables, first rating table, then the user table
+            String query = "CALL craveconnect.sp_DeleteUserProcedure("+this.userID+");";
+            deleteInsteance.executeDelete(query);
+        } catch (SQLException ex) {
+            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
+            control = false;
+        }
         return control;
     }
     
-    
-
-
+    //Getters
     public int getUserID(){
         return this.userID; 
     }
@@ -227,8 +207,9 @@ public abstract class User {
     public String getPostBy() {
         return postBy;
     }    
-        
-       public void setUserID(int UserID) {
+    
+    //Setters
+    public void setUserID(int UserID) {
         this.userID = UserID;
     }
 
@@ -264,30 +245,5 @@ public abstract class User {
         this.postBy = PostBy;
     }    
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-    //public User(int ID){
-        //lææ db helper ReadQuery();
-        // seæect * from db.user where = UserID = ID
-        //this.UserRoleID = ting fra db UserRoleID
-    //}
-    
-//    getUserDate(){
-        
-//    }
-    
-    
-    //setter vil update database
- //   setUserPassword(int UserRoleID){
-        //Update sql where id = UserRoleID
-//    }
 }
 

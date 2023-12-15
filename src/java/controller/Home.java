@@ -4,7 +4,6 @@
  */
 package controller;
 
-import dbHelpers.ReadQuery;
 import java.io.IOException;
 import java.io.PrintWriter;
 import jakarta.servlet.RequestDispatcher;
@@ -13,14 +12,11 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import model.FoodItem;
-import model.RegisteredUser;
+
 
 /**
  *
@@ -28,7 +24,6 @@ import model.RegisteredUser;
  */
 @WebServlet(name = "Home", urlPatterns = {"/home"})
 public class Home extends HttpServlet {
-    private ResultSet results;
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -68,7 +63,7 @@ public class Home extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Retrieve the search term and category ID from the request.
+        //Retrieve the search term and category ID from the request.
         String searchTerm = request.getParameter("searchTerm");
         String categoryId = request.getParameter("category");
         
@@ -76,10 +71,6 @@ public class Home extends HttpServlet {
             // Fetch all categories and set them as a request attribute for access in JSP.
             
             Map<Integer, String> categories = FoodItem.getAllCategories();
-            
-            
-            
-            
             request.setAttribute("categories", categories);
             
             // Handle search based on category ID.

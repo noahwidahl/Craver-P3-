@@ -1,9 +1,3 @@
-<%-- 
-    Document   : login
-    Created on : 13. nov. 2023, 00.00.14
-    Author     : timmadsen
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -20,6 +14,7 @@
     </head>
     <body>
         <div class="logincontainer">
+            <!-- Form to handle the communicating to the Login.java servlet --> 
             <form action="login" method="post">
                 <label>Brugernavn</label><br/>
                 <input type="text" placeholder="Indtast brugernavn" name="uname"><br/><br/>
@@ -32,7 +27,7 @@
                 
                 <!-- Add hidden fields to identify which button was pressed -->
                 <input type="hidden" name="loginType" value="">
-                    <script>
+                    <script>    <!-- JavaScript to identify which button was pressed, should be turned into a servlet, but didnt have the time --> 
                     // JavaScript function to set the value of the hidden field based on the pressed button
                     function setLoginType(type) {
                         document.getElementsByName("loginType")[0].value = type;
@@ -49,7 +44,7 @@
                 
                 <a href="register.jsp">Ikke medlem?</a><br/><br/>
                 <a href="registerFoodSupplier.jsp">Foodsupplier</a><br/>
-  
+            <!-- Form to showcase error messages, if input wasnt filled in correctly -->     
             </form>
             <%-- Display error message if username or password is invalid --%>
             <%

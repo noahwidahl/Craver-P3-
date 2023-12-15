@@ -4,8 +4,6 @@
  */
 package controller;
 
-import dbHelpers.ReadQuery;
-import dbHelpers.UpdateQuery;
 import jakarta.servlet.RequestDispatcher;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -15,9 +13,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.HashMap;
 import model.AdministratorUser;
 import model.RegisteredUser;
@@ -26,6 +21,8 @@ import model.RegisteredUser;
  *
  * @author Bokaj
  */
+
+// Name of Servlet and URL to be called from the webpage
 @WebServlet(name = "Admin", urlPatterns = {"/admin"})
 public class Admin extends HttpServlet {
     private ResultSet results;
@@ -80,62 +77,47 @@ public class Admin extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        //Using a HashMap to dyniamicly make buttons, key = button name, value = button text
+        HashMap<String, String> hashMap = new HashMap<>();
+        hashMap.put("BtnDeny", "Deny");
+        hashMap.put("BtnApprove", "Approve");
+        //hashMap.put("test", "test");
             
+        //Calling the static method showFoodsuppliersToBeValidated
+        String table = AdministratorUser.showFoodsuppliersToBeValidated(hashMap);
             
-            
-            //Using a HashMap to dyniamicly make buttons, key = button name, value = button text
-            HashMap<String, String> hashMap = new HashMap<>();
-            hashMap.put("BtnDeny", "Deny");
-            hashMap.put("BtnApprove", "Approve");
-            //hashMap.put("test", "test");
+        //Passing table to webpage
+        request.setAttribute("table", table);
+        String url ="/admin.jsp";
+        RequestDispatcher dispatcher = request.getRequestDispatcher(url);
+        dispatcher.forward(request, response);
+        processRequest(request, response);
 
-            String table = AdministratorUser.showFoodsuppliersToBeValidated(hashMap);
-            
-            //Pass execution control to read.jsp along with the table.
-            request.setAttribute("table", table);
-            String url ="/admin.jsp";
-            
-            RequestDispatcher dispatcher = request.getRequestDispatcher(url);
-            dispatcher.forward(request, response);
-            
-            processRequest(request, response);
-
-        
-        //Reading the hidden first column value in a table
+        //Reading the hidden first column value in a table, the parameter "parameterName" exists here ReadQuery.outputResultAsHtmlTableWithButtons
         String parameterValue = request.getParameter("parameterName");
-      
-            RegisteredUser userLoggedIn = (RegisteredUser) request.getSession().getAttribute("sessionUserObject");    
-            AdministratorUser admin = new AdministratorUser(userLoggedIn.getUserName());
+        
+        //Reading the session attribute of the RegisteredUser object, this enable the user information all around the system.
+        RegisteredUser userLoggedIn = (RegisteredUser) request.getSession().getAttribute("sessionUserObject");    
+        //Creating an insteace of the Administrator object, input is RegisteredUser objects UserName 
+        AdministratorUser admin = new AdministratorUser(userLoggedIn.getUserName());
             
-            
-                if(parameterValue == null || "".equals(parameterValue)){
-                   
-                }else if(parameterValue.contains("BtnDeny")){
-                    //what to do
-                    String[] parts = parameterValue.split(":");
-                    //System.out.println("testing here: "+parts[1].trim());  
-                    admin.validateFoodSupplier("1", parts[1].trim());
-                }else if(parameterValue.contains("BtnApprove")){
-                    //what to do
-                    String[] parts = parameterValue.split(":");
-                    admin.validateFoodSupplier("2", parts[1].trim());
-                }else{
-                    System.out.println(parameterValue); 
-                }
-                
-                url ="/admin.jsp";
-
-                dispatcher = request.getRequestDispatcher(url);
-                dispatcher.forward(request, response);
-
-        
-        
-
-
-        
-        
-        
-        //processRequest(request, response);
+        //If-statement to handle which action to take, based on which button was pressed.     
+        if(parameterValue == null || "".equals(parameterValue)){
+            //Nothing here
+        }else if(parameterValue.contains("BtnDeny")){
+            //Handling the BtnDeny button action
+            //Splitting the parameterValue (which is a hashMap) into 2 component, a key and a value
+            String[] parts = parameterValue.split(":");
+            admin.validateFoodSupplier(1, Integer.parseInt(parts[1].trim()));
+        }else if(parameterValue.contains("BtnApprove")){
+             //Handling the BtnApporve button action
+            //Splitting the parameterValue (which is a hashMap) into 2 component, a key and a value
+            String[] parts = parameterValue.split(":");
+            admin.validateFoodSupplier(2, Integer.parseInt(parts[1].trim()));
+        }else{
+            //what happens if another value is passed...
+            //System.out.println(parameterValue); 
+        }
     }
 
     /**

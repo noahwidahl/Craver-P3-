@@ -1,8 +1,4 @@
-<%-- 
-    Document   : Profile
-    Created on : 26. nov. 2023, 21.15.56
-    Author     : Bokaj
---%>
+<!-- Importing java libraries --> 
 <%@page import="model.RegisteredUser"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!Doctype HTML>
@@ -16,62 +12,65 @@
   </head>
 <body>
     
-<!-- Menu elements start -->    
-        <%-- getting the session variables used in the form --%>
+<    <!-- Menu elements start -->    
+    <%-- getting the session variables used in the system --%>
     <%
-        RegisteredUser userLoggedIn = (RegisteredUser) session.getAttribute("sessionUserObject");
-        int userRole = userLoggedIn.getUserID();
-        request.setAttribute("varUserName", userLoggedIn.getUserName());
-        request.setAttribute("varUserID", userRole);
-        request.setAttribute("varUserRole", userLoggedIn.getUserRole());  // Assuming you have a getUserRole() method in RegisteredUser
-        request.setAttribute("varUserRoleDescription", userLoggedIn.getUserRoleDescription());  // Assuming you have a getUserRoleDescription() method
-        request.setAttribute("Addresse", userLoggedIn.getAddress());
-        request.setAttribute("PostNr", userLoggedIn.getPostNr());
-        request.setAttribute("PostBy", userLoggedIn.getPostBy());
+        int userRole = 0;
+
+        try {
+            RegisteredUser userLoggedIn = (RegisteredUser) session.getAttribute("sessionUserObject");
+            userRole = userLoggedIn.getUserRoleID();
+            request.setAttribute("varUserName", userLoggedIn.getUserName());
+            request.setAttribute("varUserName", userLoggedIn.getUserName());
+            request.setAttribute("varUserID", userLoggedIn.getUserID());
+            request.setAttribute("varUserRole", userLoggedIn.getUserRole());  // Assuming you have a getUserRole() method in RegisteredUser
+            request.setAttribute("varUserRoleDescription", userLoggedIn.getUserRoleDescription());  // Assuming you have a getUserRoleDescription() method
+            request.setAttribute("Addresse", userLoggedIn.getAddress());
+            request.setAttribute("PostNr", userLoggedIn.getPostNr());
+            request.setAttribute("PostBy", userLoggedIn.getPostBy());
+        } catch (Exception ex) {
+            userRole = 3;
+            request.setAttribute("varUserName", "Guest");
+        }
     %>
     
     
     <div id="square1" class="square">
     <nav>    
-
-      <%
-   if (userRole == 1) { //Menubar Administrator
-%>
+<!-- Menu elements loaded depending of userRole -->   
+    <%
+        if (userRole == 1) { //Menubar Administrator
+    %>
         <a href="${pageContext.request.contextPath}/home.jsp">Home</a>
-        <a href="${pageContext.request.contextPath}/searchFoodSupplierProfile.jsp">Search</a>
-        <a href="${pageContext.request.contextPath}/profile.jsp">User profile</a> 
-        <a href="${pageContext.request.contextPath}/admin.jsp">Admin</a> 
         <a href="${pageContext.request.contextPath}/foodSupplier">Se alle restauranter her</a> <!-- New Button -->
         <a href="${pageContext.request.contextPath}/navigation.jsp">Navigation her</a>
-
-<%
-   } else if (userRole == 2) {  //Menubar User
-%>
-        <a href="${pageContext.request.contextPath}/home.jsp">Home</a>
-        <a href="${pageContext.request.contextPath}/searchFoodSupplierProfile.jsp">Search</a>
         <a href="${pageContext.request.contextPath}/profile.jsp">User profile</a> 
-        <a href="${pageContext.request.contextPath}/foodSupplier">Se alle restauranter her</a> <!-- New Button -->
-        <a href="${pageContext.request.contextPath}/Navigation.jsp">Navigation her</a>
-<%
-   }else if (userRole == 3) {  //Menubar guest
-%>
+        <a href="${pageContext.request.contextPath}/admin.jsp">Admin</a> 
+    <%
+        } else if (userRole == 2) {  //Menubar User
+    %>
         <a href="${pageContext.request.contextPath}/home.jsp">Home</a>
-        <a href="${pageContext.request.contextPath}/searchFoodSupplierProfile.jsp">Search</a>
-        <a href="${pageContext.request.contextPath}/foodSupplier.jsp">Se alle restauranter her</a> <!-- New Button -->
         <a href="${pageContext.request.contextPath}/foodSupplier">Se alle restauranter her</a> <!-- New Button -->
-        <a href="${pageContext.request.contextPath}/Navigation.jsp">Navigation her</a>
-<%
-   }else if (userRole == 4) {  //Menubar foodsupplier 
-%>
-        <a href="${pageContext.request.contextPath}/home.jsp">Home</a>
-        <a href="${pageContext.request.contextPath}/searchFoodSupplierProfile.jsp">Search</a>
+        <a href="${pageContext.request.contextPath}/navigation.jsp">Navigation her</a>
         <a href="${pageContext.request.contextPath}/profile.jsp">User profile</a> 
-<%
-   } 
-%>
-
+    <%
+        }else if (userRole == 3) {  //Menubar guest
+    %>
+        <a href="${pageContext.request.contextPath}/home.jsp">Home</a>
+        <a href="${pageContext.request.contextPath}/foodSupplier">Se alle restauranter her</a> <!-- New Button -->
+        <a href="${pageContext.request.contextPath}/navigation.jsp">Navigation her</a>
+    <%
+        }else if (userRole == 4) {  //Menubar foodsupplier 
+    %>
+        <a href="${pageContext.request.contextPath}/home.jsp">Home</a>
+        <a href="${pageContext.request.contextPath}/profile.jsp">User profile</a> 
+    <%
+        } 
+    %>
+    
+     <!-- Placeholder and script to load userName --> 
       <div id="user-name-placeholder" class="user-name-placeholder">${varUserName}</div>
-      <script>
+    <script> 
         document.getElementById("user-name-placeholder").innerText = "User: ${varUserName}";
         
     </script>
@@ -91,66 +90,50 @@
 
 <!-- Menu elements stop -->
     
+    <%-- Label to showcase user data --%>
+    <label for="userID">UserID:</label>
+    <input type="text" id="userID" name="userID" disabled value="${varUserID}"><br>
 
+    <label for="userName">UserName:</label>
+    <input type="text" id="userName" name="userName" disabled value="${varUserName}"><br>
 
-  
-
-        <label for="userID">UserID:</label>
-        <input type="text" id="userID" name="userID" disabled value="${varUserID}"><br>
-
-        <label for="userName">UserName:</label>
-        <input type="text" id="userName" name="userName" disabled value="${varUserName}"><br>
-
-        <label for="userRole">UserRole:</label>
-        <input type="text" id="userRole" name="userRole" disabled value="${varUserRoleDescription}"><br>
-
-
-
-        
-        <form action="profile" method="post">
-            <!-- Adding a hidden input to identify the action -->
-             <label for="LabelAddresse">Addresse:</label>
-            <input type="text" id="Addresse" name="Addresse" value="${Addresse}"><br>
-
-            <label for="PostNr">PostNr</label>
-            <input type="text" id="PostNr" name="PostNr" value="${PostNr}"><br>
-
-            <label for="PostBy">PostBy</label>
-            <input type="text" id="PostBy" name="PostBy" value="${PostBy}"><br><br>
-            
-            <input type="hidden" name="Updateaction" value="updateInfo">
-            <button id="UpdateInfo" type="submit" style="background-color: lightgreen;">Update info</button>
-            
-        </form><br> 
-            
-        <form action="profile" method="post">
-            <input type="hidden" name="DeleteUseraction" value="DeleteUser">
-            <button id="BtnDeleteUser" type="submit" style="background-color: red;">Delete user</button>   
-        </form>    
-            
-            <br> 
-        
-        
-        
-            <h1>Your ratings</h1>  
-            
-      
-
+    <label for="userRole">UserRole:</label>
+    <input type="text" id="userRole" name="userRole" disabled value="${varUserRoleDescription}"><br>
     
-            <div id="tableContent" ></div>
-    
-    
-<% 
-    String tableValue = (String) request.getAttribute("table");
-    
-    if (tableValue != null) {
-%>
-    <%= tableValue %>
-<%
-    }
-%>
-   
- 
+    <%-- Form to interact with Profile.java servlet, in this case using the BtnUpdateaction button --%>
+    <form action="profile" method="post">
+        <label for="LabelAddresse">Addresse:</label>
+        <input type="text" id="Addresse" name="Addresse" value="${Addresse}"><br>
+
+        <label for="PostNr">PostNr</label>
+        <input type="text" id="PostNr" name="PostNr" value="${PostNr}"><br>
+
+        <label for="PostBy">PostBy</label>
+        <input type="text" id="PostBy" name="PostBy" value="${PostBy}"><br><br>
+            
+        <input type="hidden" name="BtnUpdateaction" value="updateInfo">
+        <button id="UpdateInfo" type="submit" style="background-color: lightgreen;">Update info</button>
+            
+    </form><br> 
+    <%-- Form to interact with Profile.java servlet, in this case using the BtnDeleteUseraction button --%>       
+    <form action="profile" method="post">
+        <input type="hidden" name="BtnDeleteUseraction" value="DeleteUser">
+        <button id="BtnDeleteUser" type="submit" style="background-color: red;">Delete user</button>   
+    </form><br> 
+
+    <h1>Your ratings</h1>  
+            
+     <div id="tableContent" ></div>
+    <% 
+        String tableValue = (String) request.getAttribute("table");
+
+        if (tableValue != null) {
+    %>
+        <%= tableValue %>
+    <%
+        }
+    %>
+    <%-- javaSript to preload when a table when the webpage is loaded, should have been a servlet, but no more time. --%>
     <script>
     window.onload = function () {
         var xhr = new XMLHttpRequest();
@@ -167,10 +150,8 @@
                     // Create a temporary container element
                     const container = document.createElement('div');
                     container.innerHTML = htmlContent;
-                    //console.log(container);
                     // Find the table element and extract its content
                     const tableElement = container.querySelector('table');
-                    //console.log(container);
                     if (tableElement) {
                         // Get the HTML content of the table
                         tableContent = tableElement.innerHTML;
@@ -179,11 +160,9 @@
                         const oldValue = '<tbody>';
                         const newValue = '<table border=1>';
                         tableContent = tableContent.replace(new RegExp(oldValue, 'g'), newValue);
-                        //console.log(tableContent);
                     } else {
                         //console.log('Table not found in the HTML content.');
                     }
-
                     // Update the content of the 'tableContent' div with the response
                     document.getElementById("tableContent").innerHTML = tableContent.replace("","");
                 } else {
@@ -192,11 +171,10 @@
                 }
             }
         };
-
         xhr.open("GET", "profile", true); //http://localhost:8080/Crave/profile
         xhr.send();
     };
-</script>
+    </script>
 
 </body>
 

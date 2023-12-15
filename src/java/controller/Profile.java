@@ -12,14 +12,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import dbHelpers.ReadQuery;
-import dbHelpers.UpdateQuery;
-import jakarta.servlet.http.HttpSession;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import model.Rating;
 import model.RegisteredUser;
 
@@ -30,7 +23,6 @@ import model.RegisteredUser;
 @WebServlet(name = "Profile", urlPatterns = {"/profile"})
 public class Profile extends HttpServlet {
     
-    private ResultSet results;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -69,20 +61,16 @@ public class Profile extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        // Retrieve the session User Object, assigned at login
+        //Retrieve the session User Object, assigned at login
         RegisteredUser userLoggedIn = (RegisteredUser) request.getSession().getAttribute("sessionUserObject");
-        
-        // Default behavior, e.g., display profile information
-        System.out.println("Profile2");
-            
+        //Creating a table showcasing the users own ratings and turning them into a table    
         String table = userLoggedIn.getOwnRatings();
         request.setAttribute("table", table);
-            
+        //Forwarding the table result to the .jsp file
         String url ="/profile.jsp";
         // Forward the request to the profile.jsp page
         RequestDispatcher dispatcher = request.getRequestDispatcher(url);
         dispatcher.forward(request, response);
-
         processRequest(request, response);
     }
 
@@ -97,32 +85,30 @@ public class Profile extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        //Reading the hidden first column value in a table, the value in the hashtable parsed
+        //Reading the hidden first column value in a table parsed as a hashtable value
         String parameterValue = request.getParameter("parameterName");
           
-                if(parameterValue == null || "".equals(parameterValue)){
-                //what to do when is doesnt have data.
-                }else if(parameterValue.contains("BtnDelete")){
-                    //splitting the hash table
-                    String[] parts = parameterValue.split(":");
-                    //System.out.println("testing here: "+parts[1].trim()); 
-                    //creating rating obj and running the method to delete rating.
-                    Rating deleteRating = new Rating(Integer.parseInt(parts[1].trim()));
-                    deleteRating.deleteRating();
+        if(parameterValue == null || "".equals(parameterValue)){
+            //what to do when is doesnt have data.
+        }else if(parameterValue.contains("BtnDelete")){
+            //splitting the hash table
+            String[] parts = parameterValue.split(":");
+            //creating rating obj and running the method to delete rating.
+            Rating deleteRating = new Rating(Integer.parseInt(parts[1].trim()));
+            deleteRating.deleteRating();
                     
-                    String url ="/profile.jsp";
-                    // Forward the request to the profile.jsp page
-                    RequestDispatcher dispatcher = request.getRequestDispatcher(url);
-                    dispatcher.forward(request, response); 
-                }else{
-                    System.out.println(parameterValue); 
-                }
-        
-        parameterValue = request.getParameter("DeleteUseraction");
+            String url ="/profile.jsp";
+            // Forward the request to the profile.jsp page
+            RequestDispatcher dispatcher = request.getRequestDispatcher(url);
+            dispatcher.forward(request, response); 
+        }else{
+            System.out.println(parameterValue); 
+        }
+        //Handling the action when the BtnDeleteUseraction is pressed.
+        parameterValue = request.getParameter("BtnDeleteUseraction");
         if(parameterValue == null || "".equals(parameterValue)){
                 //what to do when is doesnt have data.
         }else if(parameterValue.contains("DeleteUser")){
-            System.out.println("DeleteUseraction: "+parameterValue); 
             //Getting the current user obj
             RegisteredUser deleteUser = (RegisteredUser) request.getSession().getAttribute("sessionUserObject");
             //Deleting the user obj
@@ -133,30 +119,27 @@ public class Profile extends HttpServlet {
             response.sendRedirect("login.jsp");  
         }
                 
-        // Retrieve the session User Object, assigned at login
+        //Retrieve the session User Object, assigned at login
         RegisteredUser userLoggedIn = (RegisteredUser) request.getSession().getAttribute("sessionUserObject");
-        
-        String action = request.getParameter("Updateaction");
+        //handling what happens when the BtnUpdateaction button is pressed
+        String action = request.getParameter("BtnUpdateaction");
         
         if ("updateInfo".equals(action)) {
-            System.out.println("Updateaction: "+action);
-            // Handle the "Update Info" action
+            // Getting the parameters from the input fields in profile.jsp
             String address = request.getParameter("Addresse");
             String postNr = request.getParameter("PostNr");
             String postBy = request.getParameter("PostBy");
 
-            //System.out.println("Profile");
-            //System.out.println("Address: " + address);
-            //System.out.println("PostNr: " + postNr);
-            //System.out.println("PostBy: " + postBy);
-               // Extract the first four letters of postNr
+            // Extract the first four letters of postNr, PostNr is max 4 chars in DB table
             String truncatedPostNr = postNr.substring(0, Math.min(postNr.length(), 4));
             
+            //Making an user object to update
             RegisteredUser updateUser = new RegisteredUser(userLoggedIn.getUserName());
-            boolean control = updateUser.updateOwnUser(address, truncatedPostNr, postBy);
-            System.out.println("control: " + control);
+            //Running the update method
+            boolean control = updateUser.updateOwnUser(address, truncatedPostNr, postBy,userLoggedIn.getUserID());
+            //Check if the update action happend
             if (control) {
-            // Update the session object with the new information
+            // if true - Update the session object with the new information
             userLoggedIn.setAddress(address);
             userLoggedIn.setPostNr(postNr);
             userLoggedIn.setPostBy(postBy);
@@ -171,8 +154,7 @@ public class Profile extends HttpServlet {
         RequestDispatcher dispatcher = request.getRequestDispatcher(url);
         dispatcher.forward(request, response);         
         }   
-         
-                
+                     
     }
 
     /**

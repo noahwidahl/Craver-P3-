@@ -7,8 +7,10 @@ package model;
 import dbHelpers.ReadQuery;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+//import java.util.ArrayList;
+//import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -18,25 +20,42 @@ public class Ingredient {
     int ingredientID;
     String ingredientName;
     
-    public static void getAllIngredients(String ingredientsQuery) {
+    //Constructor
+    public Ingredient(){
         try {
-            System.out.println(ingredientsQuery);
-            ReadQuery readInstance = new ReadQuery();   //Creating ReadQuery object
+            //Getting the ingredient information using the dbHelpers 
+            ReadQuery readInstance = new ReadQuery();
+            String query = "SELECT * FROM craveconnect.Ingredients;";
+            ResultSet resultSet = readInstance.readTableData(query);
             
-            ResultSet result = readInstance.readTableData(ingredientsQuery);
-            //System.out.println(readInstance.outputResultAsHtmlTable(result));
-            System.out.println(readInstance.outputResultAsText(result));
-            
-            
-
-        } catch (SQLException e) {
-
-            e.printStackTrace();
-            System.out.println("fejl");
-            
+            //Controlling if statement, did the query return a result
+            boolean hasFirstRow = resultSet.next();
+            if(hasFirstRow){
+                //Assigning all the attributes with values from the DB
+                this.ingredientID = Integer.parseInt(resultSet.getString("ingredientID"));     //Parsing string to Int
+                this.ingredientName = resultSet.getString("ingredientName");
+            }        
+        } catch (SQLException ex) {
+            Logger.getLogger(RegisteredUser.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
+    //Methods
+    //Static method to handle the showcase of all ingrediens.
+    /* Not used anymore i believe.
+    public static void getAllIngredients(String ingredientsQuery) {
+        try {
+            ReadQuery readInstance = new ReadQuery();   //Creating ReadQuery object
+            ResultSet result = readInstance.readTableData(ingredientsQuery);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("fejl");
+        }
+    }
+    */
+    
+    //Static method to 
+    /*
     public static void getSpecificIngredients(String ingredientsQuery) {
         try {
             System.out.println(ingredientsQuery);
@@ -54,7 +73,8 @@ public class Ingredient {
             
         }
     }
-
+    */
+}    
         
 /*
 
@@ -116,16 +136,8 @@ public class Ingredient {
 
             return ingredientName;
         }*/
-    }
+
     
-   /* 
-       // Testing example
-   public static void main(String[] args) {
-   
-        
-        Ingredient test = new Ingredient();
-        test.getAllIngredients("SELECT * FROM craveconnect.Ingredients;");
-        
-    }
-*/
+
+
 

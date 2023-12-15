@@ -1,9 +1,8 @@
+<!-- Importing java libraries --> 
 <%@page import="model.RegisteredUser"%>
-<%-- 
-    Document   : Navigation
-    Created on : 28. nov. 2023, 15.48.23
-    Author     : ajens
---%>
+<%@page import="model.FoodSupplier" %>
+<%@page import="java.util.ArrayList" %>
+<%@page import="java.util.List" %>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -13,62 +12,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Restaurant Map</title>
     <link href="${pageContext.request.contextPath}/style.css" rel="stylesheet">
-<!-- Menu elements start -->    
-        <%-- getting the session variables used in the form --%>
+    <!-- Menu elements start -->    
+    <%-- getting the session variables used in the system --%>
     <%
-        RegisteredUser userLoggedIn = (RegisteredUser) session.getAttribute("sessionUserObject");
-        int userRole = userLoggedIn.getUserID();
-        request.setAttribute("varUserName", userLoggedIn.getUserName());
-        request.setAttribute("varUserID", userRole);
-        request.setAttribute("varUserRole", userLoggedIn.getUserRole());  // Assuming you have a getUserRole() method in RegisteredUser
-        request.setAttribute("varUserRoleDescription", userLoggedIn.getUserRoleDescription());  // Assuming you have a getUserRoleDescription() method
-        request.setAttribute("Addresse", userLoggedIn.getAddress());
-        request.setAttribute("PostNr", userLoggedIn.getAddress());
-        request.setAttribute("PostBy", userLoggedIn.getAddress());
+        int userRole = 0;
+
+        try {
+            RegisteredUser userLoggedIn = (RegisteredUser) session.getAttribute("sessionUserObject");
+            userRole = userLoggedIn.getUserRoleID();
+            request.setAttribute("varUserName", userLoggedIn.getUserName());
+        } catch (Exception ex) {
+            userRole = 3;
+            request.setAttribute("varUserName", "Guest");
+        }
     %>
     
     
     <div id="square1" class="square">
     <nav>    
-
-      <%
-   if (userRole == 1) { //Menubar Administrator
-%>
+<!-- Menu elements loaded depending of userRole -->   
+    <%
+        if (userRole == 1) { //Menubar Administrator
+    %>
         <a href="${pageContext.request.contextPath}/home.jsp">Home</a>
-        <a href="${pageContext.request.contextPath}/searchFoodSupplierProfile.jsp">Search</a>
-        <a href="${pageContext.request.contextPath}/profile.jsp">User profile</a> 
-        <a href="${pageContext.request.contextPath}/admin.jsp">Admin</a> 
         <a href="${pageContext.request.contextPath}/foodSupplier">Se alle restauranter her</a> <!-- New Button -->
         <a href="${pageContext.request.contextPath}/navigation.jsp">Navigation her</a>
-
-<%
-   } else if (userRole == 2) {  //Menubar User
-%>
-        <a href="${pageContext.request.contextPath}/home.jsp">Home</a>
-        <a href="${pageContext.request.contextPath}/searchFoodSupplierProfile.jsp">Search</a>
         <a href="${pageContext.request.contextPath}/profile.jsp">User profile</a> 
-        <a href="${pageContext.request.contextPath}/foodSupplier">Se alle restauranter her</a> <!-- New Button -->
-        <a href="${pageContext.request.contextPath}/Navigation.jsp">Navigation her</a>
-<%
-   }else if (userRole == 3) {  //Menubar guest
-%>
+        <a href="${pageContext.request.contextPath}/admin.jsp">Admin</a> 
+    <%
+        } else if (userRole == 2) {  //Menubar User
+    %>
         <a href="${pageContext.request.contextPath}/home.jsp">Home</a>
-        <a href="${pageContext.request.contextPath}/searchFoodSupplierProfile.jsp">Search</a>
-        <a href="${pageContext.request.contextPath}/foodSupplier.jsp">Se alle restauranter her</a> <!-- New Button -->
         <a href="${pageContext.request.contextPath}/foodSupplier">Se alle restauranter her</a> <!-- New Button -->
-        <a href="${pageContext.request.contextPath}/Navigation.jsp">Navigation her</a>
-<%
-   }else if (userRole == 4) {  //Menubar foodsupplier 
-%>
-        <a href="${pageContext.request.contextPath}/home.jsp">Home</a>
-        <a href="${pageContext.request.contextPath}/searchFoodSupplierProfile.jsp">Search</a>
+        <a href="${pageContext.request.contextPath}/navigation.jsp">Navigation her</a>
         <a href="${pageContext.request.contextPath}/profile.jsp">User profile</a> 
-<%
-   } 
-%>
-
+    <%
+        }else if (userRole == 3) {  //Menubar guest
+    %>
+        <a href="${pageContext.request.contextPath}/home.jsp">Home</a>
+        <a href="${pageContext.request.contextPath}/foodSupplier">Se alle restauranter her</a> <!-- New Button -->
+        <a href="${pageContext.request.contextPath}/navigation.jsp">Navigation her</a>
+    <%
+        }else if (userRole == 4) {  //Menubar foodsupplier 
+    %>
+        <a href="${pageContext.request.contextPath}/home.jsp">Home</a>
+        <a href="${pageContext.request.contextPath}/profile.jsp">User profile</a> 
+    <%
+        } 
+    %>
+    
+     <!-- Placeholder and script to load userName --> 
       <div id="user-name-placeholder" class="user-name-placeholder">${varUserName}</div>
-      <script>
+    <script> 
         document.getElementById("user-name-placeholder").innerText = "User: ${varUserName}";
         
     </script>
@@ -78,9 +73,7 @@
     
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAylpg3tnqQLq7Jmm8qA-bZXSV70njxzok&libraries=places&callback=initMap" async defer></script>
 
-    <%@ page import="model.FoodSupplier" %>
-    <%@ page import="java.util.ArrayList" %>
-    <%@ page import="java.util.List" %>
+    <%-- initializing a FoodSupplier object, in this context from FoodSupplier with ID 8, this is a test to check if nagivation works.--%>
     <% 
         FoodSupplier restaurant = new FoodSupplier(8);
         List<Double> doubleList = restaurant.getCoordinates();
@@ -88,7 +81,7 @@
         double Longitude = doubleList.get(1);
     %>
     
-    
+    <%-- Navigationprogram using google maps API --%>
     <script>
         var map;
         var restaurantLocation;

@@ -10,6 +10,7 @@ import java.sql.*;
  */
 
 public class UpdateQuery extends CRUD {    
+    //Constructor to inherent from the CRUD superclass
     public UpdateQuery() throws SQLException {
         super(); // Calls the constructor of the CRUD class to establish a database connection
     }
@@ -17,7 +18,5 @@ public class UpdateQuery extends CRUD {
     public int executeInsertUpdate(String query) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(query);
         return preparedStatement.executeUpdate();
-    }
-
-    
+    }    
 }

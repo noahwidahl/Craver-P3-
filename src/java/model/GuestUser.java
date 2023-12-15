@@ -16,9 +16,11 @@ import java.util.UUID;
  * @author Bokaj
  */
 public class GuestUser extends User {
+    //Attributes specifc for GuestUser
     int guestID;
     String token;
     
+    //Constructor assigning the attributes from the superclass User and the subclass GuestUser 
     public GuestUser(String UserName) {
         super(UserName);
         this.userID = 0;     //Parsing string to Int
@@ -36,31 +38,23 @@ public class GuestUser extends User {
         this.token = sessionCookie.getValue();
     }
  
+    //Methods
     
+    //Method to handle the login time of GuestUsers
     public void setGuestLogin() throws SQLException{
-           //insert into craveconnect.UserGuestLog;
-           CreateQuery insertInstance = new CreateQuery();
-           insertInstance.executeInsert("insert into craveconnect.UserGuestLog (Token,AddDate) values('"+this.token+"','"+this.lastSeen+"');");
+        //insert into craveconnect.UserGuestLog;
+        CreateQuery insertInstance = new CreateQuery();
+        insertInstance.executeInsert("insert into craveconnect.UserGuestLog (Token,AddDate) values('"+this.token+"','"+this.lastSeen+"');");
     }
 
-
+    //main is solely used to test the the current file.
     public static void main(String[] args) {
        //RegisteredUser test = new RegisteredUser();
        //boolean var = RegisteredUser.registerUser("Dennis","Dennis123","123","D@D.dk");  //Insert into DB - Dette er det tættest på en funktion i java
        //RegisteredUser test = new RegisteredUser("Dennis123");  //id 24
        //System.out.println(test.UserID); //id 
-        
-
-        //RegisteredUser userLoggedIn = null;
-
-      
-
-       
-
-}
-
-
-
+       //RegisteredUser userLoggedIn = null;
+    }
 }
 
 

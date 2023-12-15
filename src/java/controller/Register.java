@@ -6,7 +6,6 @@ package controller;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -71,32 +70,30 @@ public class Register extends HttpServlet {
      * @throws IOException if an I/O error occurs
      */
     @Override
-protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
         throws ServletException, IOException {
-    // Retrieve form parameters
-    String username = request.getParameter("uname");
-    String password = request.getParameter("pword");
-    String email = request.getParameter("email");
-    
-    // Check if any of the required fields is empty
-    if ( username.isEmpty() || password.isEmpty() || email.isEmpty()) {
-        // If any required field is empty, redirect back to the registration page with an error message
-        response.sendRedirect("register.jsp?error=1");
-        return;
-    }
-    // Call method in registerquery to insert data into the database
-    boolean nextStep = RegisteredUser.createOwnUser(username,password,email);
-    
-    if(nextStep==true){
-        // You can add further logic for success or failure and redirect the user accordingly
-        response.sendRedirect("login.jsp");
-    }else{
-        //Håndteres af html filen
-    }
-    
-    
-}
+        // Retrieve form parameters
+        String username = request.getParameter("uname");
+        String password = request.getParameter("pword");
+        String email = request.getParameter("email");
+        System.out.print(email);
 
+        // Check if any of the required fields is empty
+        if ( username.isEmpty() || password.isEmpty() || email.isEmpty()) {
+            // If any required field is empty, redirect back to the registration page with an error message
+            response.sendRedirect("register.jsp?error=1");
+            return;
+        }
+        // Call method in registerquery to insert data into the database
+        boolean nextStep = RegisteredUser.createOwnUser(username,password,email);
+        //If statement to control what happens based on succes or not
+        if(nextStep==true){
+            //Logic for success redirecting the user accordingly
+            response.sendRedirect("login.jsp");
+        }else{
+            //Logic for failure, is handled by the .jsp file in this context
+        }
+    }
 
     /**
      * Returns a short description of the servlet.

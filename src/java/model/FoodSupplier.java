@@ -8,7 +8,6 @@ import dbHelpers.CreateQuery;
 import dbHelpers.DeleteQuery;
 import dbHelpers.ReadQuery;
 import dbHelpers.UpdateQuery;
-import model.FoodItem;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -36,11 +35,11 @@ public class FoodSupplier {
     //Constructoren
     public FoodSupplier(int FoodsupplierID){
         try {
+            //Getting the FoodSupplier information using the dbHelpers 
             ReadQuery readInstance = new ReadQuery();
             String query = "SELECT * FROM craveconnect.Foodsupplier where FoodsupplierID = "+FoodsupplierID+";";
-            ResultSet resultSet = readInstance.readTableData(query);
-            System.out.println(query);
-            System.out.println(resultSet);       
+            ResultSet resultSet = readInstance.readTableData(query);     
+            //Controlling if statement, did the query return a result
             boolean hasFirstRow = resultSet.next();
             if(hasFirstRow){
                 this.foodsupplierID = Integer.parseInt(resultSet.getString("FoodsupplierID"));     //Parsing string to Int
@@ -53,22 +52,18 @@ public class FoodSupplier {
                 this.latitude = Double.parseDouble(resultSet.getString("Latitude"));     //Parsing string to Int
                 this.longitude = Double.parseDouble(resultSet.getString("Longitude"));   //Parsing string to Int
                 this.foodSupplierCategoryID = Integer.parseInt(resultSet.getString("FoodSupplierCategoryID"));     //Parsing string to Int
-                //Dennis, lav password tjekker, send password med i constructor, hvis de ikke er ens, smid exception
-                //System.out.println(this.FoodsupplierID);
             }
-                    
         } catch (SQLException ex) {
             Logger.getLogger(RegisteredUser.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    
+
     //Methods
+    
+    //Method to handle the creating of a foodItem, inputs are price, link and category
     public void createFoodItem(String name, double price, String link, int category){
-        System.out.println("Running: CreateFoodItem"); //id 
-        //FoodItem test = new FoodItem();
-        CreateQuery createInstance;
         try {
+            CreateQuery createInstance;
             createInstance = new CreateQuery();
             String query = "insert into craveconnect.FoodItem (FoodItemName,Price,LinkToFoodImage,FoodsupplierID,FoodItemCategoryID) values ('"+name+"',"+price+",'"+link+"',"+this.foodsupplierID+","+category+");";
             createInstance.executeInsert(query);
@@ -77,48 +72,55 @@ public class FoodSupplier {
         }
     }
     
-    // registerFoodSupplier method
-    public static boolean registerFoodSupplier(String FoodSupplierUsername, String FoodsupplierPassword, String FoodsupplierEmail, String FoodsupplierName, String FoodsupplierAddress, String FoodsupplierPostNr,String FoodsupplierCity, String FoodsupplierPhoneNumber, String FoodsuFoodsupplierExternalLinkpplierAddress, String FoodSupplierCategoryID) {
+    //Method to handle the registration of Foodsuppliers. 
+    //First the user of the foodsupplier is created, 
+    //then the creating of the foodsupplier master data.
+    public static boolean registerFoodSupplier(
+            //inputs
+            String FoodSupplierUsername, 
+            String FoodsupplierPassword, 
+            String FoodsupplierEmail, 
+            String FoodsupplierName, 
+            String FoodsupplierAddress, 
+            String FoodsupplierPostNr,
+            String FoodsupplierCity, 
+            String FoodsupplierPhoneNumber, 
+            String FoodsuFoodsupplierExternalLinkpplierAddress, 
+            String FoodSupplierCategoryID) {
         try {
-            // Define your SQL INSERT statement
-            String sql = "INSERT INTO craveconnect.User (username, password, Email, UserRoleID) VALUES ('"+FoodSupplierUsername+"', '"+FoodsupplierPassword+"','"+FoodsupplierEmail+"', 4);";
-            //String sql = "INSERT INTO craveconnect.User (fullName, username, password, email) VALUES ('"+fullName+"', '"+userName+"', '"+password+"', '"+email+"');";
-             System.out.println(sql);   
+            // First is a user object created and stored in the DB table craveconnect.User
+            String sql = "INSERT INTO craveconnect.User (username, password, Email, UserRoleID) VALUES ('"+FoodSupplierUsername+"', '"+FoodsupplierPassword+"','"+FoodsupplierEmail+"', 4);";  
+            System.out.print((sql));
             CreateQuery createInstanceUserRegisting = new CreateQuery();   //Creating ReadQuery object    
             // Use executeInsert for INSERT statements
-        int rowsAffected = createInstanceUserRegisting.executeInsert(sql);
-        
-        // Check rowsAffected to ensure the insertion was successful
-        if (rowsAffected > 0) {
-            System.out.println("Registration successful!");
-
-            sql = "insert into craveconnect.Foodsupplier (FoodsupplierName, Address, PostNr, City, PhoneNumber, ExternalLink, StateID, FoodSupplierCategoryID) values('"+FoodsupplierName+"','"+FoodsupplierAddress+"','"+FoodsupplierPostNr+"','"+FoodsupplierCity+"','"+FoodsupplierPhoneNumber+"','"+FoodsuFoodsupplierExternalLinkpplierAddress+"',3,"+FoodSupplierCategoryID+");";
-            System.out.println(sql);   
-            CreateQuery createInstanceFoodsupplierData = new CreateQuery();   //Creating ReadQuery object  
-            rowsAffected = createInstanceFoodsupplierData.executeInsert(sql);
-            if(rowsAffected > 0){
-                System.out.println("Foodsupplier data is successful!");
-                return true;
-            }else {
-                System.out.println("Food supplier data failed!");
+            int rowsAffected = createInstanceUserRegisting.executeInsert(sql);    
+            // Check rowsAffected to ensure the insertion was successful
+            if (rowsAffected > 0) {
+                System.out.println("Registration successful!");
+                //Now a foodsupplier object is created and stored in the DB table craveconnect.Foodsupplier
+                sql = "insert into craveconnect.Foodsupplier (FoodsupplierName, Address, PostNr, City, PhoneNumber, ExternalLink, StateID, FoodSupplierCategoryID) values('"+FoodsupplierName+"','"+FoodsupplierAddress+"','"+FoodsupplierPostNr+"','"+FoodsupplierCity+"','"+FoodsupplierPhoneNumber+"','"+FoodsuFoodsupplierExternalLinkpplierAddress+"',3,"+FoodSupplierCategoryID+");";
+                System.out.println(sql);   
+                CreateQuery createInstanceFoodsupplierData = new CreateQuery();   //Creating ReadQuery object  
+                rowsAffected = createInstanceFoodsupplierData.executeInsert(sql);
+                if(rowsAffected > 0){
+                    System.out.println("Foodsupplier data is successful!");
+                    return true;
+                }else {
+                    System.out.println("Foodsupplier data failed!");
+                    return false;
+                }   
+            } else {
+                System.out.println("Registration failed!");
                 return false;
-            }   
-        } else {
-            System.out.println("Registration failed!");
-            return false;
-        }  
-
+            }  
         } catch (SQLException e) {
-
             e.printStackTrace();
-            System.out.println("fejl i Class registerUser");
+            System.out.println("fail in Class registerUser");
             return false;
         }
     }
 
-
-    
-    
+    //Methods to get the coordinates from the foodsupplier table and return them as a list.
     public List<Double> getCoordinates(){
         // List of double-precision floating-point numbers
         List<Double> doubleList = new ArrayList<>();
@@ -126,8 +128,9 @@ public class FoodSupplier {
         doubleList.add(this.longitude);
         return doubleList;
     }
-      // MEthod to get FoodsupplierNames
-   public static List<String> getAllFoodSupplierNames() {
+    
+    //Static method to get FoodsupplierNames
+    public static List<String> getAllFoodSupplierNames() {
         List<String> foodSupplierNames = new ArrayList<>();
         try {
             ReadQuery readInstance = new ReadQuery();
@@ -140,26 +143,26 @@ public class FoodSupplier {
         } catch (SQLException ex) {
             Logger.getLogger(FoodSupplier.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return foodSupplierNames;
-        
+        return foodSupplierNames; 
     }
-     // Method to get FoodSupplier ID
+    
+    //Static method to get FoodSupplier ID, the method returns a List of integers (the IDs)
     public static List<Integer> getAllFoodSupplierIDs() {
         List<Integer> foodSupplierIDs = new ArrayList<>();
         try {
             ReadQuery readInstance = new ReadQuery();
             String query = "SELECT FoodsupplierID FROM craveconnect.Foodsupplier;";
             ResultSet resultSet = readInstance.readTableData(query);
-
-        while (resultSet.next()) {
-            foodSupplierIDs.add(resultSet.getInt("FoodsupplierID"));
-        }
+            //While loop to go over all the IDs and add them to the list of integers
+            while (resultSet.next()) {
+                foodSupplierIDs.add(resultSet.getInt("FoodsupplierID"));
+            }
         } catch (SQLException ex) {
             Logger.getLogger(FoodSupplier.class.getName()).log(Level.SEVERE, null, ex);
     }
     return foodSupplierIDs;
 }
-    // Method to fetch all FoodSupplier names and their IDs
+    //Static method to fetch all FoodSupplier names and their IDs, returning a List of Strings.
     public static List<String> getAllFoodSupplierNamesWithIDs() {
         List<String> supplierList = new ArrayList<>();
         try {
@@ -179,59 +182,55 @@ public class FoodSupplier {
         return supplierList;
     }
     
-    public void updateFoodItem(int foodItemID,double price){
-        System.out.println("Running: updateFoodItem"); //id 
-        
-        
+    //Method to update a food item.
+    public boolean updateFoodItem(int foodItemID,double price){
         try {
             UpdateQuery updateInstance = new UpdateQuery();
             String query = "update craveconnect.FoodItem set Price = "+price+" where FoodItemID = "+foodItemID+";";
             updateInstance.executeInsertUpdate(query);
+            return true;
         } catch (SQLException ex) {
             Logger.getLogger(FoodSupplier.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
-    
     } 
     
-     public void deleteFoodItem(int foodItemID){
-        System.out.println("Running: deleteFoodItem"); //id 
+    //Method to delete a foodItem
+    public boolean deleteFoodItem(int foodItemID){
         try {
             DeleteQuery deleteInstance = new DeleteQuery();
             String query = "CALL craveconnect.sp_DeleteFoodItem("+foodItemID+");";
             deleteInstance.executeDelete(query);
+            return true;
         } catch (SQLException ex) {
             Logger.getLogger(FoodSupplier.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
     } 
-     
-    public void deleteOwnFoodSupplier(){
-        System.out.println("Running: deleteFoodItem"); //id 
+    
+    //Method to enable the deleting of a current foodsupplier
+    public boolean deleteOwnFoodSupplier(){
         try {
             DeleteQuery deleteInstance = new DeleteQuery();
             String query = "CALL craveconnect.sp_DeleteFoodsupplier("+this.foodsupplierID+");";
             deleteInstance.executeDelete(query);
+            return true;
         } catch (SQLException ex) {
             Logger.getLogger(FoodSupplier.class.getName()).log(Level.SEVERE, null, ex);
+            return false;
         }
     } 
     
-    private void test(){
-        System.out.println("i am a test");
-    }
-    
-    
-    
-    
     //Getters
     public String getFoodsupplierName(){
-        System.out.println("getFoodsupplierName: "+this.foodsupplierName);
+        //System.out.println("getFoodsupplierName: "+this.foodsupplierName);
         return this.foodsupplierName;
     }
     
     //Setters
 
     
-    // Testing example
+   //main is solely used to test the the current file.
    public static void main(String[] args) {
        //RegisteredUser test = new RegisteredUser();
        //boolean var = RegisteredUser.registerUser("Dennis","Dennis123","123","D@D.dk");  //Insert into DB - Dette er det tættest på en funktion i java
@@ -253,6 +252,5 @@ public class FoodSupplier {
         //test.deleteFoodItem(1);
         //test.deleteOwnFoodSupplier();
         //test.test();
-
     }
 }

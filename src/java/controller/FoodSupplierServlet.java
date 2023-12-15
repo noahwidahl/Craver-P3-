@@ -4,9 +4,7 @@
  */
 package controller;
 
-import dbHelpers.ReadQuery;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,11 +27,11 @@ public class FoodSupplierServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws ServletException, IOException {
         try {
-            System.out.println("FoodSupplierServlet"); 
             // Fetching supplier names and IDs from the model
             List<String> foodSupplierInfo = FoodSupplier.getAllFoodSupplierNamesWithIDs();
+            //Setting the List of string to the value foodSupplierNames, this is used in foodSupplier.jsp (showcasing the restaurant table)
             request.setAttribute("foodSupplierNames", foodSupplierInfo);
-
+            //Parsing the result to the .jsp page
             String url = "/foodSupplier.jsp"; // JSP page to display Food Suppliers
             RequestDispatcher dispatcher = request.getRequestDispatcher(url);
             dispatcher.forward(request, response);

@@ -8,136 +8,79 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Hashtable;
 import java.util.HashMap;
 import model.FoodSupplier;
 
-import model.FoodItem;
-
 
 public class ReadQuery extends CRUD {
-    
+    //Constructor to inherent from the CRUD superclass
     public ReadQuery() throws SQLException {
         super(); // Calls the constructor of the CRUD class to establish a database connection
     }
     //Generic method to get all table data
+    //Returning a ResultSet object to store the queried data.
     public ResultSet readTableData(String query) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(query);
         return preparedStatement.executeQuery();
     }
     
-    // Updated method to handle query with parameters
-    public ResultSet readTableData(String query, int supplierID) throws SQLException {
-        PreparedStatement preparedStatement = connection.prepareStatement(query);
-        preparedStatement.setInt(1, supplierID); // Set the supplierID parameter
-        return preparedStatement.executeQuery();
-    }
-    
-    //Get specific user
+    //Method to get specific users data
+    //Returning a ResultSet object to store the queried data.
     public ResultSet readUser(List<String> parameters, String baseQuery) throws SQLException {
-        
         // StringBuilder to build the query dynamically
         StringBuilder queryBuilder = new StringBuilder(baseQuery);
-        
         // Add WHERE clause if there are conditions
         if (!parameters.isEmpty()) {
             queryBuilder.append(" WHERE username = ? AND password = ?");
         }
-        
         PreparedStatement preparedStatement = connection.prepareStatement(queryBuilder.toString());
-        //Validating to be developed down here
-        
         // Set parameters based on the values in the ArrayList
         for (int i = 0; i < parameters.size(); i++) {
             preparedStatement.setString(i + 1, parameters.get(i));
         }
-        
         return preparedStatement.executeQuery();
     }
-     
+    
+    //Method to ouput ResultSets as a html table
+    //Returning the html table used broadly on the webpages
     public String outputResultAsHtmlTable(ResultSet results) {
     // Generating SQL datatable as an HTML table
-    String table = "<table border=1>";
-
+    String table = "<table border=1>";                                                                          //Start of html table
     try {
         // Get the ResultSetMetaData to obtain column names
         ResultSetMetaData metaData = results.getMetaData();
         int columnCount = metaData.getColumnCount();
 
         // Create table headers based on column names
-        table += "<tr>";
+        table += "<tr>";                                                                                        //Header table row start
         for (int i = 1; i <= columnCount; i++) {
             String columnName = metaData.getColumnName(i);
             table += "<th>" + columnName + "</th>";
         }
-        table += "</tr>";
+        table += "</tr>";                                                                                       //Header table row end
 
-        // Loop through the result set and generate data rows
+        // Loop through the result set and generate table rows adn table data
         while (results.next()) {
-            table += "<tr>";
+            table += "<tr>";                                                                                    //table row start
             for (int i = 1; i <= columnCount; i++) {
                 String columnValue = results.getString(i);
-                table += "<td>" + columnValue + "</td>"; 
+                table += "<td>" + columnValue + "</td>";                                                        //adding table data for each column
             }
-            //System.out.println(results.getString(1));
-            table += "</tr>";
+            table += "</tr>";                                                                                   //table row end
         }
     } catch (SQLException ex) {
         Logger.getLogger(ReadQuery.class.getName()).log(Level.SEVERE, null, ex);
     }
 
-    table += "</table>";
+    table += "</table>";                                                                                        //End of html table
     return table;
     }
     
-    public String outputResultAsHtmlTableWithInteractiveButtons(ResultSet results, int ColumnIdAsButton) {
-    // Generating SQL datatable as an HTML table
-    String table = "<table border=1>";
-
-    try {
-        // Get the ResultSetMetaData to obtain column names
-        ResultSetMetaData metaData = results.getMetaData();
-        int columnCount = metaData.getColumnCount();
-
-        // Create table headers based on column names
-        table += "<tr>";
-        for (int i = 1; i <= columnCount; i++) {
-            String columnName = metaData.getColumnName(i);
-            table += "<th>" + columnName + "</th>";
-        }
-        table += "</tr>";
-
-        // Loop through the result set and generate data rows
-        while (results.next()) {
-            table += "<tr>";
-            for (int i = 1; i <= columnCount; i++) {
-                String columnValue = results.getString(i);
-                //If statement der bestemmer hvilke kolonner der skal se anderleds ud
-                if(i == ColumnIdAsButton){
-                    table += "<td>"+"<button class='TableButtons' type='button'>"+columnValue+"</button>" + "</td>"; 
-                }else{
-                    table += "<td>" + columnValue + "</td>";  
-                        }
-                
-            }
-            //System.out.println(results.getString(1));
-            table += "</tr>";
-        }
-    } catch (SQLException ex) {
-        Logger.getLogger(ReadQuery.class.getName()).log(Level.SEVERE, null, ex);
-    }
-
-    table += "</table>";
-    return table;
-    }
-    
-    
-    
+    //Method to ouput ResultSets as a html table and adding interactive buttons
+    //Returning the html table with added buttons
     public String outputResultAsHtmlTableWithButtons(ResultSet results, HashMap<String, String> hashMap, String action) {
         // Generating SQL datatable as an HTML table
         StringBuilder tableBuilder = new StringBuilder("<table border=1>");
@@ -157,32 +100,32 @@ public class ReadQuery extends CRUD {
 
             // Loop through the result set and generate data rows
             while (results.next()) {
-                tableBuilder.append("<tr>");
+                tableBuilder.append("<tr>");        //Table row start
                 for (int i = 1; i <= columnCount; i++) {
                     String columnValue = results.getString(i);
-                    tableBuilder.append("<td>").append(columnValue).append("</td>");
+                    tableBuilder.append("<td>").append(columnValue).append("</td>");    //Table data
                 }
-
+                
+                //Adding the interactive buttons based on values from the HashMap inputted
                 for (String key : hashMap.keySet()) {
-                    tableBuilder.append("<td><form action='").append(action)
-                        .append("' method='post'><input type='hidden' name='parameterName' value='")
-                        .append(key).append(": ").append(results.getString(1))
-                        .append("'><button type='submit' onclick='reloadPage()'>")
-                        .append(hashMap.get(key)).append("</button></form></td>");
+                    tableBuilder.append("<td><form action='").append(action)    //Adding button start
+                        .append("' method='post'><input type='hidden' name='parameterName' value='")    //adding of meta data in html
+                        .append(key).append(": ").append(results.getString(1))  //adding the HashMap data
+                        .append("'><button type='submit' onclick='reloadPage()'>")      //adding last of meta data.
+                        .append(hashMap.get(key)).append("</button></form></td>");  //Adding button end
                 }
-
-                tableBuilder.append("</tr>");
+                tableBuilder.append("</tr>");       //table row end
             }
         } catch (SQLException ex) {
             Logger.getLogger(ReadQuery.class.getName()).log(Level.SEVERE, null, ex);
         }
-
         tableBuilder.append("</table>");
         return tableBuilder.toString();
     }
     
     
-    
+    //Test method to output Resultsset as console log.
+    //Returning a string with the stored data.
     public String outputResultAsText(ResultSet results) {
         // Generating SQL datatable as an HTML table
         String outputPlaceholder = "";
@@ -213,54 +156,31 @@ public class ReadQuery extends CRUD {
         }
         return outputPlaceholder;
     }
-                // In ReadQuery class
-
-    public String outputFoodSuppliersAsHtmlTable(List<String> suppliers) {
-        String table = "<table border='1'>";
-        table += "<tr><th>Supplier Name</th><th>Supplier ID</th></tr>";
-        for (String supplier : suppliers) {
-            String[] parts = supplier.split(" \\(");
-            String name = parts[0];
-            String id = parts[1].replace(")", "");
-            table += "<tr><td>" + name + "</td><td>" + id + "</td></tr>";
-        }
-        table += "</table>";
-        return table;
-    }
-    
-    // Metode til at udføre en forespørgsel med parametre (til FoodItem og Ingredient søgning)
+                
+    //Method to handle queries with paramters (used in FoodItem and Ingredients seaching)
+    //Returning a ResultSet object 
     public ResultSet readTableDataWithParameters(String query, List<Object> params) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(query);
-
-        // Sætter parametrene for PreparedStatement
+        //Setting the parameters for the preparestatement
         for (int i = 0; i < params.size(); i++) {
             preparedStatement.setObject(i + 1, params.get(i));
         }
-
         return preparedStatement.executeQuery();
-    }
-
-// Metode til at læse kategorier
-    public ResultSet readCategories() throws SQLException {
-        String query = "SELECT * FROM FoodCategory";
-        PreparedStatement preparedStatement = connection.prepareStatement(query);
-        return preparedStatement.executeQuery();
-    } 
+    }    
     
-
+    //main is solely used to test the the current file.
     public static void main(String[] args) {
         try {
             ReadQuery readInstance = new ReadQuery();
             // Fetch data from the model and display as HTML table
             List<String> supplierList = FoodSupplier.getAllFoodSupplierNamesWithIDs();
-            String htmlTable = readInstance.outputFoodSuppliersAsHtmlTable(supplierList);
-            System.out.println(htmlTable);
+
 
             // Other example usage of ReadQuery methods
             ResultSet result = readInstance.readTableData("SELECT * FROM craveconnect.Roles;");
-            System.out.println(readInstance.outputResultAsHtmlTable(result));
+            //System.out.println(readInstance.outputResultAsHtmlTable(result));
             ResultSet resultText = readInstance.readTableData("SELECT * FROM craveconnect.Foodsupplier;");
-            System.out.println(readInstance.outputResultAsText(resultText));
+            //System.out.println(readInstance.outputResultAsText(resultText));
 
             // Disconnect from the database
             readInstance.disconnect();

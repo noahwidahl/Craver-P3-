@@ -11,11 +11,12 @@ import java.sql.*;
  */
 
 public class DeleteQuery extends CRUD {
+    //Constructor to inherent from the CRUD superclass
     public DeleteQuery() throws SQLException {
         super(); // Calls the constructor of the CRUD class to establish a database connection
     }
     
-        //Generic method to delete data row
+    //Generic method to delete data row
     public int executeDelete(String query) throws SQLException {
         //check if query contains delete, otherwise throw exception
         if (query.toLowerCase().contains("delete")) {
@@ -27,9 +28,6 @@ public class DeleteQuery extends CRUD {
     
         PreparedStatement preparedStatement = connection.prepareStatement(query);
         return preparedStatement.executeUpdate();
-    }
-    
-    
-    
+    }  
 }
 

@@ -50,13 +50,14 @@ public abstract class CRUD {
             this.connection = DriverManager.getConnection(url, user, password);
 
             if (connection != null) {
-                System.out.println("Connected to MySQL server");
+                //System.out.println("Connected to MySQL server");
             }
         } catch (ClassNotFoundException | SQLException e) {
             System.err.println("Connection failed: " + e.getMessage());
         } 
     }
-
+    
+    //Method to disconnect safely from the database
     public void disconnect() throws SQLException {
         if (connection != null && !connection.isClosed()) {
             //Closing the MySQL server

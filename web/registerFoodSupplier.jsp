@@ -1,11 +1,6 @@
-<%-- 
-    Document   : Login
-    Created on : 10. nov. 2023, 11.28.59
-    Author     : timmadsen
---%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
+<!-- Importing java libraries --> 
 <%@ page import="java.util.Map" %>
 <%@ page import="java.util.HashMap" %>
 <%@ page import="java.util.Collections" %>
@@ -42,7 +37,7 @@
     <body>
         <div class="registercontainer">
             <p class="error-message"><%= errorMessage %></p>
-            
+            <%-- Form to interact with RegisterFoodSupplier.java servlet --%>
             <form action="registerFoodSupplier" method="post">
                 <label>System brugernavn</label><br/>
                 <input type="text" placeholder="Indtast brugernavn" name="FoodSupplierUsername" required><br/>

@@ -12,7 +12,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.FoodSupplier;
-import model.RegisteredUser;
 
 /**
  *
@@ -74,34 +73,32 @@ public class RegisterFoodSupplier extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         // Retrieve form parameters
-    String FoodSupplierUsername = request.getParameter("FoodSupplierUsername");
-    String FoodsupplierPassword = request.getParameter("FoodsupplierPassword");
-    String FoodsupplierEmail = request.getParameter("FoodsupplierEmail");
-    String FoodsupplierName = request.getParameter("FoodsupplierName");
-    String FoodsupplierAddress = request.getParameter("FoodsupplierAddress");
-    String FoodsupplierPostNr = request.getParameter("FoodsupplierPostNr");
-    String FoodsupplierCity = request.getParameter("FoodsupplierCity");
-    String FoodsupplierPhoneNumber = request.getParameter("FoodsupplierPhoneNumber");
-    String FoodsupplierExternalLink = request.getParameter("FoodsupplierExternalLink");
-    String FoodSupplierCategoryID = request.getParameter("FoodSupplierCategoryID");
+        String FoodSupplierUsername = request.getParameter("FoodSupplierUsername");
+        String FoodsupplierPassword = request.getParameter("FoodsupplierPassword");
+        String FoodsupplierEmail = request.getParameter("FoodsupplierEmail");
+        String FoodsupplierName = request.getParameter("FoodsupplierName");
+        String FoodsupplierAddress = request.getParameter("FoodsupplierAddress");
+        String FoodsupplierPostNr = request.getParameter("FoodsupplierPostNr");
+        String FoodsupplierCity = request.getParameter("FoodsupplierCity");
+        String FoodsupplierPhoneNumber = request.getParameter("FoodsupplierPhoneNumber");
+        String FoodsupplierExternalLink = request.getParameter("FoodsupplierExternalLink");
+        String FoodSupplierCategoryID = request.getParameter("FoodSupplierCategoryID");
     
-    // Check if any of the required fields is empty
-    if ( FoodSupplierUsername.isEmpty() || FoodsupplierPassword.isEmpty() || FoodsupplierEmail.isEmpty() || FoodsupplierName.isEmpty() || FoodsupplierAddress.isEmpty() || FoodsupplierPostNr.isEmpty() || FoodsupplierCity.isEmpty() || FoodsupplierPhoneNumber.isEmpty() || FoodsupplierExternalLink.isEmpty() || FoodSupplierCategoryID.isEmpty()) {
-        // If any required field is empty, redirect back to the registration page with an error message
-        response.sendRedirect("registerFoodSupplier.jsp?error=1");
-        return;
-    }
-    // Call method in registerquery to insert data into the database
-    boolean nextStep = FoodSupplier.registerFoodSupplier(FoodSupplierUsername,FoodsupplierPassword,FoodsupplierEmail,FoodsupplierName,FoodsupplierAddress,FoodsupplierPostNr,FoodsupplierCity,FoodsupplierPhoneNumber,FoodsupplierExternalLink,FoodSupplierCategoryID);
-    
-    if(nextStep==true){
-        // You can add further logic for success or failure and redirect the user accordingly
-        response.sendRedirect("login.jsp");
-    }else{
-        //Håndteres af html filen
-    }
-    
-        //processRequest(request, response);
+        // Check if any of the required fields is empty
+        if ( FoodSupplierUsername.isEmpty() || FoodsupplierPassword.isEmpty() || FoodsupplierEmail.isEmpty() || FoodsupplierName.isEmpty() || FoodsupplierAddress.isEmpty() || FoodsupplierPostNr.isEmpty() || FoodsupplierCity.isEmpty() || FoodsupplierPhoneNumber.isEmpty() || FoodsupplierExternalLink.isEmpty() || FoodSupplierCategoryID.isEmpty()) {
+            // If any required field is empty, redirect back to the registration page with an error message
+            response.sendRedirect("registerFoodSupplier.jsp?error=1");
+            return;
+        }
+        // Call method in registerquery to insert data into the database
+        boolean nextStep = FoodSupplier.registerFoodSupplier(FoodSupplierUsername,FoodsupplierPassword,FoodsupplierEmail,FoodsupplierName,FoodsupplierAddress,FoodsupplierPostNr,FoodsupplierCity,FoodsupplierPhoneNumber,FoodsupplierExternalLink,FoodSupplierCategoryID);
+        //If statement to control what happens based on succes or not
+        if(nextStep==true){
+            //Logic for success redirecting the user accordingly
+            response.sendRedirect("login.jsp");
+        }else{
+            //Logic for failure, is handled by the .jsp file in this context
+        }
     }
 
     /**
